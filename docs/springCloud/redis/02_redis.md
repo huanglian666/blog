@@ -1,3 +1,7 @@
+---
+title: 02_redis
+---
+
 
 
 
@@ -94,7 +98,7 @@ Redis 与其他 key - value（Memcache） 缓存产品有以下三个特点：
 
 升级gcc,以下每行命令依次执行即可升级gcc到9.3.1
 
-```she
+```bash
 yum -y install centos-release-scl
 yum -y install devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-binutils
 scl enable devtoolset-9 bash
@@ -1837,7 +1841,7 @@ bind 0.0.0.0
 
 
 
-```she
+```bash
 #如果redis设置密码，加上如下配置
 requirepass "123456"
 masterauth "123456"
@@ -1927,7 +1931,7 @@ Can I set the above configuration? (type 'yes' to accept): yes
 
 第五步：连接集群
 
-```she
+```bash
 ./redis-cli  -p 7002 -c
 补充：观察节点详情 ，先通过客户端连接, info replication
 ```

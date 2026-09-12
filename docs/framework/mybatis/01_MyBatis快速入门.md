@@ -1,3 +1,7 @@
+---
+title: 01_MyBatis快速入门
+---
+
 ## 一、MyBatis简介
 
 ### 1.1、JDBC操作（插入数据）
@@ -113,7 +117,7 @@
 
 > **注意设置id自增**
 
-```mysql
+```sql
 CREATE TABLE `user`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `username` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,

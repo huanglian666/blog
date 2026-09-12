@@ -1,3 +1,7 @@
+---
+title: 06_git在项目中的使用
+---
+
 ## 一：Git简介
 
 官网：https://git-scm.com/

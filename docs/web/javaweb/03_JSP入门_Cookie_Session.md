@@ -1,3 +1,7 @@
+---
+title: 03_JSP入门_Cookie_Session
+---
+
 ## 一、JSP入门
 
 ### 1.1、概述
@@ -25,7 +29,7 @@
 > * out对象在JSP页面中无需创建就可以使用，它的作用是用来向客户端输出；
 > * `<%=…%>`与out.print()功能是相同的，它们都是向客户端输出
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -50,7 +54,7 @@
 
 > 在一个JSP中多个<%...%>可以一起使用
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -320,7 +324,7 @@ public class LoginServlet extends HttpServlet {
 
 > login.jsp代码
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -358,7 +362,7 @@ public class LoginServlet extends HttpServlet {
 
 > success.jsp代码
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -486,7 +490,7 @@ public class LogoutServlet extends HttpServlet {
 
 > 修改success.jsp
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -580,7 +584,7 @@ public class MyTest {
 
 > 修改登录页面
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -672,7 +676,7 @@ public class LoginServlet extends HttpServlet {
 
 > 在项目中引入jquery，修改登录页面
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>

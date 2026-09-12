@@ -1,23 +1,44 @@
 ---
 home: true
-heroImage: ./logo.jpg
-heroText: Welcome to blog of huanglian.
-tagline: Born to win.
-actions:
-- text: 开始学习
-  link: /javase/basic/01_Java入门与开发环境搭建.html
-  type: primary
-- text: 关于我
+layout: Blog
+title: 黄炼的技术博客
+heroImage: /logo.png
+heroText: 黄炼的技术博客
+tagline: 用代码记录成长，用笔记沉淀知识
+heroAlt: 黄炼的技术博客头像
+heroFullScreen: true
+projects:
+- name: JavaSE
+  desc: Java 基础语法与进阶专题
+  link: /javase/
+  icon: fa-brands fa-java
+- name: 工具与部署
+  desc: IDEA、Maven、Git、Linux 与 Nginx
+  link: /tool/
+  icon: fa-solid fa-toolbox
+- name: 数据库
+  desc: MySQL、SQL 与 JDBC
+  link: /sql/
+  icon: fa-solid fa-database
+- name: Web 开发
+  desc: 前端基础与 JavaWeb
+  link: /web/
+  icon: fa-solid fa-globe
+- name: 框架学习
+  desc: MyBatis、Spring、SpringBoot、SpringMVC 与 Vue
+  link: /framework/
+  icon: fa-solid fa-layer-group
+- name: SpringCloud
+  desc: 微服务、中间件与综合项目
+  link: /springCloud/
+  icon: fa-solid fa-cloud
+- name: 设计模式
+  desc: 面向对象设计思想与实践
+  link: /designPatterns/
+  icon: fa-solid fa-puzzle-piece
+- name: 关于我
+  desc: 博主介绍与联系方式
   link: /me/
-  type: secondary
-features:
-- title: 关于我
-  details: huanglian是一个爱好英语的程序员，有点小文艺，有点小年轻，希望和大家称为好朋友。
-- title: 算法
-  details: 一天一道算法题，准备逆天。
-- title: java开发相关知识
-  details: 记录工作学习中的java开发相关的知识
-- title: java开发项目记录
-  details: 记录工作中的实战项目，以及项目中遇到的问题和解决方案
-  footer: Hep Licensed | Copyright © 2021-present 黄炼
+  icon: fa-solid fa-user
+footer: Hep Licensed | Copyright © 2021-present 黄炼
 ---

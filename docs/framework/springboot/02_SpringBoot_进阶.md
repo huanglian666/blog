@@ -1,3 +1,7 @@
+---
+title: 02_SpringBoot_进阶
+---
+
 ## 一、SpringBoot整合JSP（了解）
 
 > SpringBoot应用默认支持的动态网页技术是Thymeleaf，并不支持JSP；因此在SpringBoot应用想要使用JSP需要通过手动整合来实现

@@ -10,7 +10,11 @@
     "docs:build": "vuepress build docs"
   },
   "devDependencies": {
-    "@vuepress/plugin-search": "^2.0.0-beta.51",
-    "vuepress": "^2.0.0-beta.51"
+    "@vuepress/bundler-vite": "2.0.0-rc.31",
+    "@vuepress/plugin-search": "2.0.0-rc.134",
+    "katex": "^0.16.0",
+    "sass": "^1.104.0",
+    "vuepress": "2.0.0-rc.31",
+    "vuepress-theme-hope": "2.0.0-rc.109"
   }
 }

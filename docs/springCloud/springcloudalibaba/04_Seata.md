@@ -1,3 +1,7 @@
+---
+title: 04_Seata
+---
+
 ```txt
 小结：
 nacos 【name server】：注册中心，解决服务的注册与发现

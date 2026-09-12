@@ -1,3 +1,7 @@
+---
+title: 01_SpringMVC快速入门及解析
+---
+
 ## 一、SpringMVC概述及快速入门
 
 ### 1.1、概述
@@ -108,7 +112,7 @@ public class HelloController {
 
 > 在web目录下新建jsp目录，在该目录中创建success.jsp。
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>

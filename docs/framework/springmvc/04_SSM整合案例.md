@@ -1,3 +1,7 @@
+---
+title: 04_SSM整合案例
+---
+
 ## 一、基础环境搭建
 
 > 本次环境搭建在《Spring整合MyBatis》基础之上进行，我们在该部分学习中完成了Spring对MyBatis的整合，并且完成了Dao层和Service层的代码，关于整合我们需要做的工作就是让Web容器能够读取Spring的配置文件。

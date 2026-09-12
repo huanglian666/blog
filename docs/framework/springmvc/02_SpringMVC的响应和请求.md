@@ -1,3 +1,7 @@
+---
+title: 02_SpringMVC的响应和请求
+---
+
 ## 一、SpringMVC的数据响应
 
 ### 1.1、数据响应方式概述
@@ -28,7 +32,7 @@ public class TestController {
 >
 > /webapp/jsp/success.jsp
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>

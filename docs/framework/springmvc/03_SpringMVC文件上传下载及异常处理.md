@@ -1,3 +1,7 @@
+---
+title: 03_SpringMVC文件上传下载及异常处理
+---
+
 ## 一、`SpringMVC`文件上传
 
 > 文件上传客户端表单需要满足：
@@ -117,7 +121,7 @@
 >
 > 4) 用于文件上传的页面
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <body>
@@ -142,7 +146,7 @@
 
 > 5) success.jsp
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -317,7 +321,7 @@ public class WebExceptionHandler {
 
 #### 3.4.2、发送请求的页面
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>

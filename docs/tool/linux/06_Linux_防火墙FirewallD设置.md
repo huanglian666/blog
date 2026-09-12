@@ -1,3 +1,7 @@
+---
+title: 06_Linux_防火墙FirewallD设置
+---
+
 ## 一、简介
 
 > FirewallD是iptables的前端控制器，用于实现持久的网络流量规则。它提供命令行和图形界面，在大多数 Linux 发行版的仓库中都有。与直接控制iptables相比，使用FirewallD有两个主要区别：

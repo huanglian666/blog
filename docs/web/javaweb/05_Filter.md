@@ -1,3 +1,7 @@
+---
+title: 05_Filter
+---
+
 ## 一、什么是Filter
 
 > JavaWeb三大组件（Servlet，Filter，Listener）之一；
@@ -329,7 +333,7 @@ public class BFilter2 implements Filter {
 
 > 测试，访问BServlet，打印如下，两次的hash值不同，说明“注解和web.xml同时配置，会创建多个过滤器对象，造成过滤多次”。
 
-```l
+```text
 BFilter1...
 BFilter2....768904998
 BFilter2....703274564
@@ -380,7 +384,7 @@ public class LoginFilter implements Filter {
 
 > success.jsp
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>

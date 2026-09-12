@@ -1,3 +1,7 @@
+---
+title: 01_Linux_安装
+---
+
 ## 一、安装VMware Workstation --- 虚拟机软件
 
 ![image-20210621140829889](./_pic/image-20210621140829889.png)

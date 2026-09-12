@@ -1,3 +1,7 @@
+---
+title: 05_BootStrap
+---
+
 ## 一、validate插件
 
 ### 1.1、validate插件概述

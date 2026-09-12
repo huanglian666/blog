@@ -1,3 +1,7 @@
+---
+title: 02_MySQL安装及配置
+---
+
 ## 一、下载
 
 >  **官网：**https://www.mysql.com/

@@ -1,3 +1,7 @@
+---
+title: 05_DML
+---
+
 ## 一、什么是DML
 
 > DML(Data Manipulation Language)数据操作语言：增、删、改表记录。

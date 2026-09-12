@@ -1,3 +1,7 @@
+---
+title: 04_JSP进阶_EL_JSTL
+---
+
 ## 一、JSP指令
 
 > JSP指令用来设置与整个JSP页面相关的属性。
@@ -83,7 +87,7 @@
 > - `Object getAttribute(String name)`
 > - `void removeAttribute(String name)`
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -148,7 +152,7 @@ public class MServlet extends HttpServlet {
 
 > 创建测试的JSP
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -167,7 +171,7 @@ public class MServlet extends HttpServlet {
 
 > `Object findAttribute(String name)`：依次在`page、request、session、application`范围查找名称为name的数据，如果找到就停止查找。这说明在这个范围内有相同名称的数据，那么page范围的优先级最高
 
-```jsp
+```html
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <html>
@@ -212,7 +216,7 @@ public class MServlet extends HttpServlet {
 >
 > `Exception getException()`：获取exception内置对象
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -245,7 +249,7 @@ public class MServlet extends HttpServlet {
 >
 > 被包含的JSP：a.jsp
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -259,7 +263,7 @@ public class MServlet extends HttpServlet {
 
 > b.jsp
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -298,7 +302,7 @@ public class MServlet extends HttpServlet {
 > * `<%=request.getAttribute() %>` 没有找到返回null 
 > * `${requestScope.name}`没找到返回"" 
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -358,7 +362,7 @@ public class Person {
 
 > EL表达式演示
 
-```jsp
+```html
 <%@ page import="com.qf.entity.Person" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
@@ -466,7 +470,7 @@ public class Person {
 > | ! or not   | 测试取反                         |
 > | empty      | 测试是否空值                     |
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -503,7 +507,7 @@ public class Person {
 
 > 关于`empty`关键字
 
-```jsp
+```html
 <% 
 	String s1="";
     pageContext.setAttribute("s1", s1);
@@ -539,7 +543,7 @@ ${empty list1}<br>
 > | cookie           | Cookie值                      |
 > | pageContext      | 当前页面的pageContext域对象   |
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -562,7 +566,7 @@ ${empty list1}<br>
 >
 > login.jsp
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -605,7 +609,7 @@ ${empty list1}<br>
 
 > success.jsp
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -665,7 +669,7 @@ ${empty list1}<br>
 >* value：可以是字符串常量，也可以是EL表达式
 >* default：当要输出的内容为null时，会输出default指定的值
 
-```jsp
+```html
 <!-- 输出字符串aaa -->
 <c:out value="aaa"/> 
 <!-- 输出域属性aaa，其中与${aaa}相同 -->
@@ -676,7 +680,7 @@ ${empty list1}<br>
 
 >set标签
 
-```jsp
+```html
 <!-- 创建名为a,值为hello的域属性，范围：pageContext -->
 <c:set var="a" value="hello"/> 
 <!-- 范围为session -->
@@ -685,7 +689,7 @@ ${empty list1}<br>
 
 >remove标签
 
-```jsp
+```html
 <!-- 删除名为a的域属性 -->
 <c:remove var="a"/> 
 <!-- 删除page域中名为a的域属性 -->
@@ -694,7 +698,7 @@ ${empty list1}<br>
 
 > 案例
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -728,7 +732,7 @@ ${empty list1}<br>
 
 > if标签
 
-```jsp
+```html
 <!-- 当条件为true时执行标签体内容 -->
 <c:if test="${条件}"> 
     hello
@@ -737,7 +741,7 @@ ${empty list1}<br>
 
 > choose标签
 
-```jsp
+```html
 <!--
 	等同于：
         if() {
@@ -757,7 +761,7 @@ ${empty list1}<br>
 
 > 案例
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -820,7 +824,7 @@ ${empty list1}<br>
 
 > forEach标签
 
-```jsp
+```html
 <!-- 
     var：循环变量
     begin：设置循环变量从几开始。
@@ -851,7 +855,7 @@ ${empty list1}<br>
 
 > 案例
 
-```jsp
+```html
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.qf.entity.Person" %>
@@ -963,7 +967,7 @@ ${empty list1}<br>
 
 > 修改login.jsp
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -1000,7 +1004,7 @@ ${empty list1}<br>
 
 > 修改success.jsp
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -1299,7 +1303,7 @@ public class LogoutServlet extends HttpServlet {
 >
 > 注意这个页面中引入jquery用于实现单击刷新验证码，如果加载jquery不能运行成功，删除out目录重试。
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <head>
@@ -1345,7 +1349,7 @@ public class LogoutServlet extends HttpServlet {
 
 > 成功页面success.jsp
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>

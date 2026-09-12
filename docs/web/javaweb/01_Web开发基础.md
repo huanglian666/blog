@@ -1,3 +1,7 @@
+---
+title: 01_Web开发基础
+---
+
 ## 一、常见软件系统体系结构
 
 > C/S和B/S是软件发展过程中出现的两种软件架构方式。
@@ -142,7 +146,7 @@
 >
 > index.jsp内容如下
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
@@ -308,7 +312,7 @@
 
 > 修改index.jsp的代码
 
-```jsp
+```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>

@@ -1,0 +1,63 @@
+const qualificationPath = "/软考/中级资格：软件设计师/"
+
+const article = (text, directory, filename = text) => ({
+	text,
+	link: `${qualificationPath}${directory}/${filename}`,
+})
+
+export const softExamSidebar = [
+	{
+		text: "软考概览",
+		link: "/软考/",
+	},
+	{
+		text: "中级资格：软件设计师",
+		link: qualificationPath,
+		collapsible: true,
+		children: [
+			{
+				text: "计算机组成与体系结构",
+				collapsible: true,
+				children: [
+					article("进制转换", "计算机组成与体系结构"),
+					article("码制", "计算机组成与体系结构"),
+					article("浮点数的表示", "计算机组成与体系结构"),
+					article("算数与逻辑运算", "计算机组成与体系结构"),
+					article("校验码", "计算机组成与体系结构"),
+					article("CPU的组成", "计算机组成与体系结构"),
+					article("层次化存储体系", "计算机组成与体系结构"),
+					article("Cache缓存", "计算机组成与体系结构"),
+					article("主存编址", "计算机组成与体系结构"),
+					article("I/O数据传输控制方法", "计算机组成与体系结构", "I／O数据传输控制方法"),
+					article("总线系统", "计算机组成与体系结构"),
+					article("寻址方式", "计算机组成与体系结构"),
+					article("CISC与RISC", "计算机组成与体系结构"),
+					article("流水线技术", "计算机组成与体系结构"),
+					article("可靠性", "计算机组成与体系结构"),
+				],
+			},
+			{
+				text: "操作系统",
+				collapsible: true,
+				children: [
+					article("操作系统的功能", "操作系统"),
+					article("特殊的操作系统", "操作系统"),
+					article("进程与线程的基本概念", "操作系统"),
+					article("进程的状态", "操作系统"),
+					article("信号量与PV操作", "操作系统"),
+					article("前趋图与PV操作", "操作系统", "前驱图与PV操作"),
+					article("死锁问题", "操作系统"),
+					article("进程资源图", "操作系统"),
+					article("存储管理", "操作系统"),
+					article("磁盘管理", "操作系统"),
+					article("设备管理", "操作系统"),
+					article("文件管理", "操作系统"),
+					article("树形目录结构", "操作系统"),
+					article("索引文件结构", "操作系统"),
+					article("磁盘的位示图", "操作系统"),
+					article("文件权限", "操作系统"),
+				],
+			},
+		],
+	},
+]

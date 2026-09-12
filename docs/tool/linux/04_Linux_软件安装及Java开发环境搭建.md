@@ -1,3 +1,7 @@
+---
+title: 04_Linux_软件安装及Java开发环境搭建
+---
+
 ## 一、安装JDK
 
 > 在Linux下安装JDK，并配置JAVA_HOME环境变量……

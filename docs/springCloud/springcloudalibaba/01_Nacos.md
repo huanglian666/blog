@@ -1,3 +1,7 @@
+---
+title: 01_Nacos
+---
+
 # 一：微服务架构
 
 ## 1.0：单体架构
@@ -889,7 +893,7 @@ NacosServerList.getServers
 
 第一步：上传nacos包到linux服务器并解压
 
-```she
+```bash
 tar -zxvf nacos-server-1.4.1.tar.gz -C /export/server/
 ```
 
@@ -961,7 +965,7 @@ sh /export/server/nacos8868/bin/startup.sh
 
 第七步：测试
 
-```pro
+```properties
 spring.cloud.nacos.discovery.server-addr=192.168.234.122:8848,192.168.234.122:8858,192.168.234.122:8868
 ```
 

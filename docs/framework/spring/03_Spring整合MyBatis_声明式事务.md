@@ -1,3 +1,7 @@
+---
+title: 03_Spring整合MyBatis_声明式事务
+---
+
 ## 一、Spring整合MyBatis基础工程搭建
 
 > 新建Maven工程，导入坐标，pom.xml配置如下
