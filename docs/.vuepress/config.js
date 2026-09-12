@@ -8,7 +8,7 @@ export default {
 	port: '8088',
 	host: 'localhost',
 	head:[['link',{rel: 'icon', href: '/logo.jpg'}]],
-	base: '/',
+	base: process.env.BASE || '/',
 	markdown: {
         code:{
             lineNumbers:true//代码显示行号

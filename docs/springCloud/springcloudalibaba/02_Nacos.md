@@ -331,8 +331,6 @@ springboot:                     2.3.2.RELEASE
 
 父工程锁定springboot、springcloud、springcloud-alibaba版本
 
-![img](file:///C:\Users\Administrator\AppData\Roaming\Tencent\Users\823601183\QQ\WinTemp\RichOle\C~3KMK4VCL7{6}%ZU[$8`RW.jpg)
-
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
