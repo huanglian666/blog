@@ -1,4 +1,4 @@
-name: Deploy VuePress site to GitHub Pages
+name: Build and push VuePress site
 
 on:
   push:
@@ -7,10 +7,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: pages
+  group: build-and-push-pages
   cancel-in-progress: false
 
 env:
@@ -19,11 +19,11 @@ env:
   BASE: '/blog/'
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout source
         uses: actions/checkout@v6
 
       - name: Setup pnpm
@@ -40,29 +40,19 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-
       - name: Build VuePress site
         run: pnpm docs:build
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: docs/.vuepress/dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+      - name: Push dist to gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd docs/.vuepress/dist
+          git init
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --all
+          git -c commit.gpgsign=false commit -m "deploy: ${GITHUB_SHA}"
+          git branch -M gh-pages
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force origin HEAD:gh-pages
