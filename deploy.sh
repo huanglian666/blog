@@ -7,4 +7,4 @@ set -eu
 BASE='/blog/' pnpm docs:build
 
 echo 'VuePress 构建完成：docs/.vuepress/dist'
-echo 'GitHub Pages 将由 .github/workflows/deploy-pages.yml 自动发布。'
+echo '构建产物将由 .github/workflows/build-and-push-gh-pages.yml 自动推送到 gh-pages。'

@@ -1,4 +1,4 @@
-name: Build and push VuePress site
+name: Build and push gh-pages
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: build-and-push-pages
+  group: build-and-push-gh-pages
   cancel-in-progress: false
 
 env:
