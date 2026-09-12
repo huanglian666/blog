@@ -175,11 +175,11 @@ export default {
                     {
                         text:'SpringMVC',
                         children:[
-                            {text:'01_SpringMVC快速入门及解析.md', link: '/framework/springmvc/01_SpringMVC快速入门及解析.md'},
-                            {text:'02_SpringMVC的响应和请求.md', link: '/framework/springmvc/02_SpringMVC的响应和请求.md'},
-                            {text:'03_SpringMVC文件上传下载及异常处理.md', link: '/framework/springmvc/03_SpringMVC文件上传下载及异常处理.md'},
-                            {text:'04_SSM整合案例.md', link: '/framework/springmvc/04_SSM整合案例.md'},
-                            {text:'05_SpringSecurity通用权限管理系统.md', link: '/framework/springmvc/05_SpringSecurity通用权限管理系统.md'},
+                            {text:'01_SpringMVC快速入门及解析', link: '/framework/springmvc/01_SpringMVC快速入门及解析.md'},
+                            {text:'02_SpringMVC的响应和请求', link: '/framework/springmvc/02_SpringMVC的响应和请求.md'},
+                            {text:'03_SpringMVC文件上传下载及异常处理', link: '/framework/springmvc/03_SpringMVC文件上传下载及异常处理.md'},
+                            {text:'04_SSM整合案例', link: '/framework/springmvc/04_SSM整合案例.md'},
+                            {text:'05_SpringSecurity通用权限管理系统', link: '/framework/springmvc/05_SpringSecurity通用权限管理系统.md'},
                         ]
                     },
                     {
@@ -235,11 +235,10 @@ export default {
                          text:'SpringCloudAlibaba',
                          children:[
                              {text:'01_Nacos',link:'/springCloud/springcloudalibaba/01_Nacos.md'},
-                             {text:'02_Nacos',link:'/springCloud/springcloudalibaba/02_Nacos.md'},
                              {text:'03_Sentinel',link:'/springCloud/springcloudalibaba/03_Sentinel.md'},
                              {text:'04_Sleuth',link:'/springCloud/springcloudalibaba/04_Sleuth.md'},
                              {text:'05_Gateway',link:'/springCloud/springcloudalibaba/05_Gateway.md'},
-                             {text:'06_Seata.md',link:'/springCloud/springcloudalibaba/06_Seata.md'},
+                             {text:'06_Seata',link:'/springCloud/springcloudalibaba/06_Seata.md'},
                          ]
                      }
                  ]
