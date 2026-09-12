@@ -1,0 +1,25 @@
+# ========== macOS 系统文件 ==========
+.DS_Store
+
+# ========== Windows 系统文件 ==========
+Thumbs.db
+Desktop.ini
+
+# ========== 依赖包 ==========
+node_modules/
+
+# ========== VuePress 构建产物与缓存 ==========
+docs/.vuepress/dist/
+docs/.vuepress/.temp/
+docs/.vuepress/.cache/
+
+# ========== 日志与临时文件 ==========
+*.log
+*.tmp
+*.bak
+*.swp
+
+# ========== IDE 配置 ==========
+.idea/
+.vscode/
+*.iml

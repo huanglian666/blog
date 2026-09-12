@@ -8,7 +8,7 @@ export default {
 	port: '8088',
 	host: 'localhost',
 	head:[['link',{rel: 'icon', href: '/logo.jpg'}]],
-	base: '/blog3',
+	base: '/',
 	markdown: {
         code:{
             lineNumbers:true//代码显示行号
@@ -201,7 +201,7 @@ export default {
                     },
                 ]
             },
-             {
+            {
                  text:'SpringCloud',
                  children:[
                      {
@@ -243,8 +243,8 @@ export default {
                          ]
                      }
                  ]
-             },
-             {
+            },
+            {
                  text:'SpringCloud综合项目',
                  children:[
                      {text:'01_电子商城',link:'/springCloud/project/01_项目笔记.md'},
@@ -257,7 +257,19 @@ export default {
                      {text:'08_购物车',link:'/springCloud/project/08_购物车.md'},
                  ]
 
-             }
+            },
+            {
+                text:'设计模式',
+                children:[
+                    {text:'01_设计模式概述',link:'/designPatterns/01_设计模式.md'},
+                    {text:'02_创建形设计模式',link:'/designPatterns/02_设计模式.md'},
+                    {text:'03_结构形设计模式1',link:'/designPatterns/03_设计模式.md'},
+                    {text:'04_结构形设计模式2',link:'/designPatterns/04_设计模式.md'},
+                    {text:'05_行为形设计模式1',link:'/designPatterns/05_设计模式.md'},
+                    {text:'06_行为形设计模式2',link:'/designPatterns/06_设计模式.md'},
+                ]
+
+            }
 
 
         ],

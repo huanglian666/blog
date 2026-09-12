@@ -15,11 +15,11 @@
 
 
 
-![image-20200922092403279](ElasticSearch.assets/image-20200922092403279.png)
+![image-20200922092403279](./_pic/image-20200922092403279.png)
 
 
 
-![image-20200922092505011](ElasticSearch.assets/image-20200922092505011.png)
+![image-20200922092505011](./_pic/image-20200922092505011.png)
 
 
 
@@ -33,7 +33,7 @@
 
 
 
-![image-20201103223608074](ElasticSearch.assets/image-20201103223608074.png)
+![image-20201103223608074](./_pic/image-20201103223608074.png)
 
 
 
@@ -45,9 +45,9 @@
 
 
 
-![image-20210402083842894](ElasticSearch.assets/image-20210402083842894.png)
+![image-20210402083842894](./_pic/image-20210402083842894.png)
 
-![image-20201103224315856](ElasticSearch.assets/image-20201103224315856.png)
+![image-20201103224315856](./_pic/image-20201103224315856.png)
 
 
 
@@ -55,7 +55,7 @@
 
 下载地址：https://www.elastic.co/cn/downloads/past-releases#elasticsearch
 
-![image-20201105095919417](ElasticSearch.assets/image-20201105095919417.png)
+![image-20201105095919417](./_pic/image-20201105095919417.png)
 
 
 
@@ -105,7 +105,7 @@ es存数据是以json的方式存储   ！！！
 
 ### ES索引分片存储
 
-![20191211065308753](ElasticSearch.assets/20191211065308753.png)
+![20191211065308753](./_pic/20191211065308753.png)
 
 
 
@@ -141,7 +141,7 @@ GET _analyze
 
 重启elasticsearch服务
 
-![image-20201105105757292](ElasticSearch.assets/image-20201105105757292.png)
+![image-20201105105757292](./_pic/image-20201105105757292.png)
 
 
 
@@ -168,13 +168,13 @@ GET _analyze
 
 扩展词典和停用词词典
 
-![image-20201105110806357](ElasticSearch.assets/image-20201105110806357.png)
+![image-20201105110806357](./_pic/image-20201105110806357.png)
 
 
 
 重启elasticsearch服务
 
-![image-20201105111019666](ElasticSearch.assets/image-20201105111019666.png)
+![image-20201105111019666](./_pic/image-20201105111019666.png)
 
 
 
@@ -1008,7 +1008,7 @@ GET /es_user/_search
 >
 > 版本随es的升级并行升级
 
-![image-20210212165141702](ElasticSearch.assets/image-20210212165141702.png)
+![image-20210212165141702](./_pic/image-20210212165141702.png)
 
 > 2.Spring Data Elasticsearch
 >
@@ -1016,7 +1016,7 @@ GET /es_user/_search
 
 
 
-![image-20210213164233104](ElasticSearch.assets/image-20210213164233104.png)
+![image-20210213164233104](./_pic/image-20210213164233104.png)
 
 
 
@@ -1031,7 +1031,7 @@ GET /es_user/_search
 
 
 
-![image-20210213164348231](ElasticSearch.assets/image-20210213164348231.png)
+![image-20210213164348231](./_pic/image-20210213164348231.png)
 
 
 
@@ -1265,7 +1265,7 @@ public class ESAppTest {
 ```
 
 Java8引入[lambda](https://so.csdn.net/so/search?q=lambda&spm=1001.2101.3001.7020)表达式后我们可以使用stream流链式处理的方式如：
-
+```java
   List<People> peoples = Arrays.asList(
                 new People("zs", 25, "cs"),
                 new People("ls", 28, "bj"),
@@ -1273,7 +1273,7 @@ Java8引入[lambda](https://so.csdn.net/so/search?q=lambda&spm=1001.2101.3001.70
         );
 
     List<String> names = peoples.stream().map(p -> p.getName()).collect(Collectors.toList());
-
+```
 
 ### 9.3.5：查询（match）
 

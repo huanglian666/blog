@@ -78,9 +78,9 @@ Redis 与其他 key - value（Memcache） 缓存产品有以下三个特点：
 
 > 下载地址：https://github.com/microsoftarchive/redis/releases
 
-![image-20200928150936812](Redis笔记.assets/image-20200928150936812.png)
+![image-20200928150936812](./_pic/image-20200928150936812.png)
 
-![image-20200928151038244](Redis笔记.assets/image-20200928151038244.png)
+![image-20200928151038244](./_pic/image-20200928151038244.png)
 
 
 
@@ -133,11 +133,11 @@ yum install tcl -y
 [root@zhuxm01 redis-6.0.8]# make PREFIX=/export/server/redis install
 ```
 
-![image-20200928152525279](Redis笔记.assets/image-20200928152525279.png)
+![image-20200928152525279](./_pic/image-20200928152525279.png)
 
 前台启动(先切换到 /export/server/redis/bin，在执行./redis-server)
 
-![image-20200928152611117](Redis笔记.assets/image-20200928152611117.png)
+![image-20200928152611117](./_pic/image-20200928152611117.png)
 
 
 
@@ -492,7 +492,7 @@ OK
 
 
 
-![image-20210915091352107](Redis笔记.assets/image-20210915091352107.png)
+![image-20210915091352107](./_pic/image-20210915091352107.png)
 
 
 
@@ -986,11 +986,11 @@ public class RedisTest {
 
 ### vscode
 
-![image-20210913171424253](Redis笔记.assets/image-20210913171424253.png)
+![image-20210913171424253](./_pic/image-20210913171424253.png)
 
 
 
-![image-20210914094035486](Redis笔记.assets/image-20210914094035486.png)
+![image-20210914094035486](./_pic/image-20210914094035486.png)
 
 
 
@@ -1002,19 +1002,19 @@ public class RedisTest {
 
 
 
-![image-20210624113201889](Redis笔记.assets/image-20210624113201889.png)
+![image-20210624113201889](./_pic/image-20210624113201889.png)
 
 
 
 第二步：新建签名
 
-![image-20210624113243177](Redis笔记.assets/image-20210624113243177.png)
+![image-20210624113243177](./_pic/image-20210624113243177.png)
 
 
 
 第三步：添加短信模板
 
-![image-20210624113606207](Redis笔记.assets/image-20210624113606207.png)
+![image-20210624113606207](./_pic/image-20210624113606207.png)
 
 
 
@@ -1362,7 +1362,7 @@ AOF(Append Of File):以日志的形式记录每个写操作，当redis重启时�
 
 
 
-![image-20210110183002483](Redis笔记.assets/image-20210110183002483-1610290031516.png)
+![image-20210110183002483](./_pic/image-20210110183002483-1610290031516.png)
 
 
 
@@ -1397,7 +1397,7 @@ save 60 10000     #rdb默认开启无法关闭
 - 3.bgsave
    执行该命令时，Redis会在后台异步进行快照操作，快照同时还可以响应客户端请求。具体操作是Redis进程执行fork操作创建子进程，RDB持久化过程由子进程负责，完成后自动结束。阻塞只发生在fork阶段，一般时间很短。
 
-![image-20210110182705846](Redis笔记.assets/image-20210110182705846.png)
+![image-20210110182705846](./_pic/image-20210110182705846.png)
 
 
 
@@ -1413,7 +1413,7 @@ save 60 10000     #rdb默认开启无法关闭
 >
 > appendonly yes
 
-![image-20210110184533162](Redis笔记.assets/image-20210110184533162.png)
+![image-20210110184533162](./_pic/image-20210110184533162.png)
 
 ### AOF相关配置
 
@@ -1438,7 +1438,7 @@ appendfsync always
 
 
 
-![image-20210110184852778](Redis笔记.assets/image-20210110184852778.png)
+![image-20210110184852778](./_pic/image-20210110184852778.png)
 
 
 
@@ -1446,13 +1446,13 @@ appendfsync always
 
 > 由于AOF持久化是Redis不断将写命令记录到 AOF 文件中，随着Redis不断的进行，AOF 的文件会越来越大，文件越大，占用服务器内存越大以及 AOF 恢复要求时间越长。为了解决这个问题，Redis新增了重写机制，当AOF文件的大小超过所设定的阈值时，Redis就会启动AOF文件的内容压缩，只保留可以恢复数据的最小指令集。可以使用命令 bgrewriteaof 来重新。
 
-![image-20210110185044480](Redis笔记.assets/image-20210110185044480.png)
+![image-20210110185044480](./_pic/image-20210110185044480.png)
 
 
 
 ## 10.3：RDB对比AOF
 
-![image-20210110185248622](Redis笔记.assets/image-20210110185248622.png)
+![image-20210110185248622](./_pic/image-20210110185248622.png)
 
 ```txt
 建议
@@ -1540,7 +1540,7 @@ root      13213      1  0 10:49 ?        00:00:00 redis-server 192.168.234.131:7
 
 ## 哨兵模式介绍
 
-![image-20210110223536409](Redis笔记.assets/image-20210110223536409.png)
+![image-20210110223536409](./_pic/image-20210110223536409.png)
 
  ```txt
 哨兵职责：
@@ -1649,7 +1649,7 @@ sentinel failover-timeout mymaster 180000
 sentinel notification-script mymaster /var/redis/notify.sh  
 ```
 
-![image-20210111143629643](Redis笔记.assets/image-20210111143629643.png)
+![image-20210111143629643](./_pic/image-20210111143629643.png)
 
 
 
@@ -1847,7 +1847,7 @@ masterauth "123456"
 
 
 
-![image-20201009095058410](Redis笔记.assets/image-20201009095058410.png)
+![image-20201009095058410](./_pic/image-20201009095058410.png)
 
 
 
@@ -2150,17 +2150,17 @@ public class TestSysRoleServie {
 
 创建测试计划
 
-![image-20210112092515437](Redis笔记.assets/image-20210112092515437.png)
+![image-20210112092515437](./_pic/image-20210112092515437.png)
 
 
 
 创建线程组
 
-![image-20210112092600864](Redis笔记.assets/image-20210112092600864.png)
+![image-20210112092600864](./_pic/image-20210112092600864.png)
 
 
 
-![image-20210112092826621](Redis笔记.assets/image-20210112092826621.png)
+![image-20210112092826621](./_pic/image-20210112092826621.png)
 
 
 
@@ -2168,23 +2168,23 @@ public class TestSysRoleServie {
 
 创建http请求
 
-![image-20210112092908877](Redis笔记.assets/image-20210112092908877.png)
+![image-20210112092908877](./_pic/image-20210112092908877.png)
 
 
 
-![image-20210112093022444](Redis笔记.assets/image-20210112093022444.png)
+![image-20210112093022444](./_pic/image-20210112093022444.png)
 
 
 
 监听http请求的结果
 
-![image-20210112093121326](Redis笔记.assets/image-20210112093121326.png)
+![image-20210112093121326](./_pic/image-20210112093121326.png)
 
 
 
 开始压力测试
 
-![image-20210112093216360](Redis笔记.assets/image-20210112093216360.png)
+![image-20210112093216360](./_pic/image-20210112093216360.png)
 
 
 
@@ -2433,7 +2433,7 @@ maxmemory-policy allkeys-lru
 
 `jemalloc`这种分配策略并不是按需分配，而是固定大小分配，比如8字节、32字节....2KB、4KB等
 
-![image-20210111221708703](Redis笔记.assets/image-20210111221708703.png)
+![image-20210111221708703](./_pic/image-20210111221708703.png)
 
 
 
@@ -2472,7 +2472,7 @@ config set activedefrag yes
 
 
 
-![image-20210111222416717](Redis笔记.assets/image-20210111222416717.png)
+![image-20210111222416717](./_pic/image-20210111222416717.png)
 
 
 
@@ -2486,7 +2486,7 @@ config set activedefrag yes
 
 2：Redis多线程主要解决网络IO瓶颈，并不是解决CPU瓶颈
 
-![image-20210831173947595](Redis笔记.assets/image-20210831173947595.png)
+![image-20210831173947595](./_pic/image-20210831173947595.png)
 
 
 

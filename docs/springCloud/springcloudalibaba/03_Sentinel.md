@@ -20,7 +20,7 @@
 
 > 级联失效、级联故障、cascading failure
 
-![image-20201028065801447](Sentinel.assets/image-20201028065801447.png)
+![image-20201028065801447](./_pic/image-20201028065801447.png)
 
 
 
@@ -30,7 +30,7 @@
 
 2：仓壁模式
 
-![image-20201028070254466](Sentinel.assets/image-20201028070254466.png)
+![image-20201028070254466](./_pic/image-20201028070254466.png)
 
 
 
@@ -48,7 +48,7 @@
 
 - **丰富的应用场景**：Sentinel 承接了阿里巴巴近 10 年的双十一大促流量的核心场景，例如秒杀（即突发流量控制在系统容量可以承受的范围）、消息削峰填谷、集群流量控制、实时熔断下游不可用应用等。
 
-	![image-20201026212724471](Sentinel.assets/image-20201026212724471.png)
+	![image-20201026212724471](./_pic/image-20201026212724471.png)
 
 - **完备的实时监控**：Sentinel 同时提供实时的监控功能。您可以在控制台中看到接入应用的单台机器秒级数据，甚至 500 台以下规模的集群的汇总运行情况。
 
@@ -87,13 +87,13 @@
 
 **Hystrix已经停更说明**
 
-![image-20201026211604752](Sentinel.assets/image-20201026211604752.png)
+![image-20201026211604752](./_pic/image-20201026211604752.png)
 
 
 
 ## 1.3：Sentinel架构
 
-![image-20201028011759647](Sentinel.assets/image-20201028011759647.png)
+![image-20201028011759647](./_pic/image-20201028011759647.png)
 
 ```properties
 #接口概览
@@ -138,7 +138,7 @@ pause
 
 
 
-![image-20210818151658886](Sentinel.assets/image-20210818151658886.png)
+![image-20210818151658886](./_pic/image-20210818151658886.png)
 
 
 
@@ -156,7 +156,7 @@ spring.cloud.sentinel.transport.dashboard=127.0.0.1:8888
 spring.cloud.sentinel.eager=true
 ```
 
-![image-20210818152033383](Sentinel.assets/image-20210818152033383.png)
+![image-20210818152033383](./_pic/image-20210818152033383.png)
 
 
 
@@ -183,7 +183,7 @@ QPS:Queries-per-second,每秒资源被访问的次数
 
 
 
-![image-20210818154909349](Sentinel.assets/image-20210818154909349.png)
+![image-20210818154909349](./_pic/image-20210818154909349.png)
 
 
 
@@ -193,7 +193,7 @@ QPS:Queries-per-second,每秒资源被访问的次数
 
 > 触发条件：当/order/test5 正在工作的线程数>1
 
-![image-20210818162733409](Sentinel.assets/image-20210818162733409.png)
+![image-20210818162733409](./_pic/image-20210818162733409.png)
 
 
 
@@ -201,39 +201,39 @@ Jemeter使用步骤
 
 1：新建测试计划
 
-![image-20210511143751814](Sentinel.assets\image-20210511143751814.png)
+![image-20210511143751814](./_pic/image-20210511143751814.png)
 
 
 
 2：添加线程组
 
-![image-20210511143828389](Sentinel.assets\image-20210511143828389.png)
+![image-20210511143828389](./_pic/image-20210511143828389.png)
 
 
 
-![image-20210511143952611](Sentinel.assets\image-20210511143952611.png)
+![image-20210511143952611](./_pic/image-20210511143952611.png)
 
 
 
 3：添加http请求
 
-![image-20210511144042065](Sentinel.assets\image-20210511144042065.png)
+![image-20210511144042065](./_pic/image-20210511144042065.png)
 
 
 
-![image-20210511144142075](Sentinel.assets\image-20210511144142075.png)
+![image-20210511144142075](./_pic/image-20210511144142075.png)
 
 
 
 4：添加结果观察
 
-![image-20210511144232989](Sentinel.assets\image-20210511144232989.png)
+![image-20210511144232989](./_pic/image-20210511144232989.png)
 
 
 
 5：发送请求
 
-![image-20210511144307280](Sentinel.assets\image-20210511144307280.png)
+![image-20210511144307280](./_pic/image-20210511144307280.png)
 
 
 
@@ -243,7 +243,7 @@ Jemeter使用步骤
 
 
 
-![image-20210818165013642](Sentinel.assets/image-20210818165013642.png)
+![image-20210818165013642](./_pic/image-20210818165013642.png)
 
 
 
@@ -251,13 +251,13 @@ Jemeter使用步骤
 
 > 触发条件：当关联资源(/order/test6)正在工作的线程数（并发数）>1  ,那么/order/test5 就会被流控
 
-![image-20210818165552976](Sentinel.assets/image-20210818165552976.png)
+![image-20210818165552976](./_pic/image-20210818165552976.png)
 
 
 
 ## 2.5：QPS超过阈值链路失败
 
-![image-20210818170718455](Sentinel.assets/image-20210818170718455.png)
+![image-20210818170718455](./_pic/image-20210818170718455.png)
 
 ```properties
 feign.sentinel.enabled=true
@@ -270,7 +270,7 @@ spring.cloud.sentinel.web-context-unify=false
 >
 > 当/order/test5访问qps>1  那么/order/test5就不能访问受保护资源,其他入口照常访问
 
-![image-20210818172601364](Sentinel.assets/image-20210818172601364.png)
+![image-20210818172601364](./_pic/image-20210818172601364.png)
 
 ## 2.6：流控效果-Warm-up
 
@@ -286,13 +286,13 @@ spring.cloud.sentinel.web-context-unify=false
 
 
 
-![image-20201028050506550](Sentinel.assets/image-20201028050506550.png)
+![image-20201028050506550](./_pic/image-20201028050506550.png)
 
 
 
 场景：
 
-![image-20210201214231216](Sentinel.assets/image-20210201214231216.png)
+![image-20210201214231216](./_pic/image-20210201214231216.png)
 
 ## 2.7：流控效果-匀速排队
 
@@ -300,7 +300,7 @@ spring.cloud.sentinel.web-context-unify=false
 
 
 
-![image-20210329230935856](Sentinel.assets/image-20210329230935856.png)
+![image-20210329230935856](./_pic/image-20210329230935856.png)
 
 
 
@@ -344,7 +344,7 @@ spring.cloud.sentinel.web-context-unify=false
 
 
 
-![image-20210819105935516](Sentinel.assets/image-20210819105935516.png)
+![image-20210819105935516](./_pic/image-20210819105935516.png)
 
 
 
@@ -402,7 +402,7 @@ spring.cloud.sentinel.web-context-unify=false
 >
 > 2：1s内  异常数/总请求数  > 0.6
 
-![image-20210819113541440](Sentinel.assets/image-20210819113541440.png)
+![image-20210819113541440](./_pic/image-20210819113541440.png)
 
 演示代码
 
@@ -440,7 +440,7 @@ spring.cloud.sentinel.web-context-unify=false
 >
 > 2：每秒的异常数必须大于10【我们设置的阈值】
 
-![image-20210511163229443](Sentinel.assets\image-20210511163229443.png)
+![image-20210511163229443](./_pic/image-20210511163229443.png)
 
 
 
@@ -452,7 +452,7 @@ spring.cloud.sentinel.web-context-unify=false
 >
 > 2：接口访问qps>1
 
-![image-20210819140928599](Sentinel.assets/image-20210819140928599.png)
+![image-20210819140928599](./_pic/image-20210819140928599.png)
 
 
 
@@ -466,13 +466,13 @@ spring.cloud.sentinel.web-context-unify=false
 
 
 
-![image-20210819141742327](Sentinel.assets/image-20210819141742327.png)
+![image-20210819141742327](./_pic/image-20210819141742327.png)
 
 
 
 注意事项：
 
-![image-20210330163338800](Sentinel.assets/image-20210330163338800.png)
+![image-20210330163338800](./_pic/image-20210330163338800.png)
 
 
 
@@ -484,7 +484,7 @@ spring.cloud.sentinel.web-context-unify=false
 
 > /goods/findById/{id} 对于cloud-order不能调用
 
-![image-20210819143451408](Sentinel.assets/image-20210819143451408.png)
+![image-20210819143451408](./_pic/image-20210819143451408.png)
 
 
 
@@ -563,7 +563,7 @@ public class CustomerRequestInterceptor implements RequestInterceptor {
 
 # 六：Sentinel-针对来源
 
-![image-20201029094519063](Sentinel.assets/image-20201029094519063.png)
+![image-20201029094519063](./_pic/image-20201029094519063.png)
 
 
 
@@ -856,7 +856,7 @@ public class CustomerExceptionHandler {
 
 
 
-![image-20210331105236701](Sentinel.assets/image-20210331105236701.png)
+![image-20210331105236701](./_pic/image-20210331105236701.png)
 
 
 
@@ -870,7 +870,7 @@ FileWritableDataSource 接收控制台规则推送，并根据配置，修改规
 
 
 
-![q](Sentinel.assets/q.png)
+![q](./_pic/q.png)
 
 
 
@@ -1051,13 +1051,13 @@ public class FileDataSourceInit implements InitFunc {
 
 
 
-![image-20201028204618786](Sentinel.assets/image-20201028204618786.png)
+![image-20201028204618786](./_pic/image-20201028204618786.png)
 
 
 
 
 
-![image-20201028210839167](Sentinel.assets/image-20201028210839167.png)
+![image-20201028210839167](./_pic/image-20201028210839167.png)
 
 
 
@@ -1095,7 +1095,7 @@ com.wfx.config.FileDataSourceInit
 
 生产环境下一般更常用的是 push 模式的数据源。对于 push 模式的数据源,如远程配置中心（ZooKeeper, Nacos,  Apollo等等），推送的操作不应由 Sentinel  客户端进行，而应该经控制台统一进行管理，直接进行推送，数据源仅负责获取配置中心推送的配置并更新到本地。因此推送规则正确做法应该是 **配置中心控制台/Sentinel 控制台 → 配置中心 → Sentinel 数据源 → Sentinel**，而不是经 Sentinel 数据源推送至配置中心。这样的流程就非常清晰了：
 
-![image-20211009094301650](C:\Users\zhuximing\AppData\Roaming\Typora\typora-user-images\image-20211009094301650.png)
+<!-- ![image-20211009094301650](./_pic/image-20211009094301650.png) -->
 
 ### 9.3.1：控制台改造
 
@@ -1103,7 +1103,7 @@ com.wfx.config.FileDataSourceInit
 
 
 
-![image-20210824151803313](Sentinel.assets/image-20210824151803313.png)
+<!-- ![image-20210824151803313](./_pic/image-20210824151803313.png) -->
 
 ### 9.3.2：微服务端
 

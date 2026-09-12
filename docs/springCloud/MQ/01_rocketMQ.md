@@ -10,7 +10,7 @@ mq：是生产者消费者的设计模式
 
 消费者：消费消息
 
-![image-20201107095033332](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20201107095033332.png)
+![image-20201107095033332](./_pic/image-20201107095033332.png)
 
 
 
@@ -91,7 +91,7 @@ kafka的特点其实很明显，就是仅仅提供较少的核心功能，但是
 
 配置ROCKETMQ_HOME环境变量
 
-![image-20201109102536152](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20201109102536152.png)
+![image-20201109102536152](./_pic/image-20201109102536152.png)
 
 
 
@@ -103,7 +103,7 @@ kafka的特点其实很明显，就是仅仅提供较少的核心功能，但是
 
 
 
-![image-20201109100854184](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20201109100854184.png)
+![image-20201109100854184](./_pic/image-20201109100854184.png)
 
 没有该文件，则新建
 
@@ -123,7 +123,7 @@ listenIp=127.0.0.1
 start  mqnamesrv.cmd -c  ../conf/nameserver.properties
 ```
 
-![image-20210223173026698](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20210223173026698.png)
+![image-20210223173026698](./_pic/image-20210223173026698.png)
 
 
 
@@ -133,13 +133,13 @@ start  mqnamesrv.cmd -c  ../conf/nameserver.properties
 
 
 
-![image-20210223173445921](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20210223173445921.png)
+![image-20210223173445921](./_pic/image-20210223173445921.png)
 
 
 
 nameserver进程启动成功
 
-![image-20201109101922247](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20201109101922247.png)
+![image-20201109101922247](./_pic/image-20201109101922247.png)
 
 
 
@@ -149,7 +149,7 @@ nameserver进程启动成功
 
 ### 2.2.1：配置broker
 
-![image-20201109102023742](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20201109102023742.png)
+![image-20201109102023742](./_pic/image-20201109102023742.png)
 
 
 
@@ -196,7 +196,7 @@ start mqbroker.cmd -c  ../conf/broker.conf
 
 
 
-![image-20210223173822345](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20210223173822345.png)
+![image-20210223173822345](./_pic/image-20210223173822345.png)
 
 
 
@@ -204,7 +204,7 @@ broker进程jvm堆内存设置
 
 
 
-![image-20210223173957038](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20210223173957038.png)
+![image-20210223173957038](./_pic/image-20210223173957038.png)
 
 
 
@@ -212,7 +212,7 @@ broker进程jvm堆内存设置
 
 broker启动成功
 
-![image-20201109102649221](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20201109102649221.png)
+![image-20201109102649221](./_pic/image-20201109102649221.png)
 
 
 
@@ -220,7 +220,7 @@ broker启动成功
 
 ## 3.1：进程角色说明
 
-![timg](../../../../../../Downloads/04/MQ/RocketMQ.assets/timg.jpg)
+![timg](./_pic/timg.jpg)
 
 - Name Server：在消息队列RocketMQ版中提供命名服务，更新和发现Broker服务，保存broker和topic
 
@@ -234,7 +234,7 @@ broker启动成功
 
 
 
-![timg](RocketMQ.assets\image-20220712062652563.png)
+![timg](./_pic/image-20220712062652563.png)
 
 
 
@@ -276,7 +276,7 @@ broker启动成功
 
 # 四：RocketMQ控制台
 
-![image-20201109082730318](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20201109082730318.png)
+![image-20201109082730318](./_pic/image-20201109082730318.png)
 
 
 
@@ -303,7 +303,7 @@ https://github.com/apache/rocketmq-externals/archive/master.zip
 
 修改端口（rocketmq-console>src>resource>application.properties）
 
-![image-20210223175936590](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20210223175936590.png)
+![image-20210223175936590](./_pic/image-20210223175936590.png)
 
 修改nameserver的地址（rocketmq-console>src>resource>application.properties）
 
@@ -313,13 +313,13 @@ rocketmq.config.namesrvAddr=localhost:9876
 
 
 
-![image-20210223180017191](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20210223180017191.png)
+![image-20210223180017191](./_pic/image-20210223180017191.png)
 
 
 
 修改Rocketmq的api版本（rocketmq-console>pom.xml）
 
-![image-20201107153436455](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20201107153436455.png)
+![image-20201107153436455](./_pic/image-20201107153436455.png)
 
 添加依赖
 
@@ -602,7 +602,7 @@ producer.shutdown();
 
 
 
-![image-20201107200331954](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20201107200331954.png)
+![image-20201107200331954](./_pic/image-20201107200331954.png)
 
 
 
@@ -774,7 +774,7 @@ public static void main(String[] args) throws  Exception{
 
 
 
-![image-20211018113455858](C:\Users\zhuximing\AppData\Roaming\Typora\typora-user-images\image-20211018113455858.png)
+<!-- ![image-20211018113455858](./_pic/image-20211018113455858.png) -->
 
 
 
@@ -784,7 +784,7 @@ public static void main(String[] args) throws  Exception{
 
 ## 6.2： 延时消息
 
-![image-20210223134729166](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20210223134729166.png)
+![image-20210223134729166](./_pic/image-20210223134729166.png)
 
 
 
@@ -1179,7 +1179,7 @@ rocketmq.producer.retry-times-when-send-async-failed=2
 
 
 
-![image-20210224160332275](../../../../../../Downloads/04/MQ/RocketMQ.assets/image-20210224160332275.png)
+![image-20210224160332275](./_pic/image-20210224160332275.png)
 
 
 
@@ -1320,7 +1320,7 @@ public class EsListener implements RocketMQListener<WxbGoods> {
 
 
 
-![image-20211018165823595](C:\Users\zhuximing\AppData\Roaming\Typora\typora-user-images\image-20211018165823595.png)
+<!-- ![image-20211018165823595](./_pic/image-20211018165823595.png) -->
 
 
 

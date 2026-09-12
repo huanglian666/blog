@@ -20,7 +20,7 @@ seata:分布式事务解决方案
 
  
 
-![image-20201111202522896](../../../../../../Downloads/04/SpringCloud/springcloudalibaba/分布式事务.assets/image-20201111202522896.png)
+![image-20201111202522896](./_pic/image-20201111202522896.png)
 
 在JDBC编程中，我们通过`java.sql.Connection`对象来开启、关闭或者提交事务。代码如下所示：
 
@@ -67,7 +67,7 @@ Spring声明式事务（基于aop实现）
 
 ### 1.2：分布式事务
 
-![image-20211011145438665](C:\Users\zhuximing\AppData\Roaming\Typora\typora-user-images\image-20211011145438665.png)
+<!-- ![image-20211011145438665](./_pic/image-20211011145438665.png) -->
 
 
 
@@ -252,13 +252,13 @@ Resource Manager(RM): Manage resources that branch transactions working on, talk
 
 第一阶段
 
-![image-20201111211926117](../../../../../../Downloads/04/SpringCloud/springcloudalibaba/分布式事务.assets/image-20201111211926117.png)
+![image-20201111211926117](./_pic/image-20201111211926117.png)
 
 
 
 
 
-![image-20201111211621926](../../../../../../Downloads/04/SpringCloud/springcloudalibaba/分布式事务.assets/image-20201111211621926.png)
+![image-20201111211621926](./_pic/image-20201111211621926.png)
 
 
 
@@ -266,7 +266,7 @@ Resource Manager(RM): Manage resources that branch transactions working on, talk
 
 如果决议是全局提交，此时分支事务此时已经完成提交，不需要同步协调处理（只需要异步清理回滚日志），Phase2 可以非常快速地完成
 
-![image-20201111213020592](../../../../../../Downloads/04/SpringCloud/springcloudalibaba/分布式事务.assets/image-20201111213020592.png)
+![image-20201111213020592](./_pic/image-20201111213020592.png)
 
 二阶段回滚
 
@@ -276,7 +276,7 @@ Resource Manager(RM): Manage resources that branch transactions working on, talk
 
 
 
-![image-20201111212907961](../../../../../../Downloads/04/SpringCloud/springcloudalibaba/分布式事务.assets/image-20201111212907961.png)
+![image-20201111212907961](./_pic/image-20201111212907961.png)
 
 
 
@@ -292,7 +292,7 @@ Resource Manager(RM): Manage resources that branch transactions working on, talk
 
 E:\seata-server-1.4.2\seata\seata-server-1.4.2\conf\file.conf
 
-![image-20210807120507747](../../../../../../Downloads/04/SpringCloud/springcloudalibaba/分布式事务.assets/image-20210807120507747.png)
+![image-20210807120507747](./_pic/image-20210807120507747.png)
 
 
 
@@ -369,7 +369,7 @@ CREATE TABLE IF NOT EXISTS `lock_table`
 
 E:\seata-server-1.4.2\seata\seata-server-1.4.2\conf\registry.conf
 
-![image-20210807120733657](../../../../../../Downloads/04/SpringCloud/springcloudalibaba/分布式事务.assets/image-20210807120733657.png)
+![image-20210807120733657](./_pic/image-20210807120733657.png)
 
 
 
@@ -377,7 +377,7 @@ E:\seata-server-1.4.2\seata\seata-server-1.4.2\conf\registry.conf
 
 E:\seata-server-1.4.2\seata\seata-server-1.4.2\conf\registry.conf
 
-![image-20210807120822629](../../../../../../Downloads/04/SpringCloud/springcloudalibaba/分布式事务.assets/image-20210807120822629.png)
+![image-20210807120822629](./_pic/image-20210807120822629.png)
 
 
 
@@ -581,13 +581,13 @@ store.db.password=123456
 
 #### 3.2.6.3：创建配置文件
 
-![image-20210807121432276](../../../../../../Downloads/04/SpringCloud/springcloudalibaba/分布式事务.assets/image-20210807121432276.png)
+![image-20210807121432276](./_pic/image-20210807121432276.png)
 
 
 
 注意目前只支持properties，不支持yml
 
-![image-20210807121627526](../../../../../../Downloads/04/SpringCloud/springcloudalibaba/分布式事务.assets/image-20210807121627526.png)
+![image-20210807121627526](./_pic/image-20210807121627526.png)
 
 
 
@@ -595,7 +595,7 @@ store.db.password=123456
 
 > 注意 -h必须指定为局域网真实ip地址，不要指定127.0.0.1
 
-![image-20211012112632242](C:\Users\zhuximing\AppData\Roaming\Typora\typora-user-images\image-20211012112632242.png)
+<!-- ![image-20211012112632242](./_pic/image-20211012112632242.png) -->
 
 
 
@@ -699,7 +699,7 @@ seata:
 
 ### 3.3.4：@Globaltransational
 
-![image-20201113160742772](../../../../../../Downloads/04/SpringCloud/springcloudalibaba/分布式事务.assets/image-20201113160742772.png)
+![image-20201113160742772](./_pic/image-20201113160742772.png)
 
 
 

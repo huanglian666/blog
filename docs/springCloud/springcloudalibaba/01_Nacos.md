@@ -4,7 +4,7 @@
 
 > 将项目所有模块（功能）打成jar或者war，然后部署一个进程
 
-![v2-1b379f20419869e262997606ea5fd4ed_720w](Nacos.assets/v2-1b379f20419869e262997606ea5fd4ed_720w.png)
+![v2-1b379f20419869e262997606ea5fd4ed_720w](./_pic/v2-1b379f20419869e262997606ea5fd4ed_720w.png)
 
 
 
@@ -163,7 +163,7 @@ In short, the microservice architectural style [1] is an approach to developing 
 
 **nacos架构：**
 
-![1561217892717-1418fb9b-7faa-4324-87b9-f1740329f564](Nacos.assets/1561217892717-1418fb9b-7faa-4324-87b9-f1740329f564.jpeg)
+![1561217892717-1418fb9b-7faa-4324-87b9-f1740329f564](./_pic/1561217892717-1418fb9b-7faa-4324-87b9-f1740329f564.jpeg)
 
 **nacos功能：**
 
@@ -194,7 +194,7 @@ In short, the microservice architectural style [1] is an approach to developing 
 
 2：配置
 
-![image-20210816151513489](Nacos.assets/image-20210816151513489.png)
+![image-20210816151513489](./_pic/image-20210816151513489.png)
 
 
 
@@ -204,7 +204,7 @@ In short, the microservice architectural style [1] is an approach to developing 
 
 4：配置startup.cmd，以standalone方式启动
 
-![image-20210816150721928](Nacos.assets/image-20210816150721928.png)
+![image-20210816150721928](./_pic/image-20210816150721928.png)
 
 
 
@@ -214,7 +214,7 @@ In short, the microservice architectural style [1] is an approach to developing 
 
 ## 3.2：nacos注册中心工作流程
 
-![image-20201025201055054](Nacos.assets/image-20201025201055054.png)
+![image-20201025201055054](./_pic/image-20201025201055054.png)
 
 # 四：微服务入门案例
 
@@ -235,7 +235,7 @@ springcloud的版本查看地址：https://spring.io/projects/spring-cloud#overv
 
 
 
-![image-20201017145706708](Nacos.assets/image-20201017145706708.png)
+![image-20201017145706708](./_pic/image-20201017145706708.png)
 
 ```txt
 注意：
@@ -259,7 +259,7 @@ Springcloud与springcloud-alibaba关系
 
 
 
-![image-20201017153801040](Nacos.assets/image-20201017153801040.png)
+![image-20201017153801040](./_pic/image-20201017153801040.png)
 
 
 
@@ -631,7 +631,7 @@ server.port=${port:8001}
 
 
 
-![image-20210816163533652](Nacos.assets/image-20210816163533652.png)
+![image-20210816163533652](./_pic/image-20210816163533652.png)
 
 
 
@@ -651,13 +651,13 @@ nacos的配置由三元组唯一确定     (namespace、group、dataId)
 
 1：创建namespace
 
-![image-20210817102910080](Nacos.assets/image-20210817102910080.png)
+![image-20210817102910080](./_pic/image-20210817102910080.png)
 
 
 
 2：发布服务到指定的namespace
 
-![image-20210817103155453](Nacos.assets/image-20210817103155453.png)
+![image-20210817103155453](./_pic/image-20210817103155453.png)
 
 
 
@@ -767,7 +767,7 @@ Ribbon是Netflix公司开源的一个负载均衡的项目，是一个"客户端
 
 > springcloud alibaba 对Ribbon做了兼容
 
-![image-20201018110223408](Nacos.assets/image-20201018110223408.png)
+![image-20201018110223408](./_pic/image-20201018110223408.png)
 
 
 
@@ -797,7 +797,7 @@ public RestTemplate restTemplate(){
 
 ## 6.4：Ribbon源码追踪
 
-![image-20210817135810619](Nacos.assets/image-20210817135810619.png)
+![image-20210817135810619](./_pic/image-20210817135810619.png)
 
 
 
@@ -805,7 +805,7 @@ public RestTemplate restTemplate(){
 LoadBalancerInterceptor
 ```
 
-![image-20210817135834178](Nacos.assets/image-20210817135834178.png)
+![image-20210817135834178](./_pic/image-20210817135834178.png)
 
 
 
@@ -815,13 +815,13 @@ LoadBalancerInterceptor
 RibbonLoadBalancerClient
 ```
 
-![image-20210817140127081](Nacos.assets/image-20210817140127081.png)
+![image-20210817140127081](./_pic/image-20210817140127081.png)
 
 
 
 负载均衡
 
-![image-20210817140537724](Nacos.assets/image-20210817140537724.png)
+![image-20210817140537724](./_pic/image-20210817140537724.png)
 
 
 
@@ -832,17 +832,17 @@ Ribbon核心组件IRule：根据特定算法从服务列表中选取一个需要
 其中IRule是一个接口，有七个自带的落地实现类，可以实现不同的负载均衡算法规则：
 ```
 
-![image-20210716160640128](Nacos.assets/image-20210716160640128.png)
+![image-20210716160640128](./_pic/image-20210716160640128.png)
 
 
 
 ## 6.5：切换Ribbon负载均衡策略
 
-![image-20210817142501714](Nacos.assets/image-20210817142501714.png)
+![image-20210817142501714](./_pic/image-20210817142501714.png)
 
 
 
-![image-20210817142523916](Nacos.assets/image-20210817142523916.png)
+![image-20210817142523916](./_pic/image-20210817142523916.png)
 
 
 
@@ -866,7 +866,7 @@ NacosServerList.getServers
 
 ## 7.1：nacos集群架构
 
-![image-20210817150519355](Nacos.assets/image-20210817150519355.png)
+![image-20210817150519355](./_pic/image-20210817150519355.png)
 
 
 
@@ -904,7 +904,7 @@ cd /export/server/nacos/conf/
 vim application.properties
 ```
 
-![image-20210202093842513](Nacos.assets/image-20210202093842513.png)
+![image-20210202093842513](./_pic/image-20210202093842513.png)
 
 
 
@@ -914,7 +914,7 @@ vim application.properties
 
 第三步：修改/export/server/nacos/bin/startup.sh 的JAVA_OPT
 
-![image-20210719092644814](Nacos.assets/image-20210719092644814.png)
+![image-20210719092644814](./_pic/image-20210719092644814.png)
 
 > 虚拟机内存调大到2G
 
@@ -1236,7 +1236,7 @@ public class Order {
 
 
 
-![image-20210202105915087](Nacos.assets/image-20210202105915087.png)
+![image-20210202105915087](./_pic/image-20210202105915087.png)
 
 
 
@@ -1244,13 +1244,13 @@ public class Order {
 
 ### 8.3.2：开启openfeign
 
-![image-20210817162423528](Nacos.assets/image-20210817162423528.png)
+![image-20210817162423528](./_pic/image-20210817162423528.png)
 
 
 
 ### 8.3.3：接口声明
 
-![image-20210817163043484](Nacos.assets/image-20210817163043484.png)
+![image-20210817163043484](./_pic/image-20210817163043484.png)
 
 
 
@@ -1258,7 +1258,7 @@ public class Order {
 
 扫描openfeign接口
 
-![image-20210817163230467](Nacos.assets/image-20210817163230467.png)
+![image-20210817163230467](./_pic/image-20210817163230467.png)
 
 
 
@@ -1386,7 +1386,7 @@ nacos config 官网：https://github.com/alibaba/spring-cloud-alibaba/wiki/Nacos
 
 ## 9.3：配置管理领域模型
 
-![image-20201101203849080](Nacos.assets/image-20201101203849080.png)
+![image-20201101203849080](./_pic/image-20201101203849080.png)
 
 
 
@@ -1398,13 +1398,13 @@ nacos config 官网：https://github.com/alibaba/spring-cloud-alibaba/wiki/Nacos
 
 1：创建文件
 
-![image-20210818105637846](Nacos.assets/image-20210818105637846.png)
+![image-20210818105637846](./_pic/image-20210818105637846.png)
 
-![image-20210818105858696](Nacos.assets/image-20210818105858696.png)
+![image-20210818105858696](./_pic/image-20210818105858696.png)
 
 
 
-![image-20210818105927559](Nacos.assets/image-20210818105927559.png)
+![image-20210818105927559](./_pic/image-20210818105927559.png)
 
 
 
@@ -1490,7 +1490,7 @@ server:
 
 环境切换
 
-![image-20210818113759160](Nacos.assets/image-20210818113759160.png)
+![image-20210818113759160](./_pic/image-20210818113759160.png)
 
 
 
@@ -1498,13 +1498,13 @@ server:
 
 父工程中定义环境变量
 
-![image-20210904104615186](Nacos.assets/image-20210904104615186.png)
+![image-20210904104615186](./_pic/image-20210904104615186.png)
 
 
 
 在各个微服务中引用变量
 
-![image-20210904104645680](Nacos.assets/image-20210904104645680.png)
+![image-20210904104645680](./_pic/image-20210904104645680.png)
 
 
 
@@ -1518,7 +1518,7 @@ server:
 
 
 
-![image-20210818114421971](Nacos.assets/image-20210818114421971.png)
+![image-20210818114421971](./_pic/image-20210818114421971.png)
 
 
 
@@ -1620,17 +1620,17 @@ pic:
 
 2.加载共享配置
 
-![image-20210818115930426](Nacos.assets/image-20210818115930426.png)
+![image-20210818115930426](./_pic/image-20210818115930426.png)
 
 
 
-![image-20210818120253526](Nacos.assets/image-20210818120253526.png)
+![image-20210818120253526](./_pic/image-20210818120253526.png)
 
 
 
 ## 9.9：配置文件版本管理
 
-![image-20210818120648847](Nacos.assets/image-20210818120648847.png)
+![image-20210818120648847](./_pic/image-20210818120648847.png)
 
 
 

@@ -19,7 +19,7 @@ Idworker是分布式id的完美解决方案，由Twitter公司开源，采用的
 
 
 
-![](IdWorkder.assets\1659658867.png)
+![](./_pic/1659658867.png)
 
 
 
