@@ -1,4 +1,5 @@
 import {defaultTheme} from 'vuepress'
+import {searchPlugin} from '@vuepress/plugin-search'
 
 
 export default {
@@ -14,6 +15,16 @@ export default {
             lineNumbers:true//代码显示行号
         }
 	},
+	plugins: [
+		// 本地搜索插件：构建时生成全站标题/页头索引打进静态产物，
+		// 搜索在浏览器本地完成，不依赖任何外部 API，适合国内访问场景
+		searchPlugin({
+			// 下拉建议条数，默认 5
+			maxSuggestions: 10,
+			// 激活搜索的快捷键：按 s 或 / 聚焦搜索框，默认 ['s', '/']
+			hotKeys: ['s', '/'],
+		}),
+	],
 	theme: defaultTheme({
 		 navbar: [
             {
@@ -268,7 +279,7 @@ export default {
                     {text:'06_行为形设计模式2',link:'/designPatterns/06_设计模式.md'},
                 ]
 
-            }
+            },
 
 
         ],
