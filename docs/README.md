@@ -36,6 +36,10 @@ projects:
   desc: 面向对象设计思想与实践
   link: /designPatterns/
   icon: fa-solid fa-puzzle-piece
+- name: 软考
+  desc: 软件设计师考试知识整理
+  link: /软考/
+  icon: fa-solid fa-graduation-cap
 - name: 关于我
   desc: 博主介绍与联系方式
   link: /me/
