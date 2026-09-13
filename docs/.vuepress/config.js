@@ -3,6 +3,17 @@ import { hopeTheme } from "vuepress-theme-hope"
 import { navbar } from "./navbar.js"
 import { softExamSidebar } from "./softExamSidebar.js"
 
+// 保留标题中英文的原始大小写，避免 README 目录锚点把 SpringBoot、MyBatis 等转换成小写。
+const preserveCaseSlugify = (str) =>
+	str
+		.normalize("NFKD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.replace(/[\u0000-\u001f]/g, "")
+		.replace(/[\s~`!@#$%^&*()\-_+=[\]{}|\\;:\"“”‘’<>,.?/]+/g, "-")
+		.replace(/-{2,}/g, "-")
+		.replace(/^-+|-+$/g, "")
+		.replace(/^(\d)/, "_$1")
+
 // 排除历史遗留的 _sidebar.md 页面，使其不出现在搜索结果中
 const isSidebarFile = (page) =>
 	page.filePathRelative?.replace(/\\/g, "/").endsWith("/_sidebar.md") ?? false
@@ -47,6 +58,10 @@ export default {
 	// 历史遗留的 _sidebar.md 是旧版 VuePress 的侧边栏配置，
 	// 不编译成页面，避免产生 sidebar.html 垃圾页、死链和侧边栏重复节点
 	pagePatterns: ["**/*.md", "!.vuepress", "!node_modules", "!**/_sidebar.md"],
+	// 覆盖 VuePress 默认的全小写标题锚点，保留 README 目录中的英文大小写。
+	markdown: {
+		slugify: preserveCaseSlugify,
+	},
 	theme: hopeTheme({
 		logo: "/logo.png",
 		blog: {
