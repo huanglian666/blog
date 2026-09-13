@@ -18,9 +18,9 @@ icon: fa-solid fa-cloud
 
 <!-- 可点击跳转到对应子栏目 -->
 
-- [Docker](/springCloud/docker/01_微服务架构演变)
-- [Redis](/springCloud/redis/01_redis)
-- [MQ](/springCloud/MQ/01_rocketMQ)
-- [ElasticSearch](/springCloud/elasticsearch/01_ElasticSearch)
-- [SpringCloudAlibaba](/springCloud/springcloudalibaba/01_Nacos)
-- [SpringCloud综合项目](/springCloud/project/01_项目笔记)
+- [Docker](./docker/01_微服务架构演变.md)
+- [Redis](./redis/01_redis.md)
+- [MQ](./MQ/01_rocketMQ.md)
+- [ElasticSearch](./elasticsearch/01_ElasticSearch.md)
+- [SpringCloudAlibaba](./springcloudalibaba/01_Nacos.md)
+- [SpringCloud综合项目](./project/01_项目笔记.md)

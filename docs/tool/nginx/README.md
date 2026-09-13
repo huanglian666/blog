@@ -7,4 +7,4 @@ Nginx 是常用的高性能 Web 服务器和反向代理。本目录记录 Nginx
 
 ## 目录
 
-- [Nginx](/tool/nginx/Nginx)
+- [Nginx](./Nginx.md)

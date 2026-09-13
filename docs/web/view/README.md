@@ -7,9 +7,9 @@ icon: fa-solid fa-display
 
 ## 目录
 
-- [01_HTML](/web/view/01_HTML)
-- [02_CSS](/web/view/02_CSS)
-- [03_JavaScript](/web/view/03_JavaScript)
-- [04_jQuery](/web/view/04_jQuery)
-- [05_BootStrap](/web/view/05_BootStrap)
-- [06_Ajax_JSON](/web/view/06_Ajax_JSON)
+- [01_HTML](./01_HTML.md)
+- [02_CSS](./02_CSS.md)
+- [03_JavaScript](./03_JavaScript.md)
+- [04_jQuery](./04_jQuery.md)
+- [05_BootStrap](./05_BootStrap.md)
+- [06_Ajax_JSON](./06_Ajax_JSON.md)

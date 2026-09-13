@@ -7,7 +7,7 @@ MyBatis 是 Java 生态中常用的持久层框架。本目录从基础配置、
 
 ## 目录
 
-- [01_MyBatis快速入门](/framework/mybatis/01_MyBatis快速入门)
-- [02_MyBatis进阶](/framework/mybatis/02_MyBatis进阶)
-- [03_MybatisPlus](/framework/mybatis/03_MybatisPlus)
-- [04_tkMapper](/framework/mybatis/04_tkMapper)
+- [01_MyBatis快速入门](./01_MyBatis快速入门.md)
+- [02_MyBatis进阶](./02_MyBatis进阶.md)
+- [03_MybatisPlus](./03_MybatisPlus.md)
+- [04_tkMapper](./04_tkMapper.md)

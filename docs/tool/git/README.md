@@ -7,4 +7,4 @@ Git 是团队协作中常用的分布式版本控制工具。本目录记录 Git
 
 ## 目录
 
-- [Git](/tool/git/Git)
+- [Git](./Git.md)

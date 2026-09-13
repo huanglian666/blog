@@ -7,4 +7,4 @@ icon: fa-solid fa-envelope
 
 ## 目录
 
-- [01_rocketMQ](/springCloud/MQ/01_rocketMQ)
+- [01_rocketMQ](./01_rocketMQ.md)

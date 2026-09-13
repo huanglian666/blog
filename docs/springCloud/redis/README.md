@@ -7,6 +7,6 @@ Redis 是常用的内存数据存储与缓存中间件。本目录整理 Redis �
 
 ## 目录
 
-- [01_redis](/springCloud/redis/01_redis)
-- [02_redis](/springCloud/redis/02_redis)
-- [03_布隆过滤器](/springCloud/redis/03_布隆过滤器)
+- [01_redis](./01_redis.md)
+- [02_redis](./02_redis.md)
+- [03_布隆过滤器](./03_布隆过滤器.md)

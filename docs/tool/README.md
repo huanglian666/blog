@@ -7,29 +7,29 @@ icon: fa-solid fa-toolbox
 
 ## IDEA
 
-- [IDEA简介](/tool/idea/README)
-- [01_IDEA配置_2019](/tool/idea/01_IDEA配置_2019)
-- [02_IDEA配置_2020](/tool/idea/02_IDEA配置_2020)
-- [03_IDEA快捷键](/tool/idea/03_IDEA快捷键)
+- [IDEA简介](./idea/README.md)
+- [01_IDEA配置_2019](./idea/01_IDEA配置_2019.md)
+- [02_IDEA配置_2020](./idea/02_IDEA配置_2020.md)
+- [03_IDEA快捷键](./idea/03_IDEA快捷键.md)
 
 ## Maven
 
-- [01_Maven基础](/tool/maven/01_Maven基础)
-- [02_Maven聚合工程](/tool/maven/02_Maven聚合工程)
+- [01_Maven基础](./maven/01_Maven基础.md)
+- [02_Maven聚合工程](./maven/02_Maven聚合工程.md)
 
 ## Git
 
-- [Git.md](/tool/git/Git)
+- [Git.md](./git/Git.md)
 
 ## Linux
 
-- [01_Linux_安装](/tool/linux/01_Linux_安装)
-- [02_Linux_简介及常用命令](/tool/linux/02_Linux_简介及常用命令)
-- [03_Linux_Vim使用](/tool/linux/03_Linux_Vim使用)
-- [04_Linux_软件安装及Java开发环境搭建](/tool/linux/04_Linux_软件安装及Java开发环境搭建)
-- [05_Linux_搭建基于SFTP服务的文件服务器](/tool/linux/05_Linux_搭建基于SFTP服务的文件服务器)
-- [06_Linux_防火墙FirewallD设置](/tool/linux/06_Linux_防火墙FirewallD设置)
+- [01_Linux_安装](./linux/01_Linux_安装.md)
+- [02_Linux_简介及常用命令](./linux/02_Linux_简介及常用命令.md)
+- [03_Linux_Vim使用](./linux/03_Linux_Vim使用.md)
+- [04_Linux_软件安装及Java开发环境搭建](./linux/04_Linux_软件安装及Java开发环境搭建.md)
+- [05_Linux_搭建基于SFTP服务的文件服务器](./linux/05_Linux_搭建基于SFTP服务的文件服务器.md)
+- [06_Linux_防火墙FirewallD设置](./linux/06_Linux_防火墙FirewallD设置.md)
 
 ## Nginx
 
-- [Nginx.md](/tool/nginx/Nginx)
+- [Nginx.md](./nginx/Nginx.md)

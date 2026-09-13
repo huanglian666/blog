@@ -7,4 +7,4 @@ Elasticsearch 是分布式搜索与分析引擎。本目录记录其核心概念
 
 ## 目录
 
-- [01_ElasticSearch](/springCloud/elasticsearch/01_ElasticSearch)
+- [01_ElasticSearch](./01_ElasticSearch.md)

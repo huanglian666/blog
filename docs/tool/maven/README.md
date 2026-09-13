@@ -7,5 +7,5 @@ Maven 负责 Java 项目的依赖管理、编译打包和工程构建。本目�
 
 ## 目录
 
-- [01_Maven基础](/tool/maven/01_Maven基础)
-- [02_Maven聚合工程](/tool/maven/02_Maven聚合工程)
+- [01_Maven基础](./01_Maven基础.md)
+- [02_Maven聚合工程](./02_Maven聚合工程.md)

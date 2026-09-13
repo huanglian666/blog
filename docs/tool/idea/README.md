@@ -21,6 +21,6 @@ icon: fa-solid fa-laptop-code
 
 本目录还包含不同版本的配置记录和快捷键速查：
 
-- [01_IDEA配置_2019](/tool/idea/01_IDEA配置_2019)
-- [02_IDEA配置_2020](/tool/idea/02_IDEA配置_2020)
-- [03_IDEA快捷键](/tool/idea/03_IDEA快捷键)
+- [01_IDEA配置_2019](./01_IDEA配置_2019.md)
+- [02_IDEA配置_2020](./02_IDEA配置_2020.md)
+- [03_IDEA快捷键](./03_IDEA快捷键.md)

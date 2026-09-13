@@ -7,9 +7,9 @@ Linux 是服务端开发和部署中常用的操作系统。本目录从安装�
 
 ## 目录
 
-- [01_Linux_安装](/tool/linux/01_Linux_安装)
-- [02_Linux_简介及常用命令](/tool/linux/02_Linux_简介及常用命令)
-- [03_Linux_Vim使用](/tool/linux/03_Linux_Vim使用)
-- [04_Linux_软件安装及Java开发环境搭建](/tool/linux/04_Linux_软件安装及Java开发环境搭建)
-- [05_Linux_搭建基于SFTP服务的文件服务器](/tool/linux/05_Linux_搭建基于SFTP服务的文件服务器)
-- [06_Linux_防火墙FirewallD设置](/tool/linux/06_Linux_防火墙FirewallD设置)
+- [01_Linux_安装](./01_Linux_安装.md)
+- [02_Linux_简介及常用命令](./02_Linux_简介及常用命令.md)
+- [03_Linux_Vim使用](./03_Linux_Vim使用.md)
+- [04_Linux_软件安装及Java开发环境搭建](./04_Linux_软件安装及Java开发环境搭建.md)
+- [05_Linux_搭建基于SFTP服务的文件服务器](./05_Linux_搭建基于SFTP服务的文件服务器.md)
+- [06_Linux_防火墙FirewallD设置](./06_Linux_防火墙FirewallD设置.md)

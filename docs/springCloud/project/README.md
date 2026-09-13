@@ -7,11 +7,11 @@ icon: fa-solid fa-diagram-project
 
 ## 目录
 
-- [01_项目笔记](/springCloud/project/01_项目笔记)
-- [02_单点登录SSO](/springCloud/project/02_单点登录SSO)
-- [03_ElasticSearch在项目中做搜索的应用](/springCloud/project/03_ElasticSearch在项目中做搜索的应用)
-- [04_IdWorker](/springCloud/project/04_IdWorker)
-- [05_微信支付](/springCloud/project/05_微信支付)
-- [06_git在项目中的使用](/springCloud/project/06_git在项目中的使用)
-- [07_网页静态化技术](/springCloud/project/07_网页静态化技术)
-- [08_购物车](/springCloud/project/08_购物车)
+- [01_项目笔记](./01_项目笔记.md)
+- [02_单点登录SSO](./02_单点登录SSO.md)
+- [03_ElasticSearch在项目中做搜索的应用](./03_ElasticSearch在项目中做搜索的应用.md)
+- [04_IdWorker](./04_IdWorker.md)
+- [05_微信支付](./05_微信支付.md)
+- [06_git在项目中的使用](./06_git在项目中的使用.md)
+- [07_网页静态化技术](./07_网页静态化技术.md)
+- [08_购物车](./08_购物车.md)
