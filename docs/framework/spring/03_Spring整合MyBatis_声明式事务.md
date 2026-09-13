@@ -1,5 +1,6 @@
 ---
 title: 03_Spring整合MyBatis_声明式事务
+date: 2026-09-12
 ---
 
 ## 一、Spring整合MyBatis基础工程搭建

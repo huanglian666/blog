@@ -1,5 +1,6 @@
 ---
 title: 05_BootStrap
+date: 2026-09-12
 ---
 
 ## 一、validate插件

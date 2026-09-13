@@ -1,5 +1,6 @@
 ---
 title: 06_Linux_防火墙FirewallD设置
+date: 2026-09-12
 ---
 
 ## 一、简介

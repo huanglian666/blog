@@ -1,5 +1,6 @@
 ---
 title: 04_JSP进阶_EL_JSTL
+date: 2026-09-12
 ---
 
 ## 一、JSP指令

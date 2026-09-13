@@ -1,0 +1,13 @@
+# 所有文本文件统一用 LF 存储，检出时按平台自动转换
+* text=auto
+
+# 强制某些文件用 LF
+*.js text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+*.yml text eol=lf
+
+# 二进制文件不要动
+*.png binary
+*.jpg binary
+*.pdf binary

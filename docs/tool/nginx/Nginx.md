@@ -1,5 +1,6 @@
 ---
 title: Nginx
+date: 2026-09-12
 ---
 
 ## 一、Nginx概述

@@ -1,5 +1,6 @@
 ---
 title: 01_Linux_安装
+date: 2026-09-12
 ---
 
 ## 一、安装VMware Workstation --- 虚拟机软件

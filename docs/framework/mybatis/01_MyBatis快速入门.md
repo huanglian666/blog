@@ -1,5 +1,6 @@
 ---
 title: 01_MyBatis快速入门
+date: 2026-09-12
 ---
 
 ## 一、MyBatis简介

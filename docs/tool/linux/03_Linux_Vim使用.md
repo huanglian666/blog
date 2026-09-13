@@ -1,5 +1,6 @@
 ---
 title: 03_Linux_Vim使用
+date: 2026-09-12
 ---
 
 ## 一、Vi/Vim简介

@@ -1,5 +1,6 @@
 ---
 title: 02_SpringMVC的响应和请求
+date: 2026-09-12
 ---
 
 ## 一、SpringMVC的数据响应

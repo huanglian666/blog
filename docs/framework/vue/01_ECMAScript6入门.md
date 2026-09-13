@@ -1,5 +1,6 @@
 ---
 title: 01_ECMAScript6入门
+date: 2026-09-12
 ---
 
 ## 一、ECMAScript6简介

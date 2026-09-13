@@ -1,5 +1,6 @@
 ---
 title: 04_jQuery
+date: 2026-09-12
 ---
 
 ## 一、jQuery介绍

@@ -1,5 +1,6 @@
 ---
 title: 02_SpringBoot_进阶
+date: 2026-09-12
 ---
 
 ## 一、SpringBoot整合JSP（了解）

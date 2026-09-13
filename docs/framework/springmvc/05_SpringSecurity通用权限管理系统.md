@@ -1,5 +1,6 @@
 ---
 title: 05_SpringSecurity通用权限管理系统
+date: 2026-09-12
 ---
 
 ## 一、是什么

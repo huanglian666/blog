@@ -1,5 +1,6 @@
 ---
 title: 06_Ajax_JSON
+date: 2026-09-12
 ---
 
 ## 一、Ajax

@@ -247,26 +247,31 @@ export default {
 				assets: "fontawesome",
 				prefix: "fa-",
 			},
-			// 本地搜索插件：构建时生成全站标题/页头/文件名索引打进静态产物，
-			// 搜索在浏览器本地完成，不依赖外部 API，适合国内访问场景
-			search: {
-				// 下拉建议条数
-				maxSuggestions: 10,
-				// 激活搜索的快捷键：按 s 或 / 聚焦搜索框
-				hotKeys: ["s", "/"],
-				// 历史 _sidebar.md 不作为可搜索页面
-				isSearchable: isSearchablePage,
+			// SlimSearch 本地搜索：构建时生成索引，浏览器端完成搜索，
+			// 不依赖外部 API，适合国内访问场景。
+			slimsearch: {
+				// 开启全文索引，让正文中的技术名词也可以被搜索到。
+				indexContent: true,
+				// 激活搜索的快捷键：按 s 或 / 聚焦搜索框。
+				hotKeys: [{ key: "s" }, { key: "/" }],
+				// 历史 _sidebar.md 和旧版设计模式页面不作为可搜索页面。
+				filter: isSearchablePage,
 				// 将 Markdown 文件名（去掉 .md 后缀）加入搜索索引，
-				// 使“Vue进阶”“03_Vue进阶”等关键词可命中对应页面
-				getExtraFields: (page) => {
-					const filename = page.filePathRelative
-						?.replace(/\\/g, "/")
-						.split("/")
-						.pop()
-						?.replace(/\.md$/i, "")
+				// 使“Vue进阶”“03_Vue进阶”等关键词可命中对应页面。
+				customFields: [
+					{
+						getter: (page) => {
+							const filename = page.filePathRelative
+								?.replace(/\\/g, "/")
+								.split("/")
+								.pop()
+								?.replace(/\.md$/i, "")
 
-					return filename ? [filename] : []
-				},
+							return filename || null
+						},
+						formatter: "$content",
+					},
+				],
 			},
 		},
 	}),

@@ -1,5 +1,6 @@
 ---
 title: 自定义Spring框架
+date: 2026-09-12
 ---
 
 # 7，自定义Spring框架

@@ -1,5 +1,6 @@
 ---
 title: 01_SpringIOC和DI
+date: 2026-09-12
 ---
 
 ## 一、Spring概述

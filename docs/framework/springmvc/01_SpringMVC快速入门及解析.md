@@ -1,5 +1,6 @@
 ---
 title: 01_SpringMVC快速入门及解析
+date: 2026-09-12
 ---
 
 ## 一、SpringMVC概述及快速入门
