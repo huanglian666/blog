@@ -58,6 +58,22 @@ export const softExamSidebar = [
 					article("文件权限", "操作系统"),
 				],
 			},
+			{
+				text: "程序设计语言",
+				collapsible: true,
+				children: [
+					article("编译程序与解释程序", "程序设计语言"),
+					article("常见程序设计语言的特点", "程序设计语言"),
+					article("程序设计语言的基本成分", "程序设计语言"),
+					article("函数调用", "程序设计语言"),
+					article("编译过程概述", "程序设计语言"),
+					article("文法", "程序设计语言"),
+					article("正规式与正规集", "程序设计语言"),
+					article("有限自动机", "程序设计语言"),
+					article("后缀表达式", "程序设计语言"),
+				],
+			},
+
 		],
 	},
 ]
