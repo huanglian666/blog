@@ -13,10 +13,13 @@ export const softExamSidebar = [
 	{
 		text: "中级资格：软件设计师",
 		link: qualificationPath,
+		prefix: qualificationPath,
 		collapsible: true,
 		children: [
 			{
 				text: "计算机组成与体系结构",
+				link: `${qualificationPath}计算机组成与体系结构/`,
+				prefix: `${qualificationPath}计算机组成与体系结构/`,
 				collapsible: true,
 				children: [
 					article("进制转换", "计算机组成与体系结构"),
@@ -38,6 +41,8 @@ export const softExamSidebar = [
 			},
 			{
 				text: "操作系统",
+				link: `${qualificationPath}操作系统/`,
+				prefix: `${qualificationPath}操作系统/`,
 				collapsible: true,
 				children: [
 					article("操作系统的功能", "操作系统"),
@@ -60,6 +65,8 @@ export const softExamSidebar = [
 			},
 			{
 				text: "程序设计语言",
+				link: `${qualificationPath}程序设计语言/`,
+				prefix: `${qualificationPath}程序设计语言/`,
 				collapsible: true,
 				children: [
 					article("编译程序与解释程序", "程序设计语言"),
@@ -75,6 +82,8 @@ export const softExamSidebar = [
 			},
 			{
 				text: "数据结构",
+				link: `${qualificationPath}数据结构/`,
+				prefix: `${qualificationPath}数据结构/`,
 				collapsible: true,
 				children: [
 					article("线性表", "数据结构"),
