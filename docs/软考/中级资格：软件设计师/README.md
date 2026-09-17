@@ -32,6 +32,7 @@ icon: fa-solid fa-graduation-cap
 - [计算机组成与体系结构](./计算机组成与体系结构/README.md)
 - [操作系统](./操作系统/README.md)
 - [程序设计语言](./程序设计语言/README.md)
+- [数据结构](./数据结构/README.md)
 
 ---
 
