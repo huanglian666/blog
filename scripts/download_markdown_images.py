@@ -20,13 +20,10 @@ import argparse
 import hashlib
 import os
 import re
-import shutil
+import subprocess
 import sys
-import tempfile
 from pathlib import Path
-from urllib.error import HTTPError, URLError
-from urllib.parse import unquote, urlsplit
-from urllib.request import Request, urlopen
+from urllib.parse import parse_qs, unquote, urlsplit
 
 
 MARKDOWN_IMAGE_RE = re.compile(
@@ -63,11 +60,26 @@ class ImageDownloader:
         self.overwrite = overwrite
         self.names: dict[str, str] = {}
         self.used_names: dict[str, str] = {}
+        self.completed_urls: set[str] = set()
         self.failures: list[str] = []
 
     @staticmethod
     def _filename_from_url(url: str) -> str:
-        name = Path(unquote(urlsplit(url).path)).name
+        parsed_url = urlsplit(url)
+        name = Path(unquote(parsed_url.path)).name
+
+        # 图片代理（例如 wsrv.nl?url=.../image.png）本身没有文件扩展名，
+        # 优先从查询参数中的原始图片地址提取文件名。
+        if not name or name in {".", ".."}:
+            for values in parse_qs(parsed_url.query).values():
+                for value in values:
+                    candidate = Path(unquote(urlsplit(value).path)).name
+                    if candidate and candidate not in {".", ".."}:
+                        name = candidate
+                        break
+                if name and name not in {".", ".."}:
+                    break
+
         if name and name not in {".", ".."}:
             return name
         return f"image-{hashlib.sha1(url.encode()).hexdigest()[:12]}.img"
@@ -91,49 +103,136 @@ class ImageDownloader:
 
     def download(self, url: str, filename: str) -> bool:
         destination = self.output_dir / filename
-        if destination.is_file() and destination.stat().st_size > 0 and not self.overwrite:
-            print(f"跳过已存在图片：{destination}")
+
+        if url in self.completed_urls:
             return True
+
+        if destination.is_file() and not self.overwrite:
+            try:
+                self._validate_download(destination, filename, None)
+            except OSError:
+                # 直接在原文件上续传；curl 会从现有文件大小处继续请求。
+                print(f"发现未完成图片，准备续传：{destination}")
+            else:
+                print(f"跳过已存在图片：{destination}")
+                self.completed_urls.add(url)
+                return True
+
         if self.dry_run:
             print(f"计划下载：{url} -> {destination}")
             return True
 
-        request = Request(url, headers={"User-Agent": self.user_agent})
+        if self.overwrite and destination.exists():
+            destination.unlink()
+
+        self.output_dir.mkdir(parents=True, exist_ok=True)
         for attempt in range(self.retries + 1):
-            temporary_path: Path | None = None
             try:
-                self.output_dir.mkdir(parents=True, exist_ok=True)
-                with urlopen(request, timeout=self.timeout) as response:
-                    fd, temporary_name = tempfile.mkstemp(
-                        prefix=f".{filename}.",
-                        suffix=".part",
-                        dir=self.output_dir,
-                    )
-                    os.close(fd)
-                    temporary_path = Path(temporary_name)
-                    with temporary_path.open("wb") as output:
-                        shutil.copyfileobj(response, output)
-                    temporary_path.replace(destination)
+                self._download_with_curl(url, filename, destination)
                 print(f"已下载图片：{url} -> {destination}")
+                self.completed_urls.add(url)
                 return True
-            except (HTTPError, URLError, TimeoutError, OSError) as error:
-                if temporary_path is not None:
-                    temporary_path.unlink(missing_ok=True)
+            except (OSError, subprocess.CalledProcessError) as error:
                 if attempt == self.retries:
                     self.failures.append(f"{url}: {error}")
-                    print(f"下载失败：{url} ({error})", file=sys.stderr)
+                    print(
+                        f"下载失败：{url} ({error})；未完成文件保留为 {destination}",
+                        file=sys.stderr,
+                    )
                 else:
                     print(
-                        f"下载重试 ({attempt + 1}/{self.retries})：{url}",
+                        f"下载重试 ({attempt + 1}/{self.retries})：{url}；继续使用 {destination}",
                         file=sys.stderr,
                     )
         return False
+
+    def _download_with_curl(self, url: str, filename: str, destination: Path) -> None:
+        """用 curl 直接下载到目标文件，避免 HEAD 和 Python 分块请求卡住。"""
+        curl_base = [
+            "curl",
+            "--fail",
+            "--location",
+            "--silent",
+            "--show-error",
+            "--retry",
+            "3",
+            "--retry-delay",
+            "1",
+            "--retry-connrefused",
+            "--retry-all-errors",
+            "--connect-timeout",
+            str(max(1, self.timeout)),
+            "--max-time",
+            str(max(120, self.timeout * 10)),
+            "--user-agent",
+            self.user_agent,
+            "--output",
+            str(destination),
+        ]
+
+        try:
+            subprocess.run(
+                [*curl_base, "--continue-at", "-", url],
+                check=True,
+            )
+        except subprocess.CalledProcessError as error:
+            # curl 退出码 33 表示服务端不支持续传；这时清掉半成品，
+            # 退回一次完整下载，避免把旧内容和新内容拼在一起。
+            if error.returncode != 33 or not destination.exists():
+                raise
+            print(f"服务器不支持断点续传，改为完整下载：{url}", file=sys.stderr)
+            destination.unlink()
+            subprocess.run([*curl_base, url], check=True)
+
+        self._validate_download(destination, filename, None)
+
+    def _validate_download(self, path: Path, filename: str, expected_size: int | None) -> None:
+        actual_size = path.stat().st_size
+        if actual_size <= 0:
+            raise OSError(f"文件为空，下载可能未完成：{path}")
+        if expected_size is not None and actual_size != expected_size:
+            raise OSError(
+                f"下载不完整：期望 {expected_size} 字节，实际 {actual_size} 字节"
+            )
+
+        if filename.lower().endswith(".png"):
+            with path.open("rb") as image_file:
+                header = image_file.read(8)
+                if actual_size < 12:
+                    raise OSError(f"PNG 文件过小，文件可能被截断：{path}")
+                image_file.seek(-12, os.SEEK_END)
+                trailer = image_file.read(12)
+            if header != b"\x89PNG\r\n\x1a\n" or not trailer.endswith(b"IEND\xaeB`\x82"):
+                raise OSError(f"PNG 文件校验失败，文件可能被截断：{path}")
 
 
 def clean_url(raw_url: str) -> str:
     if raw_url.startswith("<") and raw_url.endswith(">"):
         return raw_url[1:-1]
     return raw_url
+
+
+def direct_image_url(url: str) -> str:
+    """将图片代理地址还原为原始图片地址后再下载。"""
+    parsed_url = urlsplit(url)
+    hostname = parsed_url.hostname.lower() if parsed_url.hostname else ""
+    if hostname != "wsrv.nl":
+        return url
+
+    original_url = parse_qs(parsed_url.query).get("url", [""])[0].strip()
+    if not original_url:
+        return url
+
+    original_url = unquote(original_url)
+    if original_url.startswith("//"):
+        return f"https:{original_url}"
+    if original_url.startswith("/"):
+        original_url = original_url[1:]
+    if not urlsplit(original_url).scheme and original_url.startswith(
+        ("raw.githubusercontent.com/", "github.com/")
+    ):
+        return f"https://{original_url}"
+    return original_url
 
 
 def image_path(markdown_file: Path, output_dir: Path) -> str:
@@ -150,17 +249,19 @@ def rewrite_file(markdown_file: Path, downloader: ImageDownloader, output_dir: P
 
     def replace_markdown(match: re.Match[str]) -> str:
         url = clean_url(match.group("url"))
-        filename = downloader.filename_for(url)
+        download_url = direct_image_url(url)
+        filename = downloader.filename_for(download_url)
         replacement = f"{relative_dir}/{filename}"
-        if not downloader.download(url, filename):
+        if not downloader.download(download_url, filename):
             replacement = match.group("url")
         return f'{match.group("open")}{replacement}{match.group("close")}'
 
     def replace_html(match: re.Match[str]) -> str:
         url = match.group("url")
-        filename = downloader.filename_for(url)
+        download_url = direct_image_url(url)
+        filename = downloader.filename_for(download_url)
         replacement = f"{relative_dir}/{filename}"
-        if not downloader.download(url, filename):
+        if not downloader.download(download_url, filename):
             replacement = url
         return f'{match.group("open")}{replacement}{match.group("close")}'
 
@@ -267,4 +368,11 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except KeyboardInterrupt:
+        print(
+            "\n下载被中断；已完成文件保留，未完成的目标文件下次运行会继续。",
+            file=sys.stderr,
+        )
+        raise SystemExit(130)

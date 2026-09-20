@@ -50,6 +50,11 @@ export const navbar = [
 		icon: 'fa-solid fa-graduation-cap',
 	},
 	{
+		text: '生活与兴趣',
+		link: '/生活与兴趣/',
+		icon: 'fa-solid fa-heart',
+	},
+	{
 		text: '设计模式',
 		link: '/designPatterns/',
 		icon: 'fa-solid fa-puzzle-piece',

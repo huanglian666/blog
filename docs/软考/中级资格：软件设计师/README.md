@@ -33,6 +33,7 @@ icon: fa-solid fa-graduation-cap
 - [操作系统](./操作系统/README.md)
 - [程序设计语言](./程序设计语言/README.md)
 - [数据结构](./数据结构/README.md)
+- [算法基础](./算法基础/README.md)
 
 ---
 
