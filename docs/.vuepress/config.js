@@ -2,6 +2,7 @@ import { viteBundler } from "@vuepress/bundler-vite"
 import { hopeTheme } from "vuepress-theme-hope"
 import { navbar } from "./navbar.js"
 import { softExamSidebar } from "./softExamSidebar.js"
+import { lifeSidebar } from "./lifeSidebar.js"
 
 // 保留标题中英文的原始大小写，避免 README 目录锚点把 SpringBoot、MyBatis 等转换成小写。
 const preserveCaseSlugify = (str) =>
@@ -35,7 +36,23 @@ const isSearchablePage = (page) => {
 }
 
 export default {
-	bundler: viteBundler(),
+	// 当前站点的公共运行时代码约 1 MB，调整 Vite 的提示阈值，避免把正常的主题公共包误报为异常。
+	bundler: viteBundler({
+		viteOptions: {
+			build: {
+				chunkSizeWarningLimit: 1200,
+			},
+		},
+		// Hope 主题会在后续阶段写入 1024，这里在最终 Vite 配置阶段再次覆盖。
+		configureVite: (config, _isServer, isBuild) => {
+			config.build = {
+				...config.build,
+				chunkSizeWarningLimit: 1200,
+			}
+			if (isBuild) config.logLevel = "error"
+			return config
+		},
+	}),
 	lang: "zh-CN",
 	title: "黄炼wiki",
 	description: "欢迎来到黄炼的个人博客",
@@ -87,7 +104,13 @@ export default {
 		// 侧边栏按分类路径配置：点击顶部菜单进入某分类后，
 		// 左侧只展示该分类下的二级/三级菜单，而不是全站平铺。
 		// 每个值 "structure" 表示该路径按目录结构自动生成侧边栏。
-			sidebar: {
+		// Hope 的博客聚合页是主题自动生成的独立路由，这些页面不需要侧边栏，显式配置空数组以避免构建警告。
+		sidebar: {
+			'/category/': [],
+			'/tag/': [],
+			'/article/': [],
+			'/star/': [],
+			'/timeline/': [],
 			'/javase/': 'structure',
 			'/tool/': 'structure',
 			'/sql/': 'structure',
@@ -95,6 +118,7 @@ export default {
 			'/framework/': 'structure',
 			'/springCloud/': 'structure',
 			'/软考/': softExamSidebar,
+			'/生活与兴趣/': lifeSidebar,
 			'/designPatterns/': [
 				{
 					text: '设计模式导学',
