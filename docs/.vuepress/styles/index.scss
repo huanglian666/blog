@@ -1,0 +1,25 @@
+// Hope 默认将 note 设为灰色；博客中的 note 用作补充说明，统一使用更沉稳的蓝色系。
+:root {
+	--blog-note-accent: #4677c8;
+	--blog-note-title: #4f80d3;
+}
+
+[data-theme="dark"] {
+	--blog-note-accent: #668dcc;
+	--blog-note-title: #7198d9;
+}
+
+.hint-container.note {
+	--hint-c-accent: var(--blog-note-accent);
+	--hint-c-title: var(--blog-note-title);
+	--hint-c-soft: var(--vp-c-blue-soft);
+}
+
+// 提示块内的 Markdown 加粗内容提高字重，并使用对应提示块的强调色，
+// 避免深色模式下与普通正文对比不明显。
+.hint-container {
+	strong {
+		color: var(--hint-c-title);
+		font-weight: 700;
+	}
+}
