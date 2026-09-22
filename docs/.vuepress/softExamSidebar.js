@@ -120,6 +120,16 @@ export const softExamSidebar = [
 					article("算法策略", "算法基础"),
 				],
 			},
+			{
+				text: "数据结构与算法应用",
+				link: `${qualificationPath}数据结构与算法应用/`,
+				prefix: `${qualificationPath}数据结构与算法应用/`,
+				collapsible: true,
+				children: [
+					article("代码填空技巧", "数据结构与算法应用"),
+					article("简答题实战演练", "数据结构与算法应用"),
+				],
+			},
 
 		],
 	},
