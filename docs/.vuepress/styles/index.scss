@@ -23,3 +23,9 @@
 		font-weight: 700;
 	}
 }
+
+// 宽表格只在表格自身区域横向滚动，避免固定宽度或长内容撑开整篇页面。
+[vp-content] #markdown-content table {
+	box-sizing: border-box;
+	max-width: 100%;
+}
