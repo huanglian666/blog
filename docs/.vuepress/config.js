@@ -3,6 +3,7 @@ import { hopeTheme } from "vuepress-theme-hope"
 import { navbar } from "./navbar.js"
 import { softExamSidebar } from "./softExamSidebar.js"
 import { lifeSidebar } from "./lifeSidebar.js"
+import { designPatternSidebar } from "./designPatternSidebar.js"
 
 // 保留标题中英文的原始大小写，避免 README 目录锚点把 SpringBoot、MyBatis 等转换成小写。
 const preserveCaseSlugify = (str) =>
@@ -119,148 +120,7 @@ export default {
 			'/springCloud/': 'structure',
 			'/软考/': softExamSidebar,
 			'/生活与兴趣/': lifeSidebar,
-			'/designPatterns/': [
-				{
-					text: '设计模式导学',
-					link: '/designPatterns/设计模式-导学',
-				},
-				{
-					text: '设计模式基础',
-					link: '/designPatterns/01_设计模式基础',
-				},
-				{
-					text: '创建型模式（建造型）',
-					collapsible: true,
-					children: [
-						{
-							text: '创建型模式概述',
-							link: '/designPatterns/03_创建型模式概述',
-						},
-						{
-							text: '单例模式',
-							link: '/designPatterns/02_单例模式',
-						},
-						{
-							text: '工厂模式',
-							link: '/designPatterns/04_工厂模式',
-						},
-						{
-							text: '原型模式',
-							link: '/designPatterns/05_原型模式',
-						},
-						{
-							text: '建造者模式',
-							link: '/designPatterns/06_建造者模式',
-						},
-						{
-							text: '创建型模式对比',
-							link: '/designPatterns/07_创建型模式对比',
-						},
-					],
-				},
-				{
-					text: '结构型模式',
-					collapsible: true,
-					children: [
-						{
-							text: '结构型模式概述',
-							link: '/designPatterns/08_结构型模式概述',
-						},
-						{
-							text: '代理模式',
-							link: '/designPatterns/09_代理模式',
-						},
-						{
-							text: '适配器模式',
-							link: '/designPatterns/10_适配器模式',
-						},
-						{
-							text: '装饰者模式',
-							link: '/designPatterns/11_装饰者模式',
-						},
-						{
-							text: '桥接模式',
-							link: '/designPatterns/12_桥接模式',
-						},
-						{
-							text: '外观模式',
-							link: '/designPatterns/13_外观模式',
-						},
-						{
-							text: '组合模式',
-							link: '/designPatterns/14_组合模式',
-						},
-						{
-							text: '享元模式',
-							link: '/designPatterns/15_享元模式',
-						},
-					],
-				},
-				{
-					text: '行为型模式',
-					collapsible: true,
-					children: [
-						{
-							text: '行为型模式概述',
-							link: '/designPatterns/16_行为型模式概述',
-						},
-						{
-							text: '模板方法模式',
-							link: '/designPatterns/17_模板方法模式',
-						},
-						{
-							text: '策略模式',
-							link: '/designPatterns/18_策略模式',
-						},
-						{
-							text: '命令模式',
-							link: '/designPatterns/19_命令模式',
-						},
-						{
-							text: '责任链模式',
-							link: '/designPatterns/20_责任链模式',
-						},
-						{
-							text: '状态模式',
-							link: '/designPatterns/21_状态模式',
-						},
-						{
-							text: '观察者模式',
-							link: '/designPatterns/22_观察者模式',
-						},
-						{
-							text: '中介者模式',
-							link: '/designPatterns/23_中介者模式',
-						},
-						{
-							text: '迭代器模式',
-							link: '/designPatterns/24_迭代器模式',
-						},
-						{
-							text: '访问者模式',
-							link: '/designPatterns/25_访问者模式',
-						},
-						{
-							text: '备忘录模式',
-							link: '/designPatterns/26_备忘录模式',
-						},
-						{
-							text: '解释器模式',
-							link: '/designPatterns/27_解释器模式',
-						},
-					],
-				},
-				{
-					text: '综合案例',
-					collapsible: true,
-					children: [
-						{
-							text: '自定义 Spring 框架',
-							link: '/designPatterns/28_自定义Spring框架',
-						},
-					],
-				},
-			],
+			'/designPatterns/': designPatternSidebar,
 			'/me/': 'structure',
 		},
 		plugins: {
