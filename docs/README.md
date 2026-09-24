@@ -40,6 +40,9 @@ projects:
   desc: 软件设计师考试知识整理
   link: /软考/
   icon: fa-solid fa-graduation-cap
+- name: 生活与兴趣
+  desc: 这里记录家庭网络、街霸游戏以及其他日常实践与兴趣内容
+  icon: fa-solid fa-heart 
 - name: 关于我
   desc: 博主介绍与联系方式
   link: /me/
