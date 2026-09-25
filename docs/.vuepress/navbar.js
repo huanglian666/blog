@@ -45,6 +45,11 @@ export const navbar = [
 		icon: 'fa-solid fa-cloud',
 	},
 	{
+		text: '算法',
+		link: '/算法/',
+		icon: 'fa-solid fa-diagram-project',
+	},
+	{
 		text: '软考',
 		link: '/软考/',
 		icon: 'fa-solid fa-graduation-cap',

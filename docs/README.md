@@ -36,6 +36,10 @@ projects:
   desc: 面向对象设计思想与实践
   link: /designPatterns/
   icon: fa-solid fa-puzzle-piece
+- name: 算法
+  desc: 算法设计策略与经典问题的推导与实现
+  link: /算法/
+  icon: fa-solid fa-diagram-project
 - name: 软考
   desc: 软件设计师考试知识整理
   link: /软考/

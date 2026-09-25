@@ -4,6 +4,7 @@ import { navbar } from "./navbar.js"
 import { softExamSidebar } from "./softExamSidebar.js"
 import { lifeSidebar } from "./lifeSidebar.js"
 import { designPatternSidebar } from "./designPatternSidebar.js"
+import { algorithmSidebar } from "./algorithmSidebar.js"
 
 // 保留标题中英文的原始大小写，避免 README 目录锚点把 SpringBoot、MyBatis 等转换成小写。
 const preserveCaseSlugify = (str) =>
@@ -118,6 +119,7 @@ export default {
 			'/web/': 'structure',
 			'/framework/': 'structure',
 			'/springCloud/': 'structure',
+			'/算法/': algorithmSidebar,
 			'/软考/': softExamSidebar,
 			'/生活与兴趣/': lifeSidebar,
 			'/designPatterns/': designPatternSidebar,
