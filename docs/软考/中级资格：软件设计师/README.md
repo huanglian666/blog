@@ -36,6 +36,7 @@ icon: fa-solid fa-graduation-cap
 - [算法基础](./算法基础/README.md)
 - [数据结构与算法应用](./数据结构与算法应用/README.md)
 - [系统开发基础](./系统开发基础/README.md)
+- [项目管理](./项目管理/README.md)
 
 ---
 

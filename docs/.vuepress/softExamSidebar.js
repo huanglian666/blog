@@ -152,6 +152,18 @@ export const softExamSidebar = [
 					article("系统维护", "系统开发基础"),
 				],
 			},
+			{
+				text: "项目管理",
+				link: `${qualificationPath}项目管理/`,
+				prefix: `${qualificationPath}项目管理/`,
+				collapsible: true,
+				children: [
+					article("进度管理", "项目管理"),
+					article("成本管理", "项目管理"),
+					article("风险管理", "项目管理"),
+					article("沟通管理", "项目管理"),
+				],
+			},
 
 		],
 	},
