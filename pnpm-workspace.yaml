@@ -1,2 +1,8 @@
+# pnpm 10+ 起，pnpm 专有配置统一从 .npmrc 迁移到本文件（.npmrc 中的同名配置不再生效）
+# 提升公共依赖到顶层 node_modules：
+# pnpm 严格 node_modules 结构下，VuePress 生成的 docs/.vuepress/.temp 临时文件无法解析 vue 等依赖
+shamefullyHoist: true
+
+# 允许/禁止执行安装脚本的包（@parcel/watcher 为可选依赖，无需构建脚本）
 allowBuilds:
   '@parcel/watcher': false
