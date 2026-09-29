@@ -1,0 +1,67 @@
+name: Backup to Hugging Face
+
+# 把 master 分支的完整源码与历史镜像备份到 Hugging Face 的 dataset 仓库。
+# 备份产物是标准 git 仓库，可直接 git clone 下来继续编辑，恢复方式见仓库根目录说明。
+#
+# 注意：Hugging Face 账号是 huanglianai，与 GitHub 账号 huanglian666 不是同一个，不要混淆。
+
+on:
+  # 每次推送到 master 自动备份
+  push:
+    branches:
+      - master
+  # 每周日兜底备份一次，防止 push 触发失败导致漏备
+  # 03:17 UTC = 北京时间 11:17
+  schedule:
+    - cron: '17 3 * * 0'
+  # 支持在 Actions 页面手动触发
+  workflow_dispatch:
+
+# 只需读取本仓库内容；推送 Hugging Face 的权限由 HF_TOKEN 提供
+permissions:
+  contents: read
+
+# 同一时间只允许一个备份任务，避免并发推送互相覆盖
+concurrency:
+  group: backup-to-huggingface
+  cancel-in-progress: false
+
+env:
+  # Hugging Face 目标仓库，格式 <账号>/<仓库名>，类型为 dataset
+  HF_REPO: 'huanglianai/blog'
+  # Hugging Face 账号名，用于拼接带凭证的克隆地址
+  HF_USER: 'huanglianai'
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 完整历史
+        uses: actions/checkout@v6
+        with:
+          # 必须拉取完整历史：浅克隆推送到 Hugging Face 会导致历史缺失
+          fetch-depth: 0
+
+      # 将 token 写入一次性凭证文件，而不是拼进 remote URL
+      # 这样 token 不会出现在 git 报错信息和日志里；runner 销毁后文件即消失
+      - name: 配置 Hugging Face 凭证
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git config --global credential.helper store
+          echo "https://${HF_USER}:${HF_TOKEN}@huggingface.co" > ~/.git-credentials
+          chmod 600 ~/.git-credentials
+
+      - name: 推送到 Hugging Face
+        run: |
+          git remote add hf "https://huggingface.co/datasets/${HF_REPO}"
+          # master -> main：Hugging Face 仓库默认分支名为 main
+          # --force：覆盖 HF 建仓时自动生成的初始提交（README.md 与 .gitattributes）
+          # --tags：一并同步版本标签
+          git push hf master:main --tags --force
+
+      - name: 验证推送结果
+        run: |
+          echo "=== Hugging Face 远端 refs ==="
+          git ls-remote hf
