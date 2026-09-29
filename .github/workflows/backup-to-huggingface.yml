@@ -1,7 +1,7 @@
 name: Backup to Hugging Face
 
 # 把 master 分支的完整源码与历史镜像备份到 Hugging Face 的 dataset 仓库。
-# 备份产物是标准 git 仓库，可直接 git clone 下来继续编辑，恢复方式见仓库根目录说明。
+# 备份产物是标准 git 仓库，可直接 git clone 下来继续编辑。
 #
 # 注意：Hugging Face 账号是 huanglianai，与 GitHub 账号 huanglian666 不是同一个，不要混淆。
 
@@ -31,6 +31,10 @@ env:
   HF_REPO: 'huanglianai/blog'
   # Hugging Face 账号名，用于拼接带凭证的克隆地址
   HF_USER: 'huanglianai'
+  # 需要走 LFS/Xet 大文件存储的二进制文件类型
+  # 依据：仓库内实际存在 png/jpg/jpeg/gif；*.db 用于覆盖历史中曾存在的 Thumbs.db
+  # 其余为防御性列举，便于将来新增图片或字体时自动生效
+  LFS_PATTERNS: '*.png,*.jpg,*.jpeg,*.gif,*.webp,*.bmp,*.ico,*.tif,*.tiff,*.pdf,*.db,*.zip,*.gz,*.7z,*.woff,*.woff2,*.ttf,*.eot,*.mp4,*.mov,*.mp3'
 
 jobs:
   backup:
@@ -52,6 +56,33 @@ jobs:
           git config --global credential.helper store
           echo "https://${HF_USER}:${HF_TOKEN}@huggingface.co" > ~/.git-credentials
           chmod 600 ~/.git-credentials
+
+      # Hugging Face 已改用 Xet 存储后端，直接推送二进制文件会被 pre-receive 钩子拒绝：
+      #   "Your push was rejected because it contains binary files."
+      # 且该钩子检查的是推送历史中的全部对象，而非仅最新提交
+      # （历史中早已删除的 Thumbs.db 仍被列入拒绝清单可证）。
+      # 因此必须把全部历史中的二进制文件改写为 LFS 指针。
+      - name: 安装 Git LFS
+        run: |
+          git lfs install
+          git lfs version
+
+      # 重写全部 refs，把二进制文件转为 LFS 指针
+      # 副作用：commit SHA 会变化（提交信息、作者、日期均保留，仅哈希改变）
+      - name: 将二进制文件迁移到 LFS
+        run: |
+          git lfs migrate import --everything --include="${LFS_PATTERNS}"
+          echo "=== 迁移结果抽查：logo.png 应显示为 LFS 指针 ==="
+          git show HEAD:docs/.vuepress/public/logo.png | head -3
+
+      # 安装 Git Xet 扩展：让 LFS 追踪的文件实际上传到 Xet 存储，
+      # 这是 Hugging Face 官方推荐的推送方式
+      - name: 安装 Git Xet 扩展
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/huggingface/xet-core/refs/heads/main/git_xet/install.sh | sh
+          git xet install
+          git xet --version
 
       - name: 推送到 Hugging Face
         run: |
