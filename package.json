@@ -5,6 +5,7 @@
   "main": "index.js",
   "author": "黄炼 <huang.lian@trs.com.cn>",
   "license": "MIT",
+  "packageManager": "pnpm@12.6.0",
   "scripts": {
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs"
