@@ -164,6 +164,18 @@ export const softExamSidebar = [
 					article("沟通管理", "项目管理"),
 				],
 			},
+			{
+				text: "数据流图",
+				link: `${qualificationPath}数据流图/`,
+				prefix: `${qualificationPath}数据流图/`,
+				collapsible: true,
+				children: [
+					article("数据流图的基本概念", "数据流图"),
+					article("数据平衡原则", "数据流图"),
+					article("解题技巧", "数据流图"),
+					article("实战演练", "数据流图"),
+				],
+			},
 
 		],
 	},
