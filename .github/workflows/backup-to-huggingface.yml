@@ -39,6 +39,9 @@ env:
 jobs:
   backup:
     runs-on: ubuntu-latest
+    # 正常约 6 分钟（首次需上传全部 LFS 对象）；加上推送重试的等待时间，
+    # 30 分钟足够，避免异常挂起时白占 runner 额度
+    timeout-minutes: 30
 
     steps:
       - name: Checkout 完整历史
@@ -49,10 +52,30 @@ jobs:
 
       # 将 token 写入一次性凭证文件，而不是拼进 remote URL
       # 这样 token 不会出现在 git 报错信息和日志里；runner 销毁后文件即消失
+      #
+      # 同时先确认 token 有效：token 失效时 Hugging Face 会把请求按匿名处理，
+      # 最终只报出 "rate limit your IP" 这种指向 IP 的误导性错误，很难定位。
+      # 这里提前给出明确结论；网络异常只告警不中断，避免给备份引入新的失败点。
       - name: 配置 Hugging Face 凭证
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          whoami_status=$(curl -sS -o /tmp/hf-whoami.json -w '%{http_code}' \
+            -H "Authorization: Bearer ${HF_TOKEN}" \
+            https://huggingface.co/api/whoami-v2 || echo '000')
+          case "$whoami_status" in
+            200)
+              echo "HF_TOKEN 归属账号：$(python3 -c 'import json;print(json.load(open("/tmp/hf-whoami.json")).get("name",""))')"
+              ;;
+            401|403)
+              echo "::error::HF_TOKEN 无效、已过期或权限不足（HTTP ${whoami_status}）"
+              exit 1
+              ;;
+            *)
+              echo "::warning::无法确认 HF_TOKEN 有效性（HTTP ${whoami_status}），继续执行"
+              ;;
+          esac
+
           git config --global credential.helper store
           echo "https://${HF_USER}:${HF_TOKEN}@huggingface.co" > ~/.git-credentials
           chmod 600 ~/.git-credentials
@@ -80,6 +103,7 @@ jobs:
       - name: 安装 Git Xet 扩展
         run: |
           curl --proto '=https' --tlsv1.2 -sSf \
+            --retry 3 --retry-delay 2 --retry-all-errors \
             https://raw.githubusercontent.com/huggingface/xet-core/refs/heads/main/git_xet/install.sh | sh
           git xet install
           git xet --version
@@ -90,7 +114,27 @@ jobs:
           # master -> main：Hugging Face 仓库默认分支名为 main
           # --force：覆盖 HF 建仓时自动生成的初始提交（README.md 与 .gitattributes）
           # --tags：一并同步版本标签
-          git push hf master:main --tags --force
+          #
+          # Hugging Face 对 GitHub Actions 共享出口 IP 的匿名请求做限流，返回
+          # "LFS: We had to rate limit your IP (...)"。这类限流是瞬时的，
+          # 重试即可恢复；若一次失败就中断，整个备份会被偶发限流拖垮。
+          # 注意：重试是安全的，LFS 已上传的对象不会重复传输。
+          max_attempts=4
+          attempt=1
+          while [ "$attempt" -le "$max_attempts" ]; do
+            if git push hf master:main --tags --force; then
+              echo "推送成功（第 ${attempt} 次尝试）"
+              exit 0
+            fi
+            if [ "$attempt" -eq "$max_attempts" ]; then
+              echo "::error::推送 Hugging Face 失败，已重试 ${max_attempts} 次仍未成功"
+              exit 1
+            fi
+            delay=$((attempt * 30))
+            echo "::warning::第 ${attempt} 次推送失败，${delay} 秒后重试"
+            sleep "$delay"
+            attempt=$((attempt + 1))
+          done
 
       - name: 验证推送结果
         run: |
