@@ -82,6 +82,12 @@ export default {
 		slugify: preserveCaseSlugify,
 	},
 	theme: hopeTheme({
+		// 站点部署源：feed、SEO、sitemap 等插件用它把站内路径拼成绝对地址。
+		// 只写协议 + 主机（不带 /blog/），子路径由 base 自动补上，
+		// 因此 feed 条目的真实地址形如 https://huanglian.top/blog/javase/xxx.html。
+		// 线上 www.huanglian.top 会 301 跳到裸域，这里统一写裸域，
+		// 避免每条订阅链接都多一次跳转、也避免和站点自身的规范链接不一致。
+		hostname: "https://huanglian.top",
 		logo: "/logo.png",
 		blog: {
 			name: "黄炼",
@@ -158,6 +164,16 @@ export default {
 						formatter: "$content",
 					},
 				],
+			},
+			// RSS / Atom 订阅源：构建时在产物根目录生成 rss.xml 与 atom.xml，
+			// 并自动向每个页面的 head 注入 <link rel="alternate">，浏览器和阅读器可自动发现。
+			// 线上订阅地址：https://huanglian.top/blog/rss.xml（Atom 为 /blog/atom.xml）
+			feed: {
+				rss: true,
+				atom: true,
+				// 条目正文保留完整 HTML，方便在阅读器里直接读全文；
+				// 条目越多 feed 文件越大，这里只输出最近 30 篇（插件默认 100）。
+				count: 30,
 			},
 		},
 	}),
