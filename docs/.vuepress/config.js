@@ -175,6 +175,23 @@ export default {
 				// 条目越多 feed 文件越大，这里只输出最近 30 篇（插件默认 100）。
 				count: 30,
 			},
+			// 评论：Giscus，把评论存到本仓库的 GitHub Discussions。
+			// 无需自建服务端，适合纯静态站点。
+			// 前置条件：仓库已开启 Discussions，且 giscus App 已安装到本仓库
+			// （https://github.com/apps/giscus），否则评论区会提示无法创建讨论。
+			comment: {
+				provider: "Giscus",
+				// 存放评论的仓库（下方 repoId 为该仓库的 node ID，不是仓库名）
+				repo: "huanglian666/blog",
+				repoId: "R_kgDOH3a5Kg",
+				// 必须使用 Announcements 类型的分类：giscus 需要以管理员身份
+				// 自动创建 discussion，其他类型的分类不允许机器人建帖
+				category: "Announcements",
+				categoryId: "DIC_kwDOH3a5Ks4DHOty",
+				// 页面与 discussion 的映射方式，按路径匹配；
+				// 站点挂在 /blog/ 子路径下，各页面路径前缀一致，不影响匹配
+				mapping: "pathname",
+			},
 		},
 	}),
 }
