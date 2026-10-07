@@ -98,16 +98,11 @@ python3 scripts/download_markdown_images.py docs/xxx/某篇.md   # 单篇
 
 文章至少要有 `title`；常用 `date`、`lastmod`、`icon`（FontAwesome class，如 `fa-solid fa-diagram-project`）。
 
-缺 `title` 可用 `node scripts/add-title-frontmatter.mjs` 批量补，但**该脚本对 CRLF 换行的文件有缺陷**：它用 `content.startsWith("---\n")` 判断是否已有 frontmatter，CRLF 文件开头是 `---\r\n`，判断失败后会把新 frontmatter 插到原块之前，造成**重复 frontmatter**（`docs/springCloud/project/03_ElasticSearch在项目中做搜索的应用.md` 就是这样一个文件）。
+缺 `title` 可用 `node scripts/add-title-frontmatter.mjs` 批量补。脚本是**幂等**的：已有 `title` 的文件只报告 `[已有title]` 并跳过，不写盘，所以重复运行安全（可先跑一次看「修改清单」再决定）。
 
-因此运行该脚本后**必须逐个检查改动文件**：
+该脚本按 `/\r?\n/` 切分，兼容 CRLF 与 LF 两种换行，并按原文件的换行风格写回，不会混入异种换行。标题检测只在 frontmatter 块内进行，正文里出现的 `title:` 不会干扰判断。
 
-```bash
-git diff --name-only -- '*.md' | while read -r f; do
-  n=$(awk 'NR<=12 && /^---[[:space:]]*$/{c++} END{print c+0}' "$f")
-  [ "$n" -gt 2 ] && echo "重复 frontmatter: $f"
-done
-```
+> 历史缺陷（已修复）：早期版本用 `content.startsWith("---\n")` 判断，CRLF 文件（如 `docs/springCloud/project/03_ElasticSearch在项目中做搜索的应用.md`）会被误判为无 frontmatter，导致插入重复 frontmatter 块。
 
 ## 常见任务
 

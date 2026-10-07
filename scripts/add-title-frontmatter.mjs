@@ -25,17 +25,28 @@ function readFirstLines(content, n) {
   return content.split("\n").slice(0, n)
 }
 
-// 解析是否已有 frontmatter；返回 { has, titleLine } 或在无 frontmatter 时返回 has=false
+// 解析是否已有 frontmatter；返回 { has, titleLine, endLine, eol }
+//
+// 换行兼容：历史笔记中存在 CRLF（Windows 换行）文件，必须按 /\r?\n/ 切分，
+// 否则 "---\r" 既不等于 "---"，也会让开头判断失败，最终把一个新 frontmatter
+// 块插到原有块之前，产生重复 frontmatter。eol 用于写回时保持原文件的换行风格。
 function detectFrontmatter(content) {
-  if (!content.startsWith("---\n")) return { has: false, titleLine: null, endLine: null }
-  const lines = content.split("\n")
+  const eol = content.includes("\r\n") ? "\r\n" : "\n"
+  const lines = content.split(/\r?\n/)
+  if (lines[0] !== "---") return { has: false, titleLine: null, endLine: null, eol }
   for (let i = 1; i < lines.length; i++) {
     if (lines[i] === "---") {
-      const hasTitle = lines.slice(1, i).some((l) => /^title\s*:/.test(l))
-      return { has: true, titleLine: hasTitle ? lines.find((l) => /^title\s*:/.test(l)) : null, endLine: i }
+      // 只在 frontmatter 块内查找 title，避免把正文里的 "title:" 误判为已有标题
+      const offset = lines.slice(1, i).findIndex((l) => /^title\s*:/.test(l))
+      return {
+        has: true,
+        titleLine: offset === -1 ? null : lines[offset + 1],
+        endLine: i,
+        eol,
+      }
     }
   }
-  return { has: false, titleLine: null, endLine: null } // 只有开始没有结束，视为无 frontmatter
+  return { has: false, titleLine: null, endLine: null, eol } // 只有开始没有结束，视为无 frontmatter
 }
 
 function processFile(file) {
@@ -70,12 +81,13 @@ function processFile(file) {
       return
     }
     // 已有 frontmatter 但缺 title：在开始行后插入 title
-    const lines = content.split("\n")
+    // 按原文件的换行风格切分与拼接，避免在 CRLF 文件中混入 LF 行
+    const lines = content.split(/\r?\n/)
     lines.splice(1, 0, `title: ${title}`)
-    content = lines.join("\n")
+    content = lines.join(fm.eol)
   } else {
-    // 无 frontmatter：在最前面补一个
-    content = `---\ntitle: ${title}\n---\n\n${content}`
+    // 无 frontmatter：在最前面补一个，换行风格与文件其余部分保持一致
+    content = ["---", `title: ${title}`, "---", "", ""].join(fm.eol) + content
   }
 
   fs.writeFileSync(file, content, "utf8")
