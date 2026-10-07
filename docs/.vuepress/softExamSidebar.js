@@ -176,6 +176,21 @@ export const softExamSidebar = [
 					article("实战演练", "数据流图"),
 				],
 			},
+			{
+				text: "面向对象技术",
+				link: `${qualificationPath}面向对象技术/`,
+				prefix: `${qualificationPath}面向对象技术/`,
+				collapsible: true,
+				children: [
+					article("面向对象基本概念", "面向对象技术"),
+					article("面向对象开发流程", "面向对象技术"),
+					article("面向对象设计原则", "面向对象技术"),
+					article("UML图", "面向对象技术"),
+					article("设计模式-创建型", "面向对象技术"),
+					article("设计模式-结构型", "面向对象技术"),
+					article("设计模式-行为型", "面向对象技术"),
+				],
+			},
 
 		],
 	},

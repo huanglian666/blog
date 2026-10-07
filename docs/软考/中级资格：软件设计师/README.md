@@ -38,6 +38,7 @@ icon: fa-solid fa-graduation-cap
 - [系统开发基础](./系统开发基础/README.md)
 - [项目管理](./项目管理/README.md)
 - [数据流图](./数据流图/README.md)
+- [面向对象技术](./面向对象技术/README.md)
 
 ---
 
