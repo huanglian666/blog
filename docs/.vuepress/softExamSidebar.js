@@ -196,6 +196,17 @@ export const softExamSidebar = [
 				text: "UML建模（案例题）",
 				link: `${qualificationPath}UML建模（案例题）/`,
 			},
+			{
+				text: "面向对象程序设计",
+				link: `${qualificationPath}面向对象程序设计/`,
+				prefix: `${qualificationPath}面向对象程序设计/`,
+				collapsible: true,
+				children: [
+					article("C++技巧-合格", "面向对象程序设计"),
+					article("Java技巧-合格", "面向对象程序设计"),
+					article("例子-合格", "面向对象程序设计"),
+				],
+			},
 
 		],
 	},

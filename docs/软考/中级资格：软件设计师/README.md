@@ -40,6 +40,7 @@ icon: fa-solid fa-graduation-cap
 - [数据流图](./数据流图/README.md)
 - [面向对象技术](./面向对象技术/README.md)
 - [UML建模（案例题）](./UML建模（案例题）/README.md)
+- [面向对象程序设计](./面向对象程序设计/README.md)
 
 ---
 
