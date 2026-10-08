@@ -191,6 +191,11 @@ export const softExamSidebar = [
 					article("设计模式-行为型", "面向对象技术"),
 				],
 			},
+			// 单页板块：只有一篇文章，不再套一层可折叠分组
+			{
+				text: "UML建模（案例题）",
+				link: `${qualificationPath}UML建模（案例题）/`,
+			},
 
 		],
 	},
