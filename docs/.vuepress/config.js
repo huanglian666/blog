@@ -15,26 +15,6 @@ const preserveCaseSlugify = (str) =>
 		.replace(/^-+|-+$/g, "")
 		.replace(/^(\d)/, "_$1")
 
-// 排除历史遗留的 _sidebar.md 页面，使其不出现在搜索结果中
-const isSidebarFile = (page) =>
-	page.filePathRelative?.replace(/\\/g, "/").endsWith("/_sidebar.md") ?? false
-
-const legacyDesignPatternPages = [
-	"designPatterns/01_设计模式.md",
-	"designPatterns/02_设计模式.md",
-	"designPatterns/03_设计模式.md",
-	"designPatterns/04_设计模式.md",
-	"designPatterns/05_设计模式.md",
-	"designPatterns/06_设计模式.md",
-]
-
-const isSearchablePage = (page) => {
-	const filePath = page.filePathRelative?.replace(/\\/g, "/")
-	const isLegacyPage = legacyDesignPatternPages.some((path) => filePath?.endsWith(path))
-
-	return !isSidebarFile(page) && !isLegacyPage
-}
-
 export default {
 	// 当前站点的公共运行时代码约 1 MB，调整 Vite 的提示阈值，避免把正常的主题公共包误报为异常。
 	bundler: viteBundler({
@@ -135,31 +115,26 @@ export default {
 				assets: "fontawesome",
 				prefix: "fa-",
 			},
-			// SlimSearch 本地搜索：构建时生成索引，浏览器端完成搜索，
-			// 不依赖外部 API，适合国内访问场景。
-			slimsearch: {
-				// 开启全文索引，让正文中的技术名词也可以被搜索到。
-				indexContent: true,
-				// 激活搜索的快捷键：按 s 或 / 聚焦搜索框。
-				hotKeys: [{ key: "s" }, { key: "/" }],
-				// 历史 _sidebar.md 和旧版设计模式页面不作为可搜索页面。
-				filter: isSearchablePage,
-				// 将 Markdown 文件名（去掉 .md 后缀）加入搜索索引，
-				// 使“Vue进阶”“03_Vue进阶”等关键词可命中对应页面。
-				customFields: [
-					{
-						getter: (page) => {
-							const filename = page.filePathRelative
-								?.replace(/\\/g, "/")
-								.split("/")
-								.pop()
-								?.replace(/\.md$/i, "")
-
-							return filename || null
+			// DocSearch 站内搜索：由 Algolia 爬虫定时抓取线上站点生成索引，
+			// 浏览器端通过 Algolia API 搜索，对中文多字词（如「位示图」）的召回
+			// 远好于 slimsearch（后者查询侧分词不可配置，非词典词会搜不到）。
+			// appId / apiKey 为 DocSearch 免费版分配的公开凭据（search key 仅可查询，可安全暴露在前端）。
+			// 索引名 huanglian-blog 由 DocSearch 审批时自动创建，改动需同步 Crawler 后台。
+			docsearch: {
+				appId: "79D90WXSJD",
+				apiKey: "1ff1e6e4636a5e790ff54117c9db40f5",
+				indices: ["huanglian-blog"],
+				locales: {
+					"/": {
+						placeholder: "搜索文档",
+						translations: {
+							button: {
+								buttonText: "搜索文档",
+								buttonAriaLabel: "搜索文档",
+							},
 						},
-						formatter: "$content",
 					},
-				],
+				},
 			},
 			// RSS / Atom 订阅源：构建时在产物根目录生成 rss.xml 与 atom.xml，
 			// 并自动向每个页面的 head 注入 <link rel="alternate">，浏览器和阅读器可自动发现。
