@@ -1,11 +1,15 @@
 ---
-title: 07_DQL
+title: DQL
 date: 2026-09-12
 ---
 
-## 一、准备工作
+# DQL
 
-查询操作是所有操作中使用最频繁的操作，为了进行查询的学习，首先运行一段SQL脚本。
+DQL（Data Query Language，数据查询语言）用于查询表记录。查询操作是所有操作中使用最频繁的操作。
+
+## 1. 准备工作
+
+为了进行查询的学习，首先运行一段 SQL 脚本，创建并初始化部门表、雇员表、工资等级表与学生表：
 
 ```sql
 DROP DATABASE if exists mytest;
@@ -65,7 +69,7 @@ CREATE TABLE salgrade(
 	sid			学生编号
 	sname		学生姓名
 	age			学生年龄
-	gander		学生性别
+	gender		学生性别
 	province	省份
 	tuition		学费
 */
@@ -73,7 +77,7 @@ CREATE TABLE stu(
 	sid		INT 	PRIMARY KEY,
 	sname		VARCHAR(50),
 	age		INT,
-	gander		VARCHAR(10),
+	gender		VARCHAR(10),
 	province	VARCHAR(50),
 	tuition		INT
 );
@@ -129,23 +133,22 @@ INSERT INTO stu VALUES ('18', '川普', '21', '女', '北京', '21600');
 INSERT INTO stu VALUES ('19', '尤里', '23', '男', '北京', '23500');
 INSERT INTO stu VALUES ('20', '加加林', '23', '女', '莫斯科', '22500');
 INSERT INTO stu VALUES ('21', '特斯拉', '18', '男', '纽约', '23500');
-INSERT INTO stu VALUES ('22', '拉姆斯菲尔德', '23', '丹佛', '湖北', '21500');
+INSERT INTO stu VALUES ('22', '拉姆斯菲尔德', '23', '男', '科罗拉多', '21500');
 INSERT INTO stu VALUES ('23', '盖伊', '23', '男', '佛罗里达', '21500');
 ```
 
-> 关系结构数据库是以表格（Table）进行数据存储，表格由“行”和“列”组成。
->
-> 经验：执行查询语句返回的结果集是一张虚拟表。
+关系结构数据库以表格（Table）进行数据存储，表格由“行”和“列”组成。
 
-## 二、单表查询
+> [!TIP]
+> 执行查询语句返回的结果集是一张虚拟表。
 
-### 2.1、基本查询
+## 2. 单表查询
 
->SELECT后跟列名
->
->FROM后跟表名
+### 2.1 基本查询
 
-#### 2.1.1、查询所有列
+SELECT 后跟列名，FROM 后跟表名。
+
+#### 2.1.1 查询所有列
 
 ```sql
 # 查询所有列
@@ -153,10 +156,10 @@ SELECT * FROM 表名
 # 查询所有部门的信息
 SELECT * FROM dept;
 # 查询所有学生的信息
-SELECT * FROM student;
+SELECT * FROM stu;
 ```
 
-#### 2.1.2、查询指定列
+#### 2.1.2 查询指定列
 
 ```sql
 # 查询指定列
@@ -169,7 +172,7 @@ SELECT sname, age FROM stu;
 SELECT sname, age, province FROM stu;
 ```
 
-#### 2.1.3、完全重复的记录只出现一次
+#### 2.1.3 完全重复的记录只出现一次
 
 ```sql
 # 查询所有的工种
@@ -182,9 +185,9 @@ SELECT job FROM emp;
 SELECT DISTINCT job FROM emp;
 ```
 
-#### 2.1.4、列运算
+#### 2.1.4 列运算
 
-**算数运算**
+**算术运算**：列可以进行加、减、乘、除运算。
 
 ```sql
 # 列可以进行加、减、乘、除运算
@@ -195,7 +198,7 @@ SELECT ename, sal*1.5 FROM emp;
 SELECT ename, sal+comm FROM emp; # 注意这个结果有问题，后面会进行处理
 ```
 
-**字符串连接运算**
+**字符串连接运算**：
 
 ```sql
 # MySQL使用CONCAT()进行连接运算, 不能用“+”连接字符串
@@ -203,7 +206,7 @@ SELECT ename, sal+comm FROM emp; # 注意这个结果有问题，后面会进行
 SELECT ename, CONCAT(sal, '$') FROM emp;
 ```
 
-**转换NULL值**
+**转换 NULL 值**：
 
 ```sql
 # 在进行列运算时，如果某一列值为NULL，那么运算之后的结果也为NULL
@@ -213,7 +216,7 @@ SELECT ename, sal+IFNULL(comm, 0) FROM emp;
 # IFNULL(列名, 转换值)
 ```
 
-**别名**
+**别名**：
 
 ```sql
 # 对列进行运算后，查询出的结果中的列名不便于阅读，这时需要给列名起一个别名
@@ -225,9 +228,9 @@ SELECT ename '姓名', sal+IFNULL(comm, 0) '总工资' FROM emp;
 # 除了可以给列起别名，也可以给表起别名，在多表查询中会使用到为表起别名
 ```
 
-#### 2.1.5、条件查询
+#### 2.1.5 条件查询
 
-与前面介绍的UPDATE和DELETE语句一样，SELECT语句也可以使用WHERE子句来控制查询出的记录。
+与前面介绍的 UPDATE 和 DELETE 语句一样，SELECT 语句也可以使用 WHERE 子句来控制查询出的记录。
 
 ```sql
 # 查询部门编号为20的所有员工的信息
@@ -241,15 +244,14 @@ SELECT * FROM emp WHERE comm IS NOT NULL and comm <> 0;
 SELECT * FROM emp WHERE comm IS NOT NULL and comm != 0;
 ```
 
-#### 2.1.6、模糊查询
+#### 2.1.6 模糊查询
 
-> 模糊 -- 不精确
->
-> "_"匹配一个任意字符，只匹配一个字符而不是多个
->
-> "%"匹配0~N个任意字符
->
-> 模糊查询需要使用运算符：LIKE
+模糊即不精确。模糊查询需要使用运算符 `LIKE`，配合两个通配符使用：
+
+| 通配符 | 含义 |
+| --- | --- |
+| `_` | 匹配一个任意字符，只匹配一个字符而不是多个 |
+| `%` | 匹配 0~N 个任意字符 |
 
 ```sql
 # 查询姓“周”的所有员工的信息
@@ -262,13 +264,9 @@ SELECT * FROM emp WHERE ename LIKE '%杰%';
 SELECT * FROM emp WHERE ename LIKE '周__';
 ```
 
-### 2.2、排序　
+### 2.2 排序
 
-> 有些时候我们需要对查询出的结果进行排序
->
-> 排序分成升序（ASC）和降序（DESC），可以使用多列作为排序条件
->
-> 排序使用关键字ORDER BY
+有些时候我们需要对查询出的结果进行排序。排序分为升序（ASC）和降序（DESC），可以使用多列作为排序条件，排序使用关键字 ORDER BY。
 
 ```sql
 # 排序
@@ -285,17 +283,17 @@ SELECT * FROM emp ORDER BY empno;
 SELECT * FROM emp ORDER BY sal ASC, empno DESC;
 ```
 
-### 2.3、聚合函数
+### 2.3 聚合函数
 
->聚合函数做某列的纵向运算, 为NULL项不参与运算.
->
->| 函数  | 功能     |
->| ----- | -------- |
->| COUNT | 计算个数 |
->| MAX   | 最大值   |
->| MIN   | 最小值   |
->| AVG   | 平均值   |
->| SUM   | 和       |
+聚合函数做某列的纵向运算，为 NULL 的项不参与运算。
+
+| 函数 | 功能 |
+| --- | --- |
+| COUNT | 计算个数 |
+| MAX | 最大值 |
+| MIN | 最小值 |
+| AVG | 平均值 |
+| SUM | 和 |
 
 ```sql
 # 查询公司员工个数
@@ -315,18 +313,16 @@ SELECT SUM(sal) FROM emp;
 SELECT AVG(sal) FROM emp;
 ```
 
-### 2.4、分组查询
+### 2.4 分组查询
 
-> 分组查询是把记录使用某一列进行分组，然后查询组信息。
->
-> 分组查询查的是组信息，不能带“个人”信息。
->
-> 组信息包括：
->
-> * 分组列
-> * 聚合函数
->
-> 分组查询使用GROUP BY关键字。
+分组查询是把记录使用某一列进行分组，然后查询组信息。分组查询查的是组信息，不能带“个人”信息。
+
+组信息包括：
+
+- 分组列；
+- 聚合函数。
+
+分组查询使用 GROUP BY 关键字。
 
 ```sql
 # 查询每个工种的平均工资
@@ -336,7 +332,7 @@ SELECT job, AVG(sal) FROM emp GROUP BY job;
 SELECT job, COUNT(1) FROM emp GROUP BY job;
 ```
 
-> 分组查询也可以设置条件，分组后的条件使用HAVING, 分组前的条件使用WHERE
+分组查询也可以设置条件：分组后的条件使用 HAVING，分组前的条件使用 WHERE。
 
 ```sql
 # 查询工资大于15000的员工的工种，以及工种的平均工资
@@ -346,15 +342,13 @@ SELECT job, AVG(sal) FROM emp WHERE sal>15000 GROUP BY job;
 SELECT job, AVG(sal) FROM emp WHERE sal>15000 GROUP BY job HAVING COUNT(*)>=2;
 ```
 
-### 2.5、LIMIT子句
+### 2.5 LIMIT子句
 
-> 多用在分页查询中
->
-> LIMIT用来限定查询结果的起始行，以及查询行数
+LIMIT 用来限定查询结果的起始行以及查询行数，多用在分页查询中。
 
 ```sql
 # 语法
-SELECT 列名 FROM 表名 LIMIT 起始行，查询行数;
+SELECT 列名 FROM 表名 LIMIT 起始行,查询行数;
 
 # 查询员工表中前五名员工的所有信息
 # 起始行是从 0 开始，代表了第一行
@@ -364,9 +358,7 @@ SELECT * FROM emp LIMIT 0, 5;
 SELECT * FROM emp LIMIT 3,10;
 ```
 
-> LIMIT多数时候用在分页查询中
->
-> 起始行计算公式：（当前页-1）* 每页的记录数
+LIMIT 多数时候用在分页查询中，起始行的计算公式为：（当前页 - 1）× 每页的记录数。
 
 ```sql
 # 查询员工表中第一页信息，显示五条
@@ -376,7 +368,7 @@ SELECT * FROM emp LIMIT 0, 5;
 SELECT * FROM emp LIMIT 5, 5;
 ```
 
-### 2.6、查询语句执行顺序
+### 2.6 查询语句执行顺序
 
 ```sql
 SELECT
@@ -388,15 +380,13 @@ ORDER BY
 LIMIT
 ```
 
-## 三、多表查询
+## 3. 多表查询
 
-> 使用多表关联查询的原因--查询的数据分布在多个表中
+使用多表关联查询的原因：要查询的数据分布在多个表中。
 
-### 3.1、合并结果集
+### 3.1 合并结果集
 
-> 合并结果集就是把两个select语句的查询结果合并到一起，结果集就是一个表格。
->
-> 要求：被合并的两个结果：列数必须相同。
+合并结果集就是把两个 SELECT 语句的查询结果合并到一起，结果集就是一个表格。要求被合并的两个结果**列数必须相同**。
 
 ```sql
 # UNION：去除重复记录
@@ -405,7 +395,7 @@ SELECT * FROM t1 UNION SELECT * FROM t2;
 SELECT * FROM t1 UNION ALL SELECT * FROM t2;
 ```
 
-### 3.2、内连接
+### 3.2 内连接
 
 ```sql
 # 方式1(MySQL特有，不符合SQL标准)
@@ -418,15 +408,16 @@ SELECT e.ename, d.dname FROM emp e, dept d WHERE e.deptno=d.deptno;
 SELECT e.ename, d.dname FROM emp e INNER JOIN dept d ON e.deptno=d.deptno;
 ```
 
-> 上面的查询只能查询出拥有部门的员工和拥有员工的部门，没有部门的员工和没有员工的部门是查询不到的。如果要将所有的员工和部门都查询出来需要使用外连接。
+> [!NOTE]
+> 上面的查询只能查询出拥有部门的员工和拥有员工的部门，没有部门的员工和没有员工的部门是查询不到的。如果要将所有的员工和部门都查询出来，需要使用外连接。
 
-### 3.3、外连接
+### 3.3 外连接
 
-> 结果集中包含主表所有数据行，如果主表的某行在从表中没有匹配行时，则从表的选择列为NULL值。
+外连接的结果集中包含主表所有数据行，如果主表的某行在从表中没有匹配行时，则从表的选择列为 NULL 值。
 
-#### 3.3.1、左外连接
+#### 3.3.1 左外连接
 
-> 左外连接是以左表为主表，去关联右表(从表)，**结果集中包含主表所有数据行**，如果主表的某行在从表中没有匹配行时，则从表的选择列为NULL值。
+左外连接是以左表为主表，去关联右表（从表），**结果集中包含主表所有数据行**，如果主表的某行在从表中没有匹配行时，则从表的选择列为 NULL 值。
 
 ```sql
 # 语法
@@ -439,9 +430,9 @@ SELECT e.ename, d.dname FROM emp e LEFT JOIN dept d ON e.deptno=d.deptno;
 SELECT e.ename, d.dname FROM dept d LEFT JOIN emp e ON e.deptno=d.deptno;
 ```
 
-#### 3.3.2、右外连接
+#### 3.3.2 右外连接
 
-> 右外连接是以右表为主表，去关联左表(从表)，**结果集中包含主表所有数据行**，如果主表的某行在从表中没有匹配行时，则从表的选择列为NULL值。
+右外连接是以右表为主表，去关联左表（从表），**结果集中包含主表所有数据行**，如果主表的某行在从表中没有匹配行时，则从表的选择列为 NULL 值。
 
 ```sql
 # 语法
@@ -454,16 +445,17 @@ SELECT e.ename, d.dname FROM emp e RIGHT JOIN dept d ON e.deptno=d.deptno;
 SELECT e.ename, d.dname FROM dept d RIGHT JOIN emp e ON e.deptno=d.deptno;
 ```
 
-#### 3.3.3、全外连接
+#### 3.3.3 全外连接
 
-> 完全连接左表和右表中所有行，当某行数据在另一个表中没有匹配时，则另一个表的选择列值为NULL。
+全外连接完全连接左表和右表中所有行，当某行数据在另一个表中没有匹配时，则另一个表的选择列值为 NULL。
 
 ```sql
 # 语法
 SELECT 列名 FROM 左表 FULL [OUTER] JOIN 右表 ON 左表.列名 条件运算符 右表.列名 [WHERE 条件]
 ```
 
-> MySQL不支持这种语法，可以使用合并结果集进行模拟全外连接。
+> [!WARNING]
+> MySQL 不支持这种语法，可以使用合并结果集进行模拟全外连接。
 
 ```sql
 SELECT e.ename, d.dname FROM emp e LEFT JOIN dept d ON e.deptno=d.deptno
@@ -471,16 +463,16 @@ UNION
 SELECT e.ename, d.dname FROM emp e RIGHT JOIN dept d ON e.deptno=d.deptno;
 ```
 
-## 四、子查询
+## 4. 子查询
 
-> 子查询就是嵌套查询，即SELECT中包含SELECT，如果一条语句中存在两个或两个以上SELECT，那么就是子查询语句了。
->
-> 子查询出现的位置：
->
-> * WHERE后，作为条件的一部分；
-> * FROM后，作为被查询的一条表。
+**子查询**就是嵌套查询，即 SELECT 中包含 SELECT。如果一条语句中存在两个或两个以上 SELECT，那么就是子查询语句了。
 
-### 4.1、WHERE后
+子查询出现的位置：
+
+- WHERE 后，作为条件的一部分；
+- FROM 后，作为被查询的一张表。
+
+### 4.1 WHERE后
 
 ```sql
 # 查询工资最高的员工的信息
@@ -507,16 +499,13 @@ SELECT * FROM emp WHERE sal>ANY(SELECT sal FROM emp WHERE deptno=30);
 SELECT * FROM emp WHERE (sal, deptno) IN (SELECT sal, deptno FROM emp WHERE ename='周杰伦');
 ```
 
-### 4.2、FROM后
+### 4.2 FROM后
 
 ```sql
-# 列出在每个部门名称、员工数量、平均工资
+# 列出每个部门的部门名称、员工数量、平均工资
 SELECT
 	d.dname, e.cnt, e.avgsal
 FROM
 	(SELECT deptno, COUNT(*) cnt, AVG(sal) avgsal FROM emp GROUP BY deptno) e, dept d
 WHERE e.deptno=d.deptno;
 ```
-
-
-

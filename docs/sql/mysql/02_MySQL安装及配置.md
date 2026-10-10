@@ -1,143 +1,145 @@
 ---
-title: 02_MySQL安装及配置
+title: MySQL安装及配置
 date: 2026-09-12
 ---
 
-## 一、下载
+# MySQL安装及配置
 
->  **官网：**https://www.mysql.com/
->
-> **下载地址：**https://dev.mysql.com/downloads/installer/
->
-> 下载时注意MySQL版本，选择**体积大的离线安装包**下载。
+本篇记录 MySQL 5.7 在 Windows 平台下的下载、安装、配置、卸载全过程，以及环境变量、目录结构与配置文件的相关说明。
 
-![](./_pic/01.png ':size=70%')
+## 1. 下载
 
-> 单击Download后，提示注册账号，这里**我们不需要注册账号**，直接选择`No thanks, just start my download.`下载就可以了。
+**官网**：<https://www.mysql.com/>
 
-![](./_pic/02.png ':size=70%')
+**下载地址**：<https://dev.mysql.com/downloads/installer/>
 
-## 二、安装及配置
+下载时注意 MySQL 版本，选择**体积大的离线安装包**下载。
 
-### 2.1、选择安装类型
+![MySQL 官网下载页面](./_pic/01.png)
 
-> 选择`Server only`就可以，足够支撑我们的学习。
+单击 Download 后，提示注册账号，这里**我们不需要注册账号**，直接选择 `No thanks, just start my download.` 下载即可。
 
-![](./_pic/03.png ':size=70%')
+![跳过注册直接下载](./_pic/02.png)
 
-### 2.2、检查需要的依赖
+## 2. 安装及配置
 
-> MySQL Server 5.7运行需要依赖MS C++ 2013的库，安装之前有必要安装MS C++ 2013，如果你的电脑之前安装过MS C++ 2013，那么会直接进入下一步。
+### 2.1 选择安装类型
 
-![](./_pic/04.png ':size=70%')
+选择 `Server only` 就可以，足够支撑我们的学习。
 
-![](./_pic/05.png ':size=70%')
+![选择安装类型为 Server only](./_pic/03.png)
 
-![](./_pic/06.png ':size=70%')
+### 2.2 检查需要的依赖
 
-### 2.3、安装
+MySQL Server 5.7 运行需要依赖 MS C++ 2013 的库，安装之前有必要先安装 MS C++ 2013。如果你的电脑之前安装过 MS C++ 2013，那么会直接进入下一步。
 
-![](./_pic/07.png ':size=70%')
+![检查安装依赖](./_pic/04.png)
 
-![](./_pic/08.png ':size=70%')
+![安装依赖组件（一）](./_pic/05.png)
 
-![](./_pic/09.png ':size=70%')
+![安装依赖组件（二）](./_pic/06.png)
 
-### 2.4、配置
+### 2.3 安装
 
-#### 2.4.1、配置类型和网络
+![执行安装（一）](./_pic/07.png)
 
-> Config Type选择Development Computer就可以，占用资源较少，完全能够支撑我们的学习。
->
-> Port（端口）默认3306就可以，也可以写别的值，**这个值一定要牢记**，后续会反复用到。
+![执行安装（二）](./_pic/08.png)
 
-![](./_pic/10.png ':size=70%')
+![执行安装（三）](./_pic/09.png)
 
-#### 2.4.2、配置账户和角色
+### 2.4 配置
 
-> 设置root用户的密码，由于我们在学习阶段，不需要设置过于复杂的密码
+#### 2.4.1 配置类型和网络
 
-![](./_pic/11.png ':size=70%')
+Config Type 选择 Development Computer 就可以，占用资源较少，完全能够支撑我们的学习。Port（端口）默认 3306 就可以，也可以写别的值，**这个值一定要牢记**，后续会反复用到。
 
-#### 2.4.3、配置Windows服务
+![配置类型与端口](./_pic/10.png)
 
-![](./_pic/12.png ':size=70%')
+#### 2.4.2 配置账户和角色
 
-#### 2.4.4、让配置生效
+设置 root 用户的密码。由于处于学习阶段，不需要设置过于复杂的密码。
 
-> 可能会花费一点时间，**一定要耐心等待**。
+![设置 root 用户密码](./_pic/11.png)
 
-![](./_pic/13.png ':size=70%')
+#### 2.4.3 配置 Windows 服务
 
-![](./_pic/14.png ':size=70%')
+![配置 Windows 服务](./_pic/12.png)
 
-![](./_pic/15.png ':size=70%')
+#### 2.4.4 让配置生效
 
-### 2.5、验证是否安装成功
+这一步可能会花费一点时间，**一定要耐心等待**。
 
-> **开始-->MySQL-->MySQL 5.7 Commond Line Client - Unicode**
+![应用配置（一）](./_pic/13.png)
 
-![](./_pic/21.png  ':size=20%')
+![应用配置（二）](./_pic/14.png)
 
-> 提示输入密码，输入密码后出现如下界面，说明MySQL安装并配置成功
+![应用配置（三）](./_pic/15.png)
 
-![](./_pic/22.png)
+### 2.5 验证是否安装成功
 
-## 三、卸载
+**开始 --> MySQL --> MySQL 5.7 Command Line Client - Unicode**
 
-### 3.1、运行MySQL安装工具
+![打开 MySQL 命令行客户端](./_pic/21.png)
 
-> **开始-->MySQL-->MySQL Installer - Community**
+提示输入密码，输入密码后出现如下界面，说明 MySQL 安装并配置成功。
 
-![](./_pic/16.png ':size=20%')
+![MySQL 命令行登录成功界面](./_pic/22.png)
 
-### 3.2、卸载及清理
+## 3. 卸载
 
-![](./_pic/17.png ':size=70%')
+### 3.1 运行 MySQL 安装工具
 
-> 这里直接勾选Product，会卸载安装的所有MySQL组件。
+**开始 --> MySQL --> MySQL Installer - Community**
 
-![](./_pic/18.png ':size=70%')
+![打开 MySQL Installer](./_pic/16.png)
 
-> 勾选Remove the data directory，卸载完成后会连同MySQL存放数据的文件夹一并删除。
+### 3.2 卸载及清理
 
-![](./_pic/19.png ':size=70%')
+![卸载 MySQL 组件](./_pic/17.png)
 
-> 选择Yes，uninstall MySQL Installer会同时卸载MySQL安装工具。
+这里直接勾选 Product，会卸载安装的所有 MySQL 组件。
 
-![](./_pic/20.png ':size=70%')
+![删除数据目录](./_pic/18.png)
 
-### 3.3、卸载之后的检查工作
+勾选 Remove the data directory，卸载完成后会连同 MySQL 存放数据的文件夹一并删除。
 
-> 按照上面的步骤卸载之后，应该能够完全卸载MySQL 5.7。为了保险起见，我们还是要检查一下，确保MySQL 5.7已经完全卸载，从而不会对下次安装产生影响。要确保满足下面三个条件：
->
-> 1. 服务中没有MySQL57这个服务；
-> 2. C盘下Program Files和Program Files(x86)两个文件夹下都没有MySQL文件夹；
-> 3. C盘下ProgramData文件夹下没有MySQL文件夹。
->
-> 如果MySQL57服务还在，**以管理员身份打开命令行窗口**，运行如下命令删除MySQL57服务：
->
-> ```powershell
-> > sc delete MySQL57
-> ```
+![卸载确认（一）](./_pic/19.png)
 
-## 四、配置环境变量
+选择 Yes，uninstall MySQL Installer 会同时卸载 MySQL 安装工具。
 
-> 目的：在任意文件夹都可以运行mysql命令。
+![卸载确认（二）](./_pic/20.png)
 
-### 4.1、配置
+### 3.3 卸载之后的检查工作
 
-> 与安装JDK配置环境变量类型
->
-> * 新建环境变量MYSQL_HOME，值C:\Program Files\MySQL\MySQL Server 5.7；
-> * 在Path环境变量中新增%MYSQL_HOME%\bin。
+按照上面的步骤卸载之后，应该能够完全卸载 MySQL 5.7。为了保险起见，还是要检查一下，确保 MySQL 5.7 已经完全卸载，从而不会对下次安装产生影响。要确保满足下面三个条件：
 
-### 4.2、验证
+1. 服务中没有 MySQL57 这个服务；
+2. C 盘下 Program Files 和 Program Files (x86) 两个文件夹下都没有 MySQL 文件夹；
+3. C 盘下 ProgramData 文件夹下没有 MySQL 文件夹。
 
-> 打开命令行窗口，运行如下命令：
+如果 MySQL57 服务还在，**以管理员身份打开命令行窗口**，运行如下命令删除 MySQL57 服务：
 
 ```powershell
-> mysql -u root -p
+sc delete MySQL57
+```
+
+## 4. 配置环境变量
+
+配置环境变量的目的：在任意文件夹都可以运行 mysql 命令。
+
+### 4.1 配置
+
+与安装 JDK 配置环境变量类似：
+
+- 新建环境变量 `MYSQL_HOME`，值为 `C:\Program Files\MySQL\MySQL Server 5.7`；
+- 在 Path 环境变量中新增 `%MYSQL_HOME%\bin`。
+
+### 4.2 验证
+
+打开命令行窗口，运行如下命令：
+
+```text
+mysql -u root -p
 Enter password: ****
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 8
@@ -154,33 +156,33 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 mysql>
 ```
 
-> 这样我们就可以使用命令行在任意位置使用MySQL了。
+这样我们就可以使用命令行在任意位置使用 MySQL 了。
 
-## 五、目录结构
+## 5. 目录结构
 
-> 位置：C:\Program Files\MySQL\MySQL Server 5.7
+安装目录位置：`C:\Program Files\MySQL\MySQL Server 5.7`
 
-| 文件夹名称 |        内容        |
-| :--------: | :----------------: |
-|    bin     |      命令文件      |
-|    lib     |       库文件       |
-|  include   |       头文件       |
-|   share    | 字符集、语言等信息 |
+| 文件夹名称 | 内容 |
+| --- | --- |
+| bin | 命令文件 |
+| lib | 库文件 |
+| include | 头文件 |
+| share | 字符集、语言等信息 |
 
-## 六、MySQL配置文件
+## 6. MySQL配置文件
 
-> 位置：C:\ProgramData\MySQL\MySQL Server 5.7\my.ini
+配置文件位置：`C:\ProgramData\MySQL\MySQL Server 5.7\my.ini`
 
-|          参数          |           描述           |
-| :--------------------: | :----------------------: |
-| default-character-set  |     客户端默认字符集     |
-|  character-set-server  |    服务器端默认字符集    |
-|          port          | 客户端和服务器端的端口号 |
-| default-storage-engine | MySQL默认存储引擎 INNODB |
+| 参数 | 描述 |
+| --- | --- |
+| default-character-set | 客户端默认字符集 |
+| character-set-server | 服务器端默认字符集 |
+| port | 客户端和服务器端的端口号 |
+| default-storage-engine | MySQL 默认存储引擎 INNODB |
 
-### 6.1、MySQL字符编码设置
+### 6.1 MySQL字符编码设置
 
-> 目前的MySQL对中文没有很好的支持，通过以下命令可以查看MySQL的字符集
+旧版 MySQL 对中文的支持不够完善，通过以下命令可以查看 MySQL 的字符集：
 
 ```sql
 mysql> show variables like 'character_set%';
@@ -199,7 +201,7 @@ mysql> show variables like 'character_set%';
 8 rows in set, 1 warning (0.00 sec)
 ```
 
-> 为了让 MySQL支持中文，**需要把字符集改成UTF-8，为此我们需要修改my.ini文件**。
+为了让 MySQL 支持中文，**需要把字符集改成 UTF-8，为此我们需要修改 my.ini 文件**：
 
 ```properties
 [mysql]
@@ -209,16 +211,16 @@ default-character-set=utf8mb4
 [mysqld]
 # 添加如下的内容
 character-set-server=utf8mb4
-
 ```
 
-> **注意：utf8mb4不是utf-8，是在相应区域增加内容，而不是覆盖。**
+> [!WARNING]
+> utf8mb4 不是 utf-8，是在相应区域增加内容，而不是覆盖。
 
-### 6.2、重启MySQL服务
+### 6.2 重启MySQL服务
 
-> 任务栏-->右键-->任务管理器-->服务-->MySQL57-->右键-->重新启动
+操作路径：任务栏 --> 右键 --> 任务管理器 --> 服务 --> MySQL57 --> 右键 --> 重新启动。
 
-### 6.3、查看当前字符编码
+### 6.3 查看当前字符编码
 
 ```sql
 mysql> show variables like 'character_set%';
@@ -240,5 +242,4 @@ mysql> show variables like 'character_set%';
 mysql>
 ```
 
-> 出现上述内容证明修改MySQL字符编码成功。
-
+出现上述内容，证明修改 MySQL 字符编码成功。

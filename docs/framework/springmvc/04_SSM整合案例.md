@@ -1,28 +1,31 @@
 ---
-title: 04_SSM整合案例
+title: SSM整合案例
 date: 2026-09-12
 ---
 
-## 一、基础环境搭建
+# SSM整合案例
 
-> 本次环境搭建在《Spring整合MyBatis》基础之上进行，我们在该部分学习中完成了Spring对MyBatis的整合，并且完成了Dao层和Service层的代码，关于整合我们需要做的工作就是让Web容器能够读取Spring的配置文件。
+本篇整理 SSM（Spring + SpringMVC + MyBatis）整合的完整流程：基础环境搭建、Web 层相关代码（响应包装类、Controller、SpringMVC 配置、web.xml 配置），以及完全基于 Java 代码的 SSM 整合方式。
 
-### 1.1、添加坐标
+## 1. 基础环境搭建
 
-> 这里的Jar包主要包含以下内容：
-> 
-> * Spring相关Jar包；
-> * SpringMVC相关Jar包；
-> * MySQL Jar包；
-> * Druid相关Jar包；
-> * MyBatis相关Jar包；
-> * MyBatis分页插件相关Jar包；
-> 
-> pom.xml
+本次环境搭建在《Spring整合MyBatis》基础之上进行。我们在该部分学习中完成了 Spring 对 MyBatis 的整合，并且完成了 Dao 层和 Service 层的代码。关于整合，我们需要做的工作就是让 Web 容器能够读取 Spring 的配置文件。
+
+### 1.1 添加坐标
+
+这里的 Jar 包主要包含以下内容：
+
+- Spring 相关 Jar 包；
+- SpringMVC 相关 Jar 包；
+- MySQL Jar 包；
+- Druid 相关 Jar 包；
+- MyBatis 相关 Jar 包；
+- MyBatis 分页插件相关 Jar 包。
+
+pom.xml：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -33,7 +36,6 @@ date: 2026-09-12
     <packaging>war</packaging>
 
     <name>03_ssm Maven Webapp</name>
-    <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
     <properties>
@@ -43,7 +45,7 @@ date: 2026-09-12
     </properties>
 
     <dependencies>
-         <!-- lombok -->
+        <!-- lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -165,19 +167,18 @@ date: 2026-09-12
 </project>
 ```
 
-### 1.2、创建包结构
+### 1.2 创建包结构
 
-> 1) `com.qfedu.controller`：用来存放SpringMVC中的控制器；
-> 
-> 2) `com.qfedu.bean`：用来存放实体类（之前已经完成）；
-> 
-> 3) `com.qfedu.mapper`：用来存放mapper接口及接口映射文件（之前已经完成）；
-> 
-> 4) `com.qfedu.service`：用来存放Service层相关类（之前已经完成）。
+| 包 | 用途 |
+| --- | --- |
+| `com.qfedu.controller` | 存放 SpringMVC 中的控制器 |
+| `com.qfedu.bean` | 存放实体类（之前已经完成） |
+| `com.qfedu.mapper` | 存放 mapper 接口及接口映射文件（之前已经完成） |
+| `com.qfedu.service` | 存放 Service 层相关类（之前已经完成） |
 
-### 1.3、Spring配置文件（之前已经完成）
+### 1.3 Spring 配置文件（之前已经完成）
 
-> `applicationContext.xml`
+`applicationContext.xml`：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -218,7 +219,10 @@ date: 2026-09-12
 </beans>
 ```
 
-### 1.4、JDBC配置文件（之前已经完成）
+> [!NOTE]
+> 注意 `<context:component-scan>` 中的 `exclude-filter`：Spring 容器扫描时排除了 `@Controller` 注解的类，这部分 Web 组件交给 SpringMVC 的子容器管理，避免父子容器重复创建 bean。
+
+### 1.4 JDBC 配置文件（之前已经完成）
 
 ```properties
 jdbc.driver=com.mysql.jdbc.Driver
@@ -227,7 +231,7 @@ jdbc.username=root
 jdbc.password=root
 ```
 
-### 1.5、MyBatis配置文件（之前已经完成）
+### 1.5 MyBatis 配置文件（之前已经完成）
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -248,11 +252,13 @@ jdbc.password=root
 </configuration>
 ```
 
-> **在此基础之上，完成了Spring对MyBatis的整合，可以在测试类中通过加载Spring配置文件进行相关测试。**
+**在此基础之上，完成了 Spring 对 MyBatis 的整合，可以在测试类中通过加载 Spring 配置文件进行相关测试。**
 
-## 二、Web层相关代码
+## 2. Web 层相关代码
 
-### 2.1、包装响应数据的类
+### 2.1 包装响应数据的类
+
+统一封装 Controller 的返回结果，前端根据 code 判断请求是否成功：
 
 ```java
 /**
@@ -260,11 +266,11 @@ jdbc.password=root
  */
 @Data
 public class RespBean {
-    //状态码 10000-成功 10001-失败
+    // 状态码：10000-成功，10001-失败
     private Integer code;
-    //返回的附件信息
+    // 返回的提示信息
     private String msg;
-    //返回的数据
+    // 返回的数据
     private Object data;
 
     public static RespBean ok() {
@@ -315,13 +321,11 @@ public class RespBean {
         return respBean;
     }
 }
-
-
 ```
 
-### 2.2、Controller相关代码
+### 2.2 Controller 相关代码
 
-> 每个方法返回的都是JSON
+每个方法返回的都是 JSON，因此直接使用 `@RestController` 修饰：
 
 ```java
 @RestController
@@ -330,7 +334,7 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    //分页查询
+    // 分页查询
     @RequestMapping("/findByPage")
     public RespBean findByPage(Integer pageNum) {
         PageHelper.startPage(pageNum, 5);
@@ -340,7 +344,7 @@ public class StudentController {
         return RespBean.ok("查询成功", pageInfo);
     }
 
-    //根据ID查询
+    // 根据ID查询
     @RequestMapping("/findById")
     public RespBean findById(Long id) {
         Student student = studentService.findById(id);
@@ -348,7 +352,7 @@ public class StudentController {
         return RespBean.ok("查询成功", student);
     }
 
-    //添加
+    // 添加
     @RequestMapping("/add")
     public RespBean add(Student student) {
         studentService.add(student);
@@ -356,7 +360,7 @@ public class StudentController {
         return RespBean.ok("添加成功");
     }
 
-    //删除
+    // 删除
     @DeleteMapping("/del/{id}")
     public RespBean del(@PathVariable("id") Long id) {
         studentService.del(id);
@@ -364,7 +368,7 @@ public class StudentController {
         return RespBean.ok("删除成功");
     }
 
-    //修改
+    // 修改
     @RequestMapping("/update")
     public RespBean update(Student student) {
         studentService.update(student);
@@ -374,7 +378,7 @@ public class StudentController {
 }
 ```
 
-### 2.2、SpringMVC配置
+### 2.3 SpringMVC 配置
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -397,7 +401,7 @@ public class StudentController {
     <mvc:annotation-driven />
 
     <!-- 配置视图解析器
-        由于COntroller返回的都是JSON，此时不需要页面跳转，也就不再需要配置视图解析器
+        由于Controller返回的都是JSON，此时不需要页面跳转，也就不再需要配置视图解析器
      -->
     <!-- <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/pages/" />
@@ -409,15 +413,17 @@ public class StudentController {
 </beans>
 ```
 
-### 2.3、web.xml配置
+### 2.4 web.xml 配置
+
+web.xml 中需要完成三件事：配置全站字符编码过滤器、配置 Spring 的监听器、配置 SpringMVC 的前端控制器：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
           http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-           version="3.0">
+         version="3.0">
     <!-- 配置全站字符编码的Filter -->
     <filter>
         <filter-name>characterEncodingFilter</filter-name>
@@ -432,17 +438,17 @@ public class StudentController {
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!--Spring的监听器-->
+    <!-- Spring的监听器 -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    <!--全局的初始化参数-->
+    <!-- 全局的初始化参数 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:applicationContext.xml</param-value>
     </context-param>
 
-    <!--SpringMVC的前端控制器-->
+    <!-- SpringMVC的前端控制器 -->
     <servlet>
         <servlet-name>DispatcherServlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -459,103 +465,101 @@ public class StudentController {
 </web-app>
 ```
 
-## 三、完全使用Java代码实现SSM整合
+## 3. 完全使用 Java 代码实现 SSM 整合
 
-> 本次环境搭建在《Spring注解开发_整合Junit》基础之上进行，我们在该部分学习中完成了Spring对MyBatis的整合，并且完成了Dao层和Service层的代码，完全使用Java代码配置，关于整合我们需要做的工作就是让Web容器能够读取Spring的配置类。
+本次环境搭建在《Spring注解开发_整合Junit》基础之上进行。我们在该部分学习中完成了 Spring 对 MyBatis 的整合，并且完成了 Dao 层和 Service 层的代码，完全使用 Java 代码配置。关于整合，我们需要做的工作就是让 Web 容器能够读取 Spring 的配置类。
 
-### 3.1、配置SpringMVC
+### 3.1 配置 SpringMVC
 
 ```java
 @WebAppConfiguration
-//启用SpringMVC
-@EnableWebMvc 
+// 启用SpringMVC
+@EnableWebMvc
 @ComponentScan("com.qfedu.controller")
 public class WebConfig implements WebMvcConfigurer {
-    //配置视图解析器
+    // 配置视图解析器
     @Bean
     public ViewResolver viewResolver() {
-        //创建视图解析器
+        // 创建视图解析器
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        //配置前缀
+        // 配置前缀
         resolver.setPrefix("/pages/");
-        //配置后缀
+        // 配置后缀
         resolver.setSuffix(".jsp");
         return resolver;
     }
 
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        /**
-         *    配置静态资源放行，DispatcherServlet将对静态资源的请求转发到Servlet容器中默认的Servlet上，
-         *    而不是使用DispatcherServlet本身来处理此类请求
-         *  
-         *  配置静态资源放行
-        */    
+        // 配置静态资源放行：DispatcherServlet将对静态资源的请求转发到Servlet容器中
+        // 默认的Servlet上，而不是使用DispatcherServlet本身来处理此类请求
         configurer.enable();
     }
 }
 ```
 
-### 3.2、配置DispatcherServlet
+### 3.2 配置 DispatcherServlet
 
-> `DispatcherServlet`是`Spring MVC`的核心，按照传统的方式，像`DispatcherServlet`这样的`Servlet`会配置在`web.xml`文件中，借助于`Servlet 3`规范和`Spring 3.1`的功能增强，这种方式已经不是唯一的方案了，我们会使用`Java`将`DispatcherServlet`配置在`Servlet`容器中，而不会再使用`web.xml`文件。
-> 
-> 我们只需要知道扩展`AbstractAnnotationConfigDispatcherServletInitializer`的任意类都会自动地配置 `DispatcherServlet`和`Spring`应用上下文，`Spring`的应用上下文会位于应用程序的`Servlet`上下文之中。
+`DispatcherServlet` 是 SpringMVC 的核心。按照传统的方式，像 `DispatcherServlet` 这样的 Servlet 会配置在 `web.xml` 文件中。借助于 Servlet 3 规范和 Spring 3.1 的功能增强，这种方式已经不是唯一的方案了：我们可以使用 Java 将 `DispatcherServlet` 配置在 Servlet 容器中，而不再使用 `web.xml` 文件。
+
+我们只需要知道：**扩展 `AbstractAnnotationConfigDispatcherServletInitializer` 的任意类，都会自动地配置 `DispatcherServlet` 和 Spring 应用上下文**，Spring 的应用上下文会位于应用程序的 Servlet 上下文之中。
 
 ```java
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected String[] getServletMappings() {
-        //配置DispatcherServlet路径
+        // 配置DispatcherServlet路径
         return new String[]{"/"};
     }
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        //加载Spring的配置类
+        // 加载Spring的配置类
         return new Class<?>[]{MainConfig.class};
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        //加载SpringMVC的配置
+        // 加载SpringMVC的配置
         return new Class<?>[]{WebConfig.class};
     }
 }
 ```
 
-> **以下是一些细节，了解就可以**
-> 
-> 在`Servlet 3.0`环境中，容器会在类路径中查找实现`javax.servlet.ServletContainerInitializer`接口的类， 如果能发现的话，就会用它来配置`Servlet`容器。
-> 
-> `Spring`提供了这个接口的实现，名为`SpringServletContainerInitializer`，这个类反过来又会查找实现 `WebApplicationInitializer`的类并将配置的任务交给它们来完成。
-> 
-> `Spring 3.2`引入了一个便利的`WebApplicationInitializer` 基础实现，也就是：
-> 
-> * `AbstractAnnotationConfigDispatcherServletInitializer`
-> 
-> 因为我们继承了`AbstractAnnotationConfigDispatcherServletInitializer`（同时也就实现了 WebApplicationInitializer），因此当部署到`Servlet 3.0`容器中的时候，容器会自动发现它，并用它来配置 `Servlet`上下文。
-> 
-> `getServletMappings()`，它会将一个或多个路径映射到`DispatcherServlet`上。在本例中，它映射的是 `/`，这表示它会是应用的默认`Servlet`。它会处理进入应用的所有请求。
-> 
-> --------------------------------------------------------------------------------------------------------------------------------
-> 
-> 为了理解其他的两个方法，我们首先要理解`DispatcherServlet`和一个`Servlet`监听器`ContextLoaderListener`的关系。
-> 
-> 当`DispatcherServlet`启动的时候，它会创建`Spring`应用上下文，并加载配置文件或配置类中所声明的`bean`。在以上程序中的`getServletConfigClasses()`方法中，我们要求`DispatcherServlet`加载应用上下文时，使用定义在`WebConfig`配置类（使用`Java`配置）中的`bean`。
-> 
-> 但是在`Spring Web`应用中，通常还会有另外一个应用上下文。另外的这个应用上下文是由`ContextLoaderListener` 创建的。
-> 
-> 我们希望`DispatcherServlet`加载包含`Web`组件的`bean`，如控制器、视图解析器以及处理器映射，而 `ContextLoaderListener`要加载应用中的其他`bean`。这些`bean`通常是驱动应用后端的中间层和数据层组件。
-> 
-> 实际上，`AbstractAnnotationConfigDispatcherServletInitializer`会同时创建`DispatcherServlet`和`ContextLoaderListener`。`GetServletConfigClasses()`方法返回的带有`@Configuration`注解的类将会用来定义`DispatcherServlet`应用上下文中的`bean`。`getRootConfigClasses()`方法返回的带有`@Configuration`注解的类将会用来配置`ContextLoaderListener`创建的应用上下文中的`bean`。
-> 
-> 在本例中，根配置定义在`MainConfig`中，`DispatcherServlet`的配置声明在`WebConfig`中。
-> 
-> 需要注意的是，通过`AbstractAnnotationConfigDispatcherServletInitializer`来配置`DispatcherServlet `是传统`web.xml`方式的替代方案。如果你愿意的话，可以同时包含`web.xml`和 `AbstractAnnotationConfigDispatcherServletInitializer`，但这其实并没有必要。
-> 
-> 如果按照这种方式配置`DispatcherServlet`，而不是使用`web.xml`的话，那唯一问题在于它只能部署到支持 `Servlet 3.0`的服务器中才能正常工作，如`Tomcat 7`或更高版本。`Servlet 3.0`规范在2009年12月份就发布了，因此很有可能你会将应用部署到支持`Servlet 3.0`的`Servlet`容器之中。如果你还没有使用支持`Servlet 3.0 `的服务器，那么在`AbstractAnnotationConfigDispatcherServletInitializer`子类中配置 `DispatcherServlet`的方法就不适合你了。你别无选择，只能使用`web.xml`了。
+#### 3.2.1 实现原理细节（了解即可）
 
-## 四、关于页面
+在 Servlet 3.0 环境中，容器会在类路径中查找实现 `javax.servlet.ServletContainerInitializer` 接口的类，如果能发现的话，就会用它来配置 Servlet 容器。
 
-> 结合`光年模板`、`art-template`实现增删改查。
+Spring 提供了这个接口的实现，名为 `SpringServletContainerInitializer`，这个类反过来又会查找实现 `WebApplicationInitializer` 的类，并将配置的任务交给它们来完成。
+
+Spring 3.2 引入了一个便利的 `WebApplicationInitializer` 基础实现，也就是 `AbstractAnnotationConfigDispatcherServletInitializer`。因为我们继承了它（同时也就实现了 `WebApplicationInitializer`），因此当部署到 Servlet 3.0 容器中的时候，容器会自动发现它，并用它来配置 Servlet 上下文。
+
+其中，`getServletMappings()` 方法会将一个或多个路径映射到 `DispatcherServlet` 上。在本例中，它映射的是 `/`，这表示它会是应用的默认 Servlet，处理进入应用的所有请求。
+
+#### 3.2.2 两个应用上下文的关系
+
+为了理解另外两个方法，我们首先要理解 `DispatcherServlet` 和一个 Servlet 监听器 `ContextLoaderListener` 的关系。
+
+当 `DispatcherServlet` 启动的时候，它会创建 Spring 应用上下文，并加载配置文件或配置类中所声明的 bean。在以上程序中的 `getServletConfigClasses()` 方法中，我们要求 `DispatcherServlet` 加载应用上下文时，使用定义在 `WebConfig` 配置类（使用 Java 配置）中的 bean。
+
+但是在 Spring Web 应用中，通常还会有另外一个应用上下文，这个应用上下文是由 `ContextLoaderListener` 创建的。
+
+我们希望 `DispatcherServlet` 加载包含 Web 组件的 bean，如控制器、视图解析器以及处理器映射；而 `ContextLoaderListener` 要加载应用中的其他 bean，这些 bean 通常是驱动应用后端的中间层和数据层组件。
+
+实际上，`AbstractAnnotationConfigDispatcherServletInitializer` 会同时创建 `DispatcherServlet` 和 `ContextLoaderListener`：
+
+| 方法 | 创建的上下文 | 承载的 bean |
+| --- | --- | --- |
+| `getServletConfigClasses()` | DispatcherServlet 上下文 | Web 组件（控制器、视图解析器等） |
+| `getRootConfigClasses()` | ContextLoaderListener 上下文 | 中间层和数据层组件 |
+
+在本例中，根配置定义在 `MainConfig` 中，DispatcherServlet 的配置声明在 `WebConfig` 中。
+
+需要注意的是，通过 `AbstractAnnotationConfigDispatcherServletInitializer` 来配置 `DispatcherServlet` 是传统 web.xml 方式的替代方案。如果愿意的话，可以同时包含 web.xml 和 `AbstractAnnotationConfigDispatcherServletInitializer`，但这其实并没有必要。
+
+> [!NOTE]
+> 如果按照这种方式配置 `DispatcherServlet`，而不是使用 web.xml，唯一的限制是它只能部署到支持 Servlet 3.0 的服务器中才能正常工作，如 Tomcat 7 或更高版本。Servlet 3.0 规范在 2009 年 12 月就已经发布，因此绝大多数场景都可以使用这种方式；如果你的服务器不支持 Servlet 3.0，那就只能继续使用 web.xml 了。
+
+## 4. 关于页面
+
+结合`光年模板`、`art-template`实现增删改查页面。

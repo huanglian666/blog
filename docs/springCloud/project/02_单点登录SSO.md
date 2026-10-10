@@ -1,42 +1,46 @@
 ---
-title: 02_单点登录SSO
+title: 单点登录SSO
 date: 2022-10-05
 ---
 
-# 一：jwt
+# 单点登录SSO
 
-## 1.1：jwt令牌简介
+本篇先介绍 JWT 令牌的组成与使用（含 HMAC 对称签名与 RSA 非对称签名两种方案），再落地完整的单点登录链路：单点登录服务颁发令牌 → 网关全局过滤器统一校验 → 资源服务通过拦截器获取用户信息。
 
-JWT概念:
+## 1. JWT
 
-> JWT，全称JSON Web Token，官网地址https://jwt.io ，是一款出色的分布式身份校验方案。可以生成token，也可以解析检验token。
+### 1.1 JWT 令牌简介
 
-JWT生成的token由三部分组成：
+**JWT**（JSON Web Token，官网 <https://jwt.io>）是一款出色的分布式身份校验方案，可以生成 token，也可以解析校验 token。
 
-```txt
-头部（head）：令牌类型和所使用的签名算法
+JWT 生成的 token 由三部分组成：
+
+- **头部（header）**：声明令牌类型和所使用的签名算法，进行 Base64 编码（**不是加密**）；
+- **载荷（payload）**：token 中存放有效信息的部分，比如用户名、用户角色、过期时间等。**注意不要放密码等敏感信息，Base64 是可逆编码，会泄露**；
+- **签名（signature）**：将头部与载荷分别采用 Base64 编码后用 `.` 相连，再加入盐（salt），最后使用头部声明的算法进行加密，就得到了签名。
+
+```text
+头部（header）：令牌类型和所使用的签名算法
 {
-	'alg':'HS256'
-	'typ':'JWT'
+  "alg": "HS256",
+  "typ": "JWT"
 }
-进行base64编码（不是加密）==> 'xxxxxxx'
+进行 base64 编码（不是加密） ==> 'xxxxxxx'
 
-
-载荷（payload）： token中存放有效信息的部分，比如用户名，用户角色，过期时间等，但是不要放密码，会泄露！
+载荷（payload）：token 中存放有效信息的部分，比如用户名、用户角色、过期时间等（不要放密码，会泄露！）
 {
-name:'jack',
-age:18
+  "name": "jack",
+  "age": 18
 }
-进行base64编码（不是加密）==> 'yyyyyy'
+进行 base64 编码（不是加密） ==> 'yyyyyyy'
 
-
-
-签名(signatrue)：将头部与载荷分别采用 base64编码后，用“.”相连，再加入盐，最后使用头部声明的编码类型进行加密，就得到了签名。
-签名=HS256(xxxxxx.yyyyyyy,salt)
-
+签名（signature）：头部与载荷分别 base64 编码后用 "." 相连，加入盐，再用头部声明的算法加密
+signature = HS256(xxxxxxx.yyyyyyy, salt)
 ```
 
-## 1.2：jwt入门使用
+### 1.2 JWT 入门使用
+
+引入 `java-jwt` 依赖：
 
 ```xml
 <dependency>
@@ -46,75 +50,72 @@ age:18
 </dependency>
 ```
 
-
-
-
+生成、校验并解析令牌的示例：
 
 ```java
-public static void main(String[] args) throws Exception{
-  Calendar c = Calendar.getInstance();
-        c.add(Calendar.SECOND,10);
+public static void main(String[] args) throws Exception {
+    Calendar c = Calendar.getInstance();
+    c.add(Calendar.SECOND, 10);
 
+    // 生成 jwt 令牌
+    String jwtToken = JWT.create()
+        // .withHeader() 使用默认即可
+        // payload（用户信息 id、account、role、auth）
+        .withClaim("id", "12")
+        .withClaim("account", "jack")
+        .withClaim("role", "ROLE_ADMIN,ROLE_COPY")
+        .withExpiresAt(c.getTime())   // 指定令牌的过期时间
+        .sign(Algorithm.HMAC256("wfx"));
+    System.out.println(jwtToken);
 
-        //生成jwt令牌
-        String jwtToken = JWT.create()
-//            .withHeader()  使用默认即可
-            //payload(用户信息 id、account、role、auth)
-            .withClaim("id", "12")
-            .withClaim("account", "jack")
-            .withClaim("role", "ROLE_ADMIN,ROLE_COPY")
-            .withExpiresAt(c.getTime())   //指定令牌的过期时间
-            .sign(Algorithm.HMAC256("wfx"));
-        System.out.println(jwtToken);
+    // 校验 jwt 令牌（等待令牌过期后再校验，验证过期时间生效）
+    Thread.sleep(15000);
 
-        //校验jwt令牌
-
-        Thread.sleep(15000);
-
-        JWTVerifier wfxVerifier = JWT.require(Algorithm.HMAC256("wfx")).build();
-        DecodedJWT verify = wfxVerifier.verify(jwtToken);//校验令牌
-        //解析令牌，获取用户信息
-        String id = verify.getClaim("id").asString();
-        System.out.println("id"+id);
-        String account = verify.getClaim("account").asString();
-        System.out.println("account"+account);
-
-
-
-    }
+    JWTVerifier wfxVerifier = JWT.require(Algorithm.HMAC256("wfx")).build();
+    DecodedJWT verify = wfxVerifier.verify(jwtToken); // 校验令牌
+    // 解析令牌，获取用户信息
+    String id = verify.getClaim("id").asString();
+    System.out.println("id=" + id);
+    String account = verify.getClaim("account").asString();
+    System.out.println("account=" + account);
+}
 ```
 
+> [!WARNING]
+> 上例使用 `HMAC256("wfx")` 对称加密，生成 token 与校验 token 用的是**同一个盐**。一旦盐泄露，任何人都能伪造 token，这是引入 RSA 非对称加密的原因。
 
+### 1.3 RSA 非对称加密
 
-## 1.3：RSA非对称加密
+#### 1.3.1 为什么需要 RSA 非对称加密
 
-### 1.3.1：为什么RSA非对称加密
+从 JWT 生成的 token 组成上来分析安全性：
 
-JWT生成token的安全性分析:
+- 头部和载荷只是 Base64 编码，几乎是透明的，毫无安全性可言；
+- 要想避免 token 被伪造，关键看签名部分，而签名真正起作用的就是加入的盐；
+- 如果盐（salt）泄露，就会导致 token 被伪造，最终带来系统安全隐患。
 
-```txt
-从JWT生成的token组成上来看，要想避免token被伪造，主要就得看签名部分了，而签名部分又有三部分组成，其中头部和载荷的base64编码，几乎是透明的，毫无安全性可言，那么最终守护token安全的重担就落在了加入的盐上面了！
+解决办法是对盐采用非对称加密的方式处理，达到**生成 token 与校验 token 双方所用的密钥不一致**的安全效果：
 
-如果salt泄漏就会导致token伪造，最终导致系统安全隐患
+| 密钥 | 用途 | 持有方 |
+| --- | --- | --- |
+| 私钥 | 加密生成 JWT 令牌 | 认证中心（单点登录服务） |
+| 公钥 | 解密校验 JWT 令牌 | 网关、各资源服务 |
 
-这时，我们就需要对盐采用非对称加密的方式进行加密，以达到生成token与校验token方所用的盐不一致的安全效果！
+#### 1.3.2 生成公钥、私钥密钥对
 
-RSA非对称加密:私钥加密(生成令牌)  公钥解密（校验令牌）
-```
+RsaUtils 工具类：
 
-
-
-### 1.3.2：生成公钥、私钥秘钥对
-
-#### RsaUtils
-
-```JAVA
+```java
 package com.wfx.util;
+
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.security.*;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -124,9 +125,11 @@ public class RsaUtils {
     private static final int DEFAULT_KEY_SIZE = 2048;
 
     /**
-     * @param filename 公钥保存路径，相对于classpath
+     * 从文件中读取公钥
+     *
+     * @param filename 公钥保存路径，相对于 classpath
      * @return 公钥对象
-     * @throws Exception
+     * @throws Exception 读取或解析失败抛出
      */
     public static PublicKey getPublicKey(String filename) throws Exception {
         byte[] bytes = readFile(filename);
@@ -134,11 +137,11 @@ public class RsaUtils {
     }
 
     /**
-     * 从文件中读取密钥
+     * 从文件中读取私钥
      *
-     * @param filename 私钥保存路径，相对于classpath
+     * @param filename 私钥保存路径，相对于 classpath
      * @return 私钥对象
-     * @throws Exception
+     * @throws Exception 读取或解析失败抛出
      */
     public static PrivateKey getPrivateKey(String filename) throws Exception {
         byte[] bytes = readFile(filename);
@@ -146,10 +149,11 @@ public class RsaUtils {
     }
 
     /**
-     * 获取公钥
-     * @param bytes 公钥的字节形式
-     * @return
-     * @throws Exception
+     * 从字节中获取公钥
+     *
+     * @param bytes 公钥的字节形式（Base64 编码）
+     * @return 公钥对象
+     * @throws Exception 解析失败抛出
      */
     public static PublicKey getPublicKey(byte[] bytes) throws Exception {
         bytes = Base64.getDecoder().decode(bytes);
@@ -159,10 +163,12 @@ public class RsaUtils {
     }
 
     /**
-     * 获取密钥
-     * @param bytes 私钥的字节形式
-     * @return
-     * @throws Exception
+     * 从字节中获取私钥
+     *
+     * @param bytes 私钥的字节形式（Base64 编码）
+     * @return 私钥对象
+     * @throws NoSuchAlgorithmException 算法不存在
+     * @throws InvalidKeySpecException  密钥规格不合法
      */
     public static PrivateKey getPrivateKey(byte[] bytes) throws NoSuchAlgorithmException,
         InvalidKeySpecException {
@@ -173,11 +179,13 @@ public class RsaUtils {
     }
 
     /**
-     * 根据密文，生存rsa公钥和私钥,并写入指定文件
+     * 根据密文生成 RSA 公钥和私钥，并写入指定文件
      *
      * @param publicKeyFilename  公钥文件路径
      * @param privateKeyFilename 私钥文件路径
-     * @param secret             生成密钥的密文
+     * @param secret             生成密钥的密文（种子）
+     * @param keySize            密钥长度，小于默认值时按默认值生成
+     * @throws Exception 生成或写文件失败抛出
      */
     public static void generateKey(String publicKeyFilename, String privateKeyFilename, String
         secret, int keySize) throws Exception {
@@ -206,32 +214,25 @@ public class RsaUtils {
         }
         Files.write(dest.toPath(), bytes);
     }
-
-
 }
 ```
 
-
-
-#### 生成秘钥对
+生成密钥对：
 
 ```java
-public static void main(String[] args)throws Exception {
-
+public static void main(String[] args) throws Exception {
     String privateFilePath = "E:\\key\\rsa";
     String publicFilePath = "E:\\key\\rsa.pub";
 
-    RsaUtils.generateKey(publicFilePath,privateFilePath,"wfx",2048);
+    RsaUtils.generateKey(publicFilePath, privateFilePath, "wfx", 2048);
 }
 ```
 
+#### 1.3.3 JWT 令牌的颁发与校验
 
+使用"私钥加密生成 JWT 令牌、公钥解密校验 JWT 令牌"的方式改造工具类。
 
-### 1.3.3：jwt令牌的颁发与校验
-
-> 私钥加密生成jwt令牌，公钥解密jwt令牌工具类
-
-#### pom依赖
+引入 jjwt 依赖：
 
 ```xml
 <dependency>
@@ -251,22 +252,17 @@ public static void main(String[] args)throws Exception {
 </dependency>
 ```
 
-
-
-#### JsonUtils
+JsonUtils（JWT 载荷中存的是用户信息序列化后的 JSON 字符串，需要 JSON 工具）：
 
 ```java
 package com.wfx.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 public class JsonUtils {
 
@@ -275,9 +271,10 @@ public class JsonUtils {
     private static final Logger logger = LoggerFactory.getLogger(JsonUtils.class);
 
     /**
-     * 将对象转换成json串
-     * @param obj
-     * @return
+     * 将对象转换成 json 串
+     *
+     * @param obj 待序列化对象
+     * @return json 串，序列化失败返回 null
      */
     public static String toString(Object obj) {
         if (obj == null) {
@@ -295,11 +292,12 @@ public class JsonUtils {
     }
 
     /**
-     * 将json串转换成对象
-     * @param json
-     * @param tClass
-     * @param <T>
-     * @return
+     * 将 json 串转换成对象
+     *
+     * @param json   json 串
+     * @param tClass 目标类型
+     * @param <T>    目标类型泛型
+     * @return 目标对象，解析失败返回 null
      */
     public static <T> T toBean(String json, Class<T> tClass) {
         try {
@@ -309,15 +307,10 @@ public class JsonUtils {
             return null;
         }
     }
-
-
 }
-
 ```
 
-
-
-#### JwtUtils
+JwtUtils（私钥颁发令牌、公钥校验令牌）：
 
 ```java
 package com.jwt.util;
@@ -326,152 +319,135 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.*;
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.UUID;
 
 /**
- * 生成token以及校验token相关方法
+ * 生成 token 以及校验 token 相关方法
  */
 public class JwtUtils {
 
     private static final String JWT_PAYLOAD_USER_KEY = "user";
 
     /**
-     * 私钥加密token
+     * 私钥加密 token
+     *
      * @param userInfo   载荷中的数据
      * @param privateKey 私钥
-     * @param expire     过期时间，单位分钟
-     * @return JWT
+     * @param expire     过期时间，单位：分钟
+     * @return JWT 令牌
      */
     public static String generateTokenExpireInMinutes(Object userInfo, PrivateKey privateKey, int expire) {
-        //计算过期时间
+        // 计算过期时间
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.MINUTE,expire);
+        c.add(Calendar.MINUTE, expire);
 
         return Jwts.builder()
-                .claim(JWT_PAYLOAD_USER_KEY, JsonUtils.toString(userInfo))//将用户信息放入payload
-                .setId(new String(Base64.getEncoder().encode(UUID.randomUUID().toString().getBytes())))
-                .setExpiration(c.getTime())
-                .signWith(privateKey, SignatureAlgorithm.RS256)
-                .compact();
+            .claim(JWT_PAYLOAD_USER_KEY, JsonUtils.toString(userInfo)) // 将用户信息放入 payload
+            .setId(new String(Base64.getEncoder().encode(UUID.randomUUID().toString().getBytes())))
+            .setExpiration(c.getTime())
+            .signWith(privateKey, SignatureAlgorithm.RS256)
+            .compact();
     }
 
     /**
-     * 私钥加密token
+     * 私钥加密 token
+     *
      * @param userInfo   载荷中的数据
      * @param privateKey 私钥
-     * @param expire     过期时间，单位秒
-     * @return JWT
+     * @param expire     过期时间，单位：秒
+     * @return JWT 令牌
      */
     public static String generateTokenExpireInSeconds(Object userInfo, PrivateKey privateKey, int expire) {
-        //计算过期时间
+        // 计算过期时间
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.SECOND,expire);
+        c.add(Calendar.SECOND, expire);
 
         return Jwts.builder()
-                .claim(JWT_PAYLOAD_USER_KEY, JsonUtils.toString(userInfo))
-                .setId(new String(Base64.getEncoder().encode(UUID.randomUUID().toString().getBytes())))
-                .setExpiration(c.getTime())
-                .signWith(privateKey, SignatureAlgorithm.RS256)
-                .compact();
+            .claim(JWT_PAYLOAD_USER_KEY, JsonUtils.toString(userInfo))
+            .setId(new String(Base64.getEncoder().encode(UUID.randomUUID().toString().getBytes())))
+            .setExpiration(c.getTime())
+            .signWith(privateKey, SignatureAlgorithm.RS256)
+            .compact();
     }
 
-
-
-
-
-
     /**
-     * 获取token中的用户信息
+     * 获取 token 中的用户信息
      *
      * @param token     用户请求中的令牌
      * @param publicKey 公钥
-     * @return 用户信息
+     * @param userType  载荷用户信息的目标类型
+     * @return 用户信息对象
      */
-    public static  Object getInfoFromToken(String token, PublicKey publicKey, Class userType) {
-        //解析token
+    public static Object getInfoFromToken(String token, PublicKey publicKey, Class userType) {
+        // 解析 token
         Jws<Claims> claimsJws = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token);
 
-        Claims body = claimsJws.getBody();//获取payload
+        Claims body = claimsJws.getBody(); // 获取 payload
         String userInfoJson = body.get(JWT_PAYLOAD_USER_KEY).toString();
         return JsonUtils.toBean(userInfoJson, userType);
-
     }
-
-
-
 }
 ```
 
-
-
-测试jw令牌生成与jwt令牌校验
+测试 JWT 令牌的生成与校验：
 
 ```java
+public static void main(String[] args) throws Exception {
+    // 生成 jwt 令牌
+    Map<String, Object> userinfo = new HashMap<String, Object>() {{
+        put("account", "jack");
+        put("auth", "a,b,c,d");
+    }};
 
-    public static void main(String[] args) throws Exception {
-        //生成jwt令牌
-        Map userinfo = new HashMap(){{
-            put("account","jack");
-            put("auth","a,b,c,d");
-        }};
+    // 获取私钥路径
+    String path = ResourceUtils.getFile("classpath:rsa").getPath();
+    // 构建私钥对象
+    PrivateKey privateKey = RsaUtils.getPrivateKey(path);
 
-        //获取私钥
-        String path = ResourceUtils.getFile("classpath:rsa").getPath();
-        //构建私钥对象
-        PrivateKey privateKey = RsaUtils.getPrivateKey(path);
+    String token = JwtUtils.generateTokenExpireInMinutes(userinfo, privateKey, 1);
+    System.out.println(token);
 
+    // 解析 token
+    // 获取公钥路径
+    String path1 = ResourceUtils.getFile("classpath:rsa.pub").getPath();
+    // 构建公钥对象
+    PublicKey publicKey = RsaUtils.getPublicKey(path1);
 
-        String token = JwtUtils.generateTokenExpireInMinutes(userinfo, privateKey, 1);
-
-        System.out.println(token);
-
-
-        //解析token
-        //获取公钥路径
-        String path1 = ResourceUtils.getFile("classpath:rsa.pub").getPath();
-        //构建公钥对象
-        PublicKey publicKey = RsaUtils.getPublicKey(path1);
-
-        Map infoFromToken = (Map) JwtUtils.getInfoFromToken(token, publicKey, Map.class);
-        System.out.println(infoFromToken.get("account"));
-
-    }
+    Map infoFromToken = (Map) JwtUtils.getInfoFromToken(token, publicKey, Map.class);
+    System.out.println(infoFromToken.get("account"));
+}
 ```
 
+## 2. 单点登录服务
 
+在分布式系统中搭建单点登录（SSO，Single Sign On）服务，从而实现**一次登录，处处使用**：用户只需在认证中心登录一次拿到令牌，之后访问各个微服务都凭令牌鉴权。
 
-# 二：单点登录服务
-
-> 在分布式系统中，搭建单点登录（SSO）【single sign on】服务，从而实现一次登录  处处使用
-
-
-
-后台接口开发
+单点登录的后台接口开发——用户登录成功后用私钥颁发 JWT 令牌：
 
 ```java
 package com.fengmi.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fengmi.jwt.JwtUtils;
 import com.fengmi.jwt.RsaUtils;
 import com.fengmi.user.SysUser;
 import com.fengmi.user.mapper.SysUserMapper;
 import com.fengmi.user.service.ISysUserService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fengmi.vo.ResultVO;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
-import java.io.FileNotFoundException;
 import java.security.PrivateKey;
 
 /**
- * <p>
- * 用户信息表 服务实现类
- * </p>
+ * 用户信息表服务实现类
  *
  * @author zhuxm
  * @since 2021-10-19
@@ -482,54 +458,49 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public ResultVO login(SysUser user) {
         if (user == null) {
-            return  new ResultVO(false, "用户或者密码必须填写");
+            return new ResultVO(false, "用户或者密码必须填写");
         }
 
-        //获取用户信息
+        // 获取用户信息
         QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("account", user.getAccount());
         queryWrapper.eq("user_type", "6");
         SysUser sysUserFromDB = this.baseMapper.selectOne(queryWrapper);
         if (sysUserFromDB == null) {
-            return  new ResultVO(false, "用户或者密码错误");
+            return new ResultVO(false, "用户或者密码错误");
         }
 
-
-        //比较密码
+        // 比较密码（BCrypt 不可逆加密，用 matches 比对）
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(!encoder.matches(user.getPassword(),sysUserFromDB.getPassword())){
-            return  new ResultVO(false, "用户或者密码错误");
+        if (!encoder.matches(user.getPassword(), sysUserFromDB.getPassword())) {
+            return new ResultVO(false, "用户或者密码错误");
         }
 
-        //颁发jwt令牌
-        //加载私钥
+        // 颁发 jwt 令牌：加载私钥
         try {
             String path = ResourceUtils.getFile("classpath:rsa_pri").getPath();
             PrivateKey privateKey = RsaUtils.getPrivateKey(path);
-            sysUserFromDB.setPassword("");
+            sysUserFromDB.setPassword(""); // 载荷中不放密码
             String token = JwtUtils.generateTokenExpireInMinutes(sysUserFromDB, privateKey, 40);
 
-            return  new ResultVO(true, "success",token);
-
+            return new ResultVO(true, "success", token);
         } catch (Exception e) {
             e.printStackTrace();
-            return  new ResultVO(false, "用户或者密码错误");
-
+            return new ResultVO(false, "用户或者密码错误");
         }
-
     }
 
     @Override
     public ResultVO login(String phone, String code) {
+        // 手机号 + 验证码登录，略
         return null;
     }
 }
-
 ```
 
+## 3. 网关全局认证
 
-
-# 三：网关全局认证
+网关作为所有请求的入口，通过**全局过滤器**统一校验令牌：白名单内的 URI 直接放行，其余请求必须携带合法令牌，校验通过后把用户信息写入请求头转发给下游服务。
 
 ```java
 package com.portal.filters;
@@ -560,81 +531,64 @@ import java.security.PublicKey;
 import java.util.regex.Pattern;
 
 /**
- * <p>title: com.portal.filters</p>
- * <p>Company: wendao</p>
- * author zhuximing
- * date 2021/7/30
- * description:
+ * 网关全局认证过滤器
+ *
+ * @author zhuximing
+ * @date 2021/7/30
  */
 @Component
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
-//    public static void main(String[] args) {
-//        boolean matches =;
-//        System.out.println(matches);
-//    }
-
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-
-
-
-
-
-
-
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
         try {
+            // 定义白名单（支持正则）
+            String[] whiteUris = {"/auth/login", "/auth/verify", "/index/(.*)", "/search/goods"};
 
-            //定义白名单
-            String[] whiteUris = {"/auth/login","/auth/verify","/index/(.*)","/search/goods"};
-
-            //获取用户请求的uri
+            // 获取用户请求的 uri
             String uri = request.getPath().toString();
 
-            for (String uris : whiteUris) {
-                if( Pattern.matches(uris, uri)){
-                    return  chain.filter(exchange);  //放行
+            for (String whiteUri : whiteUris) {
+                if (Pattern.matches(whiteUri, uri)) {
+                    return chain.filter(exchange);  // 放行
                 }
             }
 
-
-
-            //请求头中获取token
+            // 请求头中获取 token
             String token = request.getHeaders().getFirst("token");
-            if(StringUtils.isEmpty(token)){
-                return response(response,new ResultVO(false, "非法访问"));
+            if (StringUtils.isEmpty(token)) {
+                return response(response, new ResultVO(false, "非法访问"));
             }
 
-
-            //校验令牌
+            // 校验令牌
             PublicKey publicKey = RsaUtils.getPublicKey(ResourceUtils.getFile("classpath:rsa_pub").getPath());
 
             SysUser infoFromToken = (SysUser) JwtUtils.getInfoFromToken(token, publicKey, SysUser.class);
             String str = JSONUtil.toJsonStr(infoFromToken);
-            //将用户信息存放到http请求头
+            // 将用户信息存放到 http 请求头，转发给下游服务
             ServerHttpRequest newHttpRequest = request.mutate().header("userinfo", str).build();
-            ServerWebExchange newexchange = exchange.mutate().request(newHttpRequest).build();
+            ServerWebExchange newExchange = exchange.mutate().request(newHttpRequest).build();
 
-
-            return  chain.filter(newexchange);  //放行
-
+            return chain.filter(newExchange);  // 放行
 
         } catch (MalformedJwtException e) {
             e.printStackTrace();
-            return response(response,new ResultVO(false, "非法令牌"));
-        }catch (ExpiredJwtException e) {
+            return response(response, new ResultVO(false, "非法令牌"));
+        } catch (ExpiredJwtException e) {
             e.printStackTrace();
-            return response(response,new ResultVO(false, "令牌已过期"));
-        }catch (Exception e) {
+            return response(response, new ResultVO(false, "令牌已过期"));
+        } catch (Exception e) {
             e.printStackTrace();
-            return response(response,new ResultVO(false, "其他异常"));
+            return response(response, new ResultVO(false, "其他异常"));
         }
     }
 
-    private Mono<Void> response(ServerHttpResponse response, ResultVO res){
-        //不能放行，直接返回，返回json信息
+    /**
+     * 不放行时，直接响应 json 错误信息
+     */
+    private Mono<Void> response(ServerHttpResponse response, ResultVO res) {
         response.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -645,14 +599,10 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             e.printStackTrace();
         }
 
-
         DataBuffer dataBuffer = response.bufferFactory().wrap(jsonStr.getBytes());
 
-        return response.writeWith(Flux.just(dataBuffer));//响应json数据
+        return response.writeWith(Flux.just(dataBuffer)); // 响应 json 数据
     }
-
-
-
 
     @Override
     public int getOrder() {
@@ -661,11 +611,11 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 }
 ```
 
+## 4. 资源服务获取用户信息
 
+网关校验通过后会把用户信息放进请求头转发下来，资源服务用拦截器取出并放入 `ThreadLocal`，让当前请求的任何业务代码都能方便地取到用户信息。
 
-
-
-# 四：资源服务获取用户信息
+UserInfoInterceptor：
 
 ```java
 package com.wfx.interceptor;
@@ -676,48 +626,46 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * <p>title: com.wfx.interceptor</p>
- * author zhuximing
- * description:
+ * 用户信息拦截器：从请求头中获取用户信息并放入 ThreadLocal
+ *
+ * @author zhuximing
  */
 public class UserInfoInterceptor implements HandlerInterceptor {
 
-
-   private static ThreadLocal<String> local = new ThreadLocal<>();
-
+    /**
+     * 每个请求线程独立的用户信息存储
+     */
+    private static ThreadLocal<String> local = new ThreadLocal<>();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-        //获取用户id
+        // 获取用户信息（网关校验令牌后写入请求头，头名以项目实际约定为准）
         String userId = request.getHeader("userId");
 
-        //将userId放入到threadLocal
+        // 将用户信息放入 ThreadLocal
         local.set(userId);
-
 
         return true;
     }
 
-
-    //请求结束
+    // 请求结束后清理，防止线程复用导致的数据串用与内存泄漏
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-
         local.remove();
     }
 
-
-
-    public static String  getUserInfo(){
-        return  local.get();
+    /**
+     * 业务代码中获取当前请求的用户信息
+     *
+     * @return 当前请求的用户信息
+     */
+    public static String getUserInfo() {
+        return local.get();
     }
 }
 ```
 
-
-
-
+注册拦截器：
 
 ```java
 package com.wfx.interceptor;
@@ -731,14 +679,12 @@ public class MvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-
         registry.addInterceptor(new UserInfoInterceptor())
             .addPathPatterns("/**")
             .excludePathPatterns("/login");
-
     }
 }
 ```
 
-
-
+> [!NOTE]
+> 整条链路的关键点：私钥只在认证服务中持有，负责颁发令牌；网关和资源服务只拿公钥做校验；令牌一旦被篡改，公钥校验就会失败，从而保证令牌不可伪造。

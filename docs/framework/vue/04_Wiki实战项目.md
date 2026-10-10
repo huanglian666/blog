@@ -1,30 +1,46 @@
 ---
-title: 04_Wiki实战项目
+title: Wiki实战项目
 date: 2026-09-12
 ---
 
-## 一、关于Wiki
+# Wiki实战项目
 
-### 1.1、是什么
+本篇以一个多人协作的 Wiki 系统为实战案例，整理项目的完整搭建流程：服务端建库建表与配置、前端工程的多环境配置，以及文件上传与图片显示的前后端实现。
 
-> `Wiki`(多人协作的写作系统)是一种在网络上开放且可供多人协同创作的超文本系统，由美国人沃德·坎宁安于1995年首先开发，这种超文本系统支持**面向社群**的协作式写作，同时也包括一组支持这种写作。沃德·坎宁安将`Wiki`定义为`一种允许一群用户用简单的描述来创建和连接一组网页的社会计算系统`。 `Wiki`站点由多人维护，每个人都可以发表自己的意见，或对共同的主题进行扩展与探讨。
+## 1. 关于 Wiki
 
-### 1.2、与Blog的区别
+### 1.1 是什么
 
-> `Wiki`站点的内容要求着高度相关性。最其确定的主旨，任何写作者和参与者都应当严肃地遵从。`Wiki`的协作是针对同一主题作外延式和内涵式的扩展，将同一个问题谈得很充分很深入。一般的`Blog`站点都会有一个主题，凡是这个主旨往往都是很松散的，而且一般不会去刻意地控制内容的相关性。
+`Wiki`（多人协作的写作系统）是一种在网络上开放且可供多人协同创作的超文本系统，由美国人沃德·坎宁安于 1995 年首先开发。这种超文本系统支持**面向社群**的协作式写作，同时也包括一组支持这种写作的辅助工具。沃德·坎宁安将 `Wiki` 定义为"一种允许一群用户用简单的描述来创建和连接一组网页的社会计算系统"。
 
-## 二、项目搭建
+`Wiki` 站点由多人维护，每个人都可以发表自己的意见，或对共同的主题进行扩展与探讨。
 
-### 2.1、服务端
+### 1.2 与 Blog 的区别
 
-> * 建库建表
-> * 创建SpringBoot项目
-> * 导入依赖
-> * 使用MyBatisX插件生成代码
+`Wiki` 站点的内容要求高度相关性，其确定的主旨是任何写作者和参与者都应当严肃遵从的。`Wiki` 的协作是针对同一主题作外延式和内涵式的扩展，将同一个问题谈得很充分很深入。
 
-#### 2.1.1、建库建表
+一般的 `Blog` 站点虽然也会有一个主题，但这个主旨往往很松散，而且一般不会去刻意地控制内容的相关性。
 
-> 数据库名`qfwiki`
+| 对比维度 | Wiki | Blog |
+| --- | --- | --- |
+| 内容组织 | 围绕同一主题持续扩展、深挖 | 以个人时间线组织，主旨松散 |
+| 内容相关性 | 高度相关，严格受控 | 一般不刻意控制相关性 |
+| 维护者 | 多人共同维护 | 通常为博主个人 |
+
+## 2. 项目搭建
+
+### 2.1 服务端
+
+服务端搭建的步骤：
+
+- 建库建表；
+- 创建 SpringBoot 项目；
+- 导入依赖；
+- 使用 MyBatisX 插件生成代码。
+
+#### 2.1.1 建库建表
+
+数据库名 `qfwiki`：
 
 ```sql
 SET NAMES utf8mb4;
@@ -70,10 +86,6 @@ CREATE TABLE `content`  (
   `content` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '内容',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '文档内容' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of content
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for demo
@@ -158,10 +170,6 @@ CREATE TABLE `ebook_snapshot`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '电子书快照表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of ebook_snapshot
--- ----------------------------
-
--- ----------------------------
 -- Table structure for test
 -- ----------------------------
 DROP TABLE IF EXISTS `test`;
@@ -185,7 +193,7 @@ INSERT INTO `test` VALUES (3, 'bob', '456');
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
   `id` bigint(20) NOT NULL COMMENT 'ID',
-  `login_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '登陆名',
+  `login_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '登录名',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '昵称',
   `password` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '密码',
   PRIMARY KEY (`id`) USING BTREE,
@@ -200,7 +208,7 @@ INSERT INTO `user` VALUES (1, 'test', '测试', 'e70e2222a9d67c4f2eae107533359aa
 SET FOREIGN_KEY_CHECKS = 1;
 ```
 
-#### 2.1.2、项目依赖
+#### 2.1.2 项目依赖
 
 ```xml
 <dependencies>
@@ -243,11 +251,13 @@ SET FOREIGN_KEY_CHECKS = 1;
 </dependencies>
 ```
 
-#### 2.1.3、使用MyBatisX插件生成代码
+#### 2.1.3 使用 MyBatisX 插件生成代码
 
-> 注意如何一次生成多张表的代码。
+安装 MyBatisX 插件后连接数据库，选中多张表可以一次性生成多张表的实体类、Mapper 接口与 XML 文件。
 
-#### 2.1.4、RespBean
+#### 2.1.4 RespBean
+
+统一封装接口返回结果：
 
 ```java
 import lombok.Data;
@@ -257,11 +267,11 @@ import lombok.Data;
  */
 @Data
 public class RespBean {
-    //状态码 10000-成功 10001-失败
+    // 状态码：10000-成功，10001-失败
     private Integer code;
-    //返回的附件信息
+    // 返回的提示信息
     private String msg;
-    //返回的数据
+    // 返回的数据
     private Object data;
 
     public static RespBean ok() {
@@ -314,11 +324,9 @@ public class RespBean {
 }
 ```
 
+#### 2.1.5 相关配置
 
-
-#### 2.1.5、相关配置
-
-> application.properties
+`application.properties`：
 
 ```properties
 # 端口号
@@ -330,6 +338,9 @@ spring.datasource.url=jdbc:mysql://localhost:3306/qfwiki?useSSL=false
 spring.datasource.username=root
 spring.datasource.password=root
 
+# 封面文件存放目录
+cover.dir=D:/wiki/cover/
+
 # mybatis配置
 mybatis.type-aliases-package=com.qfedu.bean
 #mybatis.mapper-locations=classpath:mapper/*Mapper.xml
@@ -338,13 +349,13 @@ mybatis.type-aliases-package=com.qfedu.bean
 logging.level.com.qfedu.mapper=DEBUG
 ```
 
-> 在启动类上添加如下注解
+在启动类上添加如下注解：
 
 ```java
 @MapperScan("com.qfedu.mapper")
 ```
 
-> `MyBatisPlus`分页插件配置
+`MyBatisPlus` 分页插件配置：
 
 ```java
 import com.baomidou.mybatisplus.annotation.DbType;
@@ -357,7 +368,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @MapperScan("com.qfedu.mapper")
 public class MyBatisPlusConfig {
-    //配置分页插件
+    // 配置分页插件
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
@@ -367,7 +378,7 @@ public class MyBatisPlusConfig {
 }
 ```
 
-> `Swagger2`配置
+`Swagger2` 配置：
 
 ```java
 import org.springframework.context.annotation.Bean;
@@ -385,7 +396,7 @@ import java.util.ArrayList;
 @Configuration
 @EnableSwagger2
 public class Swagger2Config {
-    //配置Swagger2
+    // 配置Swagger2
     @Bean
     public Docket docket(Environment environment) {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -395,63 +406,63 @@ public class Swagger2Config {
                 .build();
     }
 
-    //创建文档信息
+    // 创建文档信息
     private ApiInfo apiInfo() {
-        //联系方式
-        Contact contact = new Contact("Solar", 
-                                      "https://note.codeaction.org", 
-                                      "solar@126.com");
-        //文档信息
+        // 联系方式
+        Contact contact = new Contact("Solar",
+                "https://note.codeaction.org",
+                "solar@126.com");
+        // 文档信息
         ApiInfo apiInfo = new ApiInfo("Swagger2测试",
                 "学习如何使用Swagger2",
                 "10.0.0",
                 "https://note.codeaction.org",
                 contact,
                 "Apache2.0",
-                "https://note.codeaction.org", new ArrayList());
+                "https://note.codeaction.org", new ArrayList<>());
         return apiInfo;
     }
 }
 ```
 
-#### 2.1.6、测试
+#### 2.1.6 测试
 
-> * 使用`Junit`测试`Mapper`和`Service`；
-> * 使用`Swagger2`测试`Controller`。
+- 使用 `Junit` 测试 `Mapper` 和 `Service`；
+- 使用 `Swagger2` 测试 `Controller`。
 
-### 2.2、前端
+### 2.2 前端
 
-> 注意：我们这里使用IDEA进行Vue开发，生成的前端项目和服务端项目在同一个目录下。
+> [!NOTE]
+> 我们这里使用 IDEA 进行 Vue 开发，生成的前端项目和服务端项目在同一个目录下。
 
-#### 2.2.1、安装插件
+#### 2.2.1 安装插件
 
-> 在IDEA插件市场搜索`vue.js`，安装，这样IDEA可以识别`.vue`代码。
+在 IDEA 插件市场搜索 `vue.js`，安装后 IDEA 可以识别 `.vue` 代码。
 
-#### 2.2.2、生成前端项目
+#### 2.2.2 生成前端项目
 
-> 打开IDEA自带的控制台
+打开 IDEA 自带的控制台：
 
-```shell
-$ vue create web
+```sh
+vue create web
 ```
 
-> 按照之前讲解的内容，选择相关选项，生成Vue的项目。
+按照之前讲解的内容，选择相关选项，生成 Vue 的项目。之后进入 web 目录，方便后续操作：
 
-```shell
-# 进入web目录，方便后续操作
-$ cd web
+```sh
+cd web
 ```
 
-#### 2.2.3、安装并引入ant design of vue
+#### 2.2.3 安装并引入 ant design of vue
 
-> 安装`ant design of vue`
+安装 `ant design of vue`：
 
-```shell
+```sh
 # 安装特定版本ant design of vue，这样就无需手动修改package.json了
-$ npm install --save ant-design-vue@1.7.8
+npm install --save ant-design-vue@1.7.8
 ```
 
-> 在`main.js`引入`ant design of vue`
+在 `main.js` 引入 `ant design of vue`：
 
 ```javascript
 import Antd from 'ant-design-vue';
@@ -460,118 +471,122 @@ import 'ant-design-vue/dist/antd.css';
 Vue.use(Antd);
 ```
 
-#### 2.2.4、安装并引入Axios
+#### 2.2.4 安装并引入 Axios
 
-> 安装`Axios`
+安装 `Axios`：
 
-```shell
-$ npm install axios
+```sh
+npm install axios
 ```
 
-> 在`main.js`引入`Axios`
+在 `main.js` 引入 `Axios`：
 
-```java
+```javascript
 import axios from 'axios'
 Vue.prototype.$axios = axios
 ```
 
-#### 2.2.5、修改首页
+#### 2.2.5 修改首页
 
-> * 修改页面为上左右下结构；
-> * 提取头部和尾部为组件；
-> * 首页以列表的形式显示所有的电子书。
+- 修改页面为上左右下结构；
+- 提取头部和尾部为组件；
+- 首页以列表的形式显示所有的电子书。
 
-#### 2.2.6、配置Axios
+#### 2.2.6 配置 Axios
 
-> 配置Axios拦截器，方便跟踪请求和响应数据
+配置 Axios 拦截器，方便跟踪请求和响应数据：
 
 ```javascript
-//axios拦截器
+// axios拦截器
 axios.interceptors.request.use(config => {
-  console.log("请求参数:", config);
-  return config;
+    console.log("请求参数:", config);
+    return config;
 }, error => {
-  console.log("返回错误:", error);
-  return Promise.reject(error);
+    console.log("返回错误:", error);
+    return Promise.reject(error);
 });
 axios.interceptors.response.use(response => {
-  console.log("返回结果:", response);
-  return response;
+    console.log("返回结果:", response);
+    return response;
 }, error => {
-  console.log("返回错误:", error);
-  return Promise.reject(error);
+    console.log("返回错误:", error);
+    return Promise.reject(error);
 })
 ```
 
-#### 2.2.7、前端多环境
+#### 2.2.7 前端多环境
 
-##### 2.2.7.1、配置
+##### 2.2.7.1 配置
 
-> 在web根目录分别定义如下文件
->
-> * `.env.dev`，表示开发环境的配置文件
-> * `.env.prod`，表示生产环境的配置文件
->
-> `.env.dev`内容如下
+在 web 根目录分别定义如下文件：
+
+- `.env.dev`，表示开发环境的配置文件；
+- `.env.prod`，表示生产环境的配置文件。
+
+`.env.dev` 内容如下：
 
 ```properties
 NODE_ENV=development
 VUE_APP_SERVER=http://localhost:9999
 ```
 
-> `.env.prod`内容如下
+`.env.prod` 内容如下：
 
 ```properties
 NODE_ENV=production
 VUE_APP_SERVER=http://localhost:9990
 ```
 
-> `package.json`修改
+`package.json` 修改 `scripts` 内容如下：
 
 ```json
-#修改scripts内容如下
 "scripts": {
-    #使用开发环境配置启动项目，在80上启动项目，默认是8080
     "dev": "vue-cli-service serve --port 80 --mode dev",
-    #使用生产环境配置启动项目
     "prod": "vue-cli-service serve --mode prod",
-    #使用开发环境配置打包项目
     "build:dev": "vue-cli-service build --mode dev",
-    #使用生产环境配置打包项目
     "build:prod": "vue-cli-service build --mode prod"
 }
 ```
 
-> 以上就可以使用多环境启动和打包项目。
+四个命令的含义：
 
-##### 2.2.7.2、使用多环境相关参数
+| 命令 | 作用 |
+| --- | --- |
+| `dev` | 使用开发环境配置启动项目，在 80 端口启动（默认是 8080） |
+| `prod` | 使用生产环境配置启动项目 |
+| `build:dev` | 使用开发环境配置打包项目 |
+| `build:prod` | 使用生产环境配置打包项目 |
+
+以上就可以使用多环境启动和打包项目。
+
+##### 2.2.7.2 使用多环境相关参数
+
+在代码中可以通过 `process.env` 读取环境配置文件中的变量：
 
 ```javascript
 console.log(process.env.VUE_APP_SERVER);
 ```
 
-> 我们可以利用此特性配置Axios的基本路径，以后使用Axios发送请求，直接写相对路径就可以了。如果Axios发送请求路径发生变化，直接修改配置文件就可以。
+我们可以利用此特性配置 Axios 的基本路径。这样以后使用 Axios 发送请求时直接写相对路径就可以了，如果 Axios 发送请求的路径发生变化，直接修改配置文件即可：
 
 ```javascript
-//配置axios的baseURL
+// 配置axios的baseURL
 axios.defaults.baseURL = process.env.VUE_APP_SERVER
 ```
 
-## 三、关于文件上传和显示处理
+## 3. 文件上传和显示处理
 
-### 3.1、文件上传
+### 3.1 文件上传
 
-#### 3.1.1、前端
+#### 3.1.1 前端
 
-> 使用`a-upload`实现上传
->
-> 注意：
->
-> 1. `name`值和服务端接收参文件的参数名保持一致；
-> 2. `action`表示上传的路径；
-> 3. `change`表示上传文件改变时的状态处理，通常用于文件上传结束的处理。
+使用 `a-upload` 组件实现上传，注意以下三点：
 
-#### 3.1.2、服务端
+1. `name` 值要和服务端接收上传文件的参数名保持一致；
+2. `action` 表示上传的路径；
+3. `change` 表示上传文件改变时的状态处理，通常用于文件上传结束后的处理。
+
+#### 3.1.2 服务端
 
 ```java
 import com.qfedu.bean.RespBean;
@@ -593,11 +608,11 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/file")
 public class FileController {
-    //存放封面的目录，在application.properties中配置
+    // 存放封面的目录，在application.properties中通过cover.dir配置
     @Value("${cover.dir}")
-    private String coverdir;
+    private String coverDir;
 
-    //文件上传到coverdir, 并将唯一的文件名返回
+    // 文件上传到coverDir目录，并将唯一的文件名返回
     @ResponseBody
     @PostMapping("/upload")
     public RespBean upload(@RequestParam("cover") MultipartFile cover) {
@@ -606,14 +621,15 @@ public class FileController {
         }
         String fileName = cover.getOriginalFilename();
 
+        // 使用UUID重命名，防止文件名重复覆盖
         fileName = UUID.randomUUID().toString().replace("-", "") + "_" + fileName;
 
         try {
-            //文件上传
-            cover.transferTo(new File(coverdir + fileName));
+            // 文件上传
+            cover.transferTo(new File(coverDir + fileName));
         } catch (IOException e) {
             e.printStackTrace();
-            return RespBean.ok("上传失败");
+            return RespBean.error("上传失败");
         }
 
         return RespBean.ok("上传成功", fileName);
@@ -621,17 +637,19 @@ public class FileController {
 }
 ```
 
-### 3.2、图片显示
+### 3.2 图片显示
 
-#### 3.2.1、服务端
+#### 3.2.1 服务端
+
+服务端提供读取图片的接口，将文件流写入响应：
 
 ```java
-//前端读取该路径，显示文件
+// 前端请求该路径，显示文件
 @RequestMapping("/showimage/{image_name}")
 public void showImage(@PathVariable("image_name") String image_name,
                       HttpServletRequest req, HttpServletResponse resp)
-    throws IOException {
-    //设置响应信息
+        throws IOException {
+    // 设置响应信息：禁用缓存，内容类型为图片
     resp.setDateHeader("Expires", 0);
     resp.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
     resp.addHeader("Cache-Control", "post-check=0, pre-check=0");
@@ -639,22 +657,32 @@ public void showImage(@PathVariable("image_name") String image_name,
     resp.setContentType("image/jpeg");
 
     ServletOutputStream out = resp.getOutputStream();
-    File file = new File(coverdir + "/" + image_name);
+    File file = new File(coverDir + "/" + image_name);
 
     FileCopyUtils.copy(new FileInputStream(file), out);
     out.flush();
 }
 ```
 
-#### 3.2.2、前端
+#### 3.2.2 前端
+
+显示封面的标签：
 
 ```html
-# 显示封面的标签
 <a-avatar shape="square" :size="64" :src="covertCoverPath(cover)" />
+```
 
-# 转换头像的地址
+转换封面地址的方法，把后端配置的服务地址和图片接口拼接成完整的图片 URL：
+
+```javascript
 covertCoverPath(cover) {
-return process.env.VUE_APP_SERVER + "/file/showimage/" + cover;
+    return process.env.VUE_APP_SERVER + "/file/showimage/" + cover;
 }
 ```
 
+## 4. 本章小结
+
+- Wiki 与 Blog 的本质区别在于内容组织：Wiki 围绕同一主题多人协作深耕，Blog 以个人时间线松散组织；
+- 项目服务端沿用 SpringBoot + MyBatis-Plus + Swagger2 的标准组合，建表时通过 `parent` 字段实现分类、电子书、文档的树形层级；
+- 前端通过 `.env.dev` / `.env.prod` 配合 `--mode` 参数实现多环境，`VUE_APP_SERVER` 既作为启动地址也作为 Axios 的 baseURL；
+- 文件上传使用 UUID 重命名避免覆盖，图片显示由服务端接口输出文件流、前端拼接完整 URL 展示。

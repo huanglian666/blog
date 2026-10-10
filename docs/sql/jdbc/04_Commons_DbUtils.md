@@ -1,53 +1,61 @@
 ---
-title: 04_Commons_DbUtils
+title: Commons DbUtils
 date: 2026-09-12
 ---
 
-## 一、简介
+# Commons DbUtils
 
-> DBUtils是Apache Commons组件中的一员，开源免费。是对JDBC的简单封装，但是它还是被很多公司使用。
->
-> 主要功能：用来操作数据库，简化JDBC的操作。
->
-> 在使用的时候要和数据库连接池、MySQL的jar包配合使用。
+本篇整理 Commons DbUtils 组件的主要类与方法（QueryRunner、ResultSetHandler），并通过完整案例演示增删改、查询与事务操作。
 
-## 二、主要类及方法
+## 1. 简介
 
-> `QueryRunner`:执行sql语句的类
->
-> * 创建QueryRunner
->   * 构造器：`QueryRunner()` ，在事务里面使用；
->   * 构造器：`QueryRunner(连接池对象)`
-> * `update()`：执行INSERT、UPDATE、DELETE
-> * `query()`：执行SELECT
+**DBUtils** 是 Apache Commons 组件中的一员，开源免费。它是对 JDBC 的简单封装，但仍然被很多公司使用。
 
-### 2.1、关于增删改
+- 主要功能：用来操作数据库，简化 JDBC 的操作；
+- 使用时需要和数据库连接池、MySQL 的 jar 包配合使用。
 
-> int update(String sql, Object... params) -->  可执行增、删、改语句
->
-> int update(Connection con, String sql, Object... parmas) --> 需要调用者提供Connection，支持事务
+## 2. 主要类及方法
 
-### 2.2、关于查询
+`QueryRunner` 是执行 SQL 语句的类：
 
-> T query(String sql, ResultSetHandler rsh, Object... params) --> 可执行查询
->
-> T query(Connection con, String sql, ResultSetHadler rsh, Object... params) --> 需要调用者提供Connection，支持事务
+- 创建 QueryRunner：
+  - 构造器 `QueryRunner()`：在事务里面使用；
+  - 构造器 `QueryRunner(连接池对象)`；
+- `update()`：执行 INSERT、UPDATE、DELETE；
+- `query()`：执行 SELECT。
 
-#### 2.2.1、ResultSetHandler接口
+### 2.1 关于增删改
 
-> BeanHandler(单行) --> 构造器需要一个Class类型的参数，用来把一行结果转换成指定类型的javaBean对象;
->
-> BeanListHandler(多行) --> 构造器也是需要一个Class类型的参数，用来把一行结果集转换成一个javabean，那么多行就是转换成List对象，一堆javabean；
->
-> MapHandler(单行) --> 把一行结果集转换Map对象；
->
-> MapListHandler(多行) --> 把一行记录转换成一个Map，多行就是多个Map，即`List<Map>`
->
-> ScalarHandler(单行单列) --> 通常用与select count(*) from t_stu语句！结果集是单行单列的！它返回一个Object 聚合函数。
+```java
+int update(String sql, Object... params)                       //可执行增、删、改语句
+int update(Connection con, String sql, Object... params)       //需要调用者提供Connection，支持事务
+```
 
-## 三、使用
+### 2.2 关于查询
 
-### 3.1、建库建表
+```java
+T query(String sql, ResultSetHandler rsh, Object... params)            //可执行查询
+T query(Connection con, String sql, ResultSetHandler rsh, Object... params)  //需要调用者提供Connection，支持事务
+```
+
+#### 2.2.1 ResultSetHandler 接口
+
+ResultSetHandler 的常见实现类及用途如下：
+
+| 实现类 | 适用结果集 | 说明 |
+| --- | --- | --- |
+| `BeanHandler` | 单行 | 构造器需要一个 Class 类型的参数，用来把一行结果转换成指定类型的 JavaBean 对象 |
+| `BeanListHandler` | 多行 | 构造器同样需要一个 Class 类型的参数，用来把每行结果集转换成一个 JavaBean，多行就是转换成 List 对象（一组 JavaBean） |
+| `MapHandler` | 单行 | 把一行结果集转换成 Map 对象 |
+| `MapListHandler` | 多行 | 把一行记录转换成一个 Map，多行就是多个 Map，即 `List<Map>` |
+| `ScalarHandler` | 单行单列 | 通常用于 `select count(*) from t_stu` 语句（结果集是单行单列的），返回一个 Object 类型的聚合函数结果 |
+
+> [!NOTE]
+> `BeanHandler`、`MapHandler`、`ScalarHandler` 只处理**一行**结果；查询可能返回多行时，请使用对应的 `BeanListHandler`、`MapListHandler`。
+
+## 3. 使用
+
+### 3.1 建库建表
 
 ```sql
 DROP DATABASE IF EXISTS mydbutils;
@@ -81,13 +89,13 @@ INSERT INTO account VALUES (1, '10001', 5000);
 INSERT INTO account VALUES (2, '10002', 5000);
 ```
 
-### 3.2、项目搭建
+### 3.2 项目搭建
 
-> 1. 新建Java项目；
-> 2. 在项目下新建lib目录；
-> 3. 将MySQL驱动Jar包、Druid连接池Jar包、DbUtils的Jar包拷贝到lib目录下；
-> 4. 选中lib目录右键Add as Library--单击OK;
-> 5. 将之前使用的最新版本的JdbcUtils工具类拷贝到项目中，并增加如下的方法。
+1. 新建 Java 项目；
+2. 在项目下新建 `lib` 目录；
+3. 将 MySQL 驱动 Jar 包、Druid 连接池 Jar 包、DbUtils 的 Jar 包拷贝到 `lib` 目录下；
+4. 选中 `lib` 目录右键 `Add as Library`，单击 `OK`；
+5. 将之前使用的最新版本的 JdbcUtils 工具类拷贝到项目中，并增加如下方法：
 
 ```java
 //获取连接池对象
@@ -96,7 +104,7 @@ public static DataSource getDataSource() {
 }
 ```
 
-### 3.3、创建实体类
+### 3.3 创建实体类
 
 ```java
 public class Student {
@@ -110,7 +118,7 @@ public class Student {
 }
 ```
 
-### 3.4、DbUtils使用
+### 3.4 DbUtils 使用
 
 ```java
 import com.qfedu.entity.Student;
@@ -232,18 +240,17 @@ public class MyTest {
 }
 ```
 
-### 3.5、事务
+### 3.5 事务
 
-> 以下代码基于03_事务2.4.2、2.4.3的代码
+> [!NOTE]
+> 以下代码基于《事务》一篇 2.4.2、2.4.3 小节的代码。
 
-#### 3.5.1、DAO代码
+#### 3.5.1 DAO 代码
 
 ```java
 import com.qfedu.utils.JdbcUtils;
 import org.apache.commons.dbutils.QueryRunner;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class AccountDao {
@@ -273,7 +280,7 @@ public class AccountDao {
 }
 ```
 
-#### 3.5.1、Service代码
+#### 3.5.2 Service 代码
 
 ```java
 import com.qfedu.dao.AccountDao;
@@ -307,7 +314,7 @@ public class AccountService {
 }
 ```
 
-#### 3.5.2、测试代码
+#### 3.5.3 测试代码
 
 ```java
 @Test
@@ -318,3 +325,8 @@ public void testTransaction() {
 }
 ```
 
+## 4. 小结
+
+- DbUtils 的核心是 **QueryRunner（执行 SQL）+ ResultSetHandler（封装结果）**；
+- 增删改调用 `update()`，查询调用 `query()`，结果交给不同的 Handler 处理；
+- 事务场景使用无参构造的 `QueryRunner()`，并把外层开启事务的 Connection 传入 `update()` / `query()`。

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 330" font-family="-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <rect x="0" y="0" width="920" height="330" rx="10" fill="#f8fafc"/>
+  <text x="460" y="36" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">分布式事务示意：一次下单跨两个服务</text>
+
+  <!-- 全局事务边界 -->
+  <rect x="30" y="60" width="860" height="180" rx="10" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 5"/>
+  <text x="60" y="88" font-size="14" font-weight="bold" fill="#b45309">全局事务边界（要么都成功，要么都回滚）</text>
+
+  <!-- 订单服务 -->
+  <rect x="70" y="110" width="300" height="100" rx="8" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="220" y="138" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e40af">订单服务</text>
+  <text x="220" y="162" text-anchor="middle" font-size="13" fill="#475569">本地事务 A</text>
+  <rect x="110" y="172" width="220" height="26" rx="5" fill="#eff6ff"/>
+  <text x="220" y="190" text-anchor="middle" font-size="13" fill="#1e40af">写入 订单库（分支事务）</text>
+
+  <!-- 商品服务 -->
+  <rect x="550" y="110" width="300" height="100" rx="8" fill="#ffffff" stroke="#10b981" stroke-width="1.5"/>
+  <text x="700" y="138" text-anchor="middle" font-size="16" font-weight="bold" fill="#065f46">商品服务（库存服务）</text>
+  <text x="700" y="162" text-anchor="middle" font-size="13" fill="#475569">本地事务 B</text>
+  <rect x="590" y="172" width="220" height="26" rx="5" fill="#ecfdf5"/>
+  <text x="700" y="190" text-anchor="middle" font-size="13" fill="#047857">扣减 商品库 库存（分支事务）</text>
+
+  <!-- 协调者 -->
+  <rect x="380" y="255" width="160" height="50" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="460" y="276" text-anchor="middle" font-size="15" font-weight="bold" fill="#92400e">事务协调者 TC</text>
+  <text x="460" y="296" text-anchor="middle" font-size="12" fill="#92400e">统一决定提交 / 回滚</text>
+
+  <defs>
+    <marker id="ar" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#b45309"/></marker>
+  </defs>
+  <line x1="220" y1="212" x2="400" y2="268" stroke="#b45309" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="700" y1="212" x2="520" y2="268" stroke="#b45309" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <text x="460" y="70" text-anchor="middle" font-size="13" fill="#64748b">任何一个分支事务失败，TC 通知所有分支一起回滚，保证跨服务、跨库的数据一致性</text>
+</svg>

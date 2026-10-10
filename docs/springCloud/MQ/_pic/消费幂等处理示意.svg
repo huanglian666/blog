@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 320" font-family="-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <rect x="0" y="0" width="920" height="320" rx="10" fill="#f8fafc"/>
+  <text x="460" y="36" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">消息消费幂等处理示意</text>
+
+  <defs>
+    <marker id="ar" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#64748b"/></marker>
+    <marker id="arg" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#10b981"/></marker>
+  </defs>
+
+  <rect x="40" y="120" width="150" height="60" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="115" y="156" text-anchor="middle" font-size="15" fill="#1e293b">消费一条消息</text>
+
+  <rect x="250" y="120" width="170" height="60" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="335" y="147" text-anchor="middle" font-size="14" fill="#1e293b">取出业务唯一 ID</text>
+  <text x="335" y="168" text-anchor="middle" font-size="12" fill="#64748b">订单号 / 流水号等</text>
+
+  <polygon points="500,150 640,120 780,150 640,180" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="640" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#92400e">唯一性校验</text>
+  <text x="640" y="166" text-anchor="middle" font-size="12" fill="#92400e">唯一索引 / Redis 记录</text>
+
+  <rect x="520" y="238" width="200" height="54" rx="8" fill="#fef2f2" stroke="#ef4444"/>
+  <text x="620" y="260" text-anchor="middle" font-size="14" fill="#991b1b">已存在：丢弃消息</text>
+  <text x="620" y="280" text-anchor="middle" font-size="12" fill="#b91c1c">直接返回“消费成功”，避免重复</text>
+
+  <rect x="740" y="238" width="150" height="54" rx="8" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="815" y="260" text-anchor="middle" font-size="14" fill="#065f46">不存在：执行业务</text>
+  <text x="815" y="280" text-anchor="middle" font-size="12" fill="#047857">并记录该唯一 ID</text>
+
+  <line x1="192" y1="150" x2="246" y2="150" stroke="#64748b" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="422" y1="150" x2="496" y2="150" stroke="#64748b" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="600" y1="176" x2="630" y2="234" stroke="#64748b" stroke-width="1.5" marker-end="url(#ar)"/>
+  <text x="585" y="215" text-anchor="end" font-size="12" fill="#64748b">是（重复）</text>
+  <line x1="690" y1="172" x2="800" y2="234" stroke="#10b981" stroke-width="1.5" marker-end="url(#arg)"/>
+  <text x="770" y="205" text-anchor="start" font-size="12" fill="#047857">否（首次）</text>
+
+  <text x="460" y="308" text-anchor="middle" font-size="13" fill="#475569">利用业务唯一 ID + 唯一性校验，保证同一条消息被重复投递时也只产生一次业务效果</text>
+</svg>

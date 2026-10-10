@@ -1,33 +1,38 @@
 ---
-title: 01_JDBC
+title: JDBC
 date: 2026-09-12
 ---
 
-## 一、概述
+# JDBC
 
-### 1.1、什么是JDBC
+本篇整理 JDBC 的概念与原理、入门流程（建立连接、执行 SQL、处理结果、释放资源）、查询操作与 ResultSet、PreparedStatement 防止 SQL 注入，以及如何封装 JDBC 工具类。
 
-> JDBC（Java DataBase Connectivity，Java数据库连接）是一种用于执行SQL语句的Java API，可以为多种关系数据库提供统一访问。
->
-> 简单说就是用Java语言来操作数据库。原来我们操作数据库是在控制台使用SQL语句来操作数据库，JDBC是用Java语言向数据库发送SQL语句。
+## 1. 概述
 
-### 1.2、JDBC原理
+### 1.1 什么是 JDBC
 
->早期SUN公司的天才们想编写一套可以连接天下所有数据库的API，但是当他们刚刚开始时就发现这是不可完成的任务，因为各个厂商的数据库服务器差异太大了。后来SUN开始与数据库厂商们讨论，最终得出的结论是，由SUN提供一套访问数据库的规范（就是一组接口），并提供连接数据库的协议标准，然后各个数据库厂商会遵循SUN的规范提供一套访问自己公司的数据库服务器的API实现。SUN提供的规范命名为JDBC，而各个厂商提供的，遵循了JDBC规范的，可以访问自己数据库的API被称之为**驱动**。
->
->JDBC是接口，而JDBC驱动才是接口的实现，没有驱动无法完成数据库连接！每个数据库厂商都有自己的驱动，用来连接自己公司的数据库。
->
->**JDBC -- Java官方提供 -- 一系列接口 -- 规范**
->
->**驱动 -- 数据库厂商提供 -- JDBC接口的实现类 -- 实现**
+**JDBC**（Java DataBase Connectivity，Java 数据库连接）是一种用于执行 SQL 语句的 Java API，可以为多种关系数据库提供统一访问。
 
-![JDBC原理](./_pic/JDBC原理.jpg ":size=70%")
+简单说，JDBC 就是用 Java 语言来操作数据库。原来我们是在控制台使用 SQL 语句操作数据库，而 JDBC 是用 Java 语言向数据库发送 SQL 语句。
 
-## 二、JDBC入门
+### 1.2 JDBC 原理
 
-### 2.1、准备工作
+早期 SUN 公司想编写一套可以连接天下所有数据库的 API，但刚起步就发现这几乎不可完成，因为各厂商的数据库服务器差异太大。后来 SUN 与数据库厂商讨论，最终得出的结论是：由 SUN 提供一套访问数据库的规范（一组接口），并提供连接数据库的协议标准，各数据库厂商遵循该规范，提供访问自家数据库服务器的 API 实现。SUN 提供的规范命名为 JDBC，而厂商提供的、遵循 JDBC 规范、可以访问自家数据库的 API 被称为**驱动**。
 
-#### 2.1.1、建库建表
+JDBC 是接口，JDBC 驱动才是接口的实现，没有驱动就无法完成数据库连接。每个数据库厂商都有自己的驱动，用来连接自家的数据库。二者的对应关系如下：
+
+| 角色 | 提供方 | 性质 | 定位 |
+| --- | --- | --- | --- |
+| JDBC | Java 官方 | 一系列接口 | 规范 |
+| 驱动 | 数据库厂商 | JDBC 接口的实现类 | 实现 |
+
+![JDBC原理](./_pic/JDBC原理.jpg)
+
+## 2. JDBC 入门
+
+### 2.1 准备工作
+
+#### 2.1.1 建库建表
 
 ```sql
 DROP DATABASE IF EXISTS mydbjdbc;
@@ -52,20 +57,23 @@ INSERT INTO USER VALUES('Peter', '123');
 INSERT INTO USER VALUES('John', '123');
 ```
 
-#### 2.1.2、新建项目
+#### 2.1.2 新建项目
 
->1. 新建Java项目；
->2. 在项目下新建lib目录；
->3. 将MySQL驱动jar包拷贝到lib目录下；
->4. 选中lib目录右键Add as Library--单击OK。
+1. 新建 Java 项目；
+2. 在项目下新建 `lib` 目录；
+3. 将 MySQL 驱动 jar 包拷贝到 `lib` 目录下；
+4. 选中 `lib` 目录右键 `Add as Library`，单击 `OK`。
 
-### 2.2、建立连接
+### 2.2 建立连接
 
-#### 2.2.1、准备四大参数
+#### 2.2.1 准备四大参数
+
+> [!NOTE]
+> 本文代码的驱动类名统一使用 MySQL 8.x 的 `com.mysql.cj.jdbc.Driver`（MySQL 5.x 为 `com.mysql.jdbc.Driver`）。8.x 驱动会通过 SPI 自动注册，`Class.forName(driverName)` 这一步可以省略；若连接时出现时区相关报错，可在 URL 后追加 `serverTimezone=Asia/Shanghai` 等参数。
 
 ```java
 //驱动名
-String driverName = "com.mysql.jdbc.Driver";
+String driverName = "com.mysql.cj.jdbc.Driver";
 //连接数据库的url
 String url = "jdbc:mysql://localhost:3306/mydbjdbc?useSSL=false";
 //用户名
@@ -74,21 +82,21 @@ String username = "root";
 String password = "root";
 ```
 
-#### 2.2.2、加载驱动
+#### 2.2.2 加载驱动
 
 ```java
 //手动加载字节码文件到JVM中
 Class.forName(driverName);
 ```
 
-#### 2.2.3、准备SQL语句
+#### 2.2.3 准备 SQL 语句
 
-```sql
+```java
 //SQL语句
 String sql = "INSERT INTO tb_stu(sname, sage, sgender) VALUES('Peter', 20, 'male')";
 ```
 
-#### 2.2.4、建立连接
+#### 2.2.4 建立连接
 
 ```java
 //建立连接
@@ -98,54 +106,45 @@ Connection connection = DriverManager.getConnection(url, username, password);
 System.out.println(connection);
 ```
 
+> [!TIP]
 > 如果能够正常输出连接信息，说明连接建立成功，这是后续一切操作的基础。
 
-#### 2.2.5、常见问题
+#### 2.2.5 常见问题
 
-> `java.lang.ClassNotFoundException: com.mysql.jdbc.Driver`
->
-> 原因：项目中没有添加MySQL驱动或驱动的名字写错
->
-> `java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: YES)`
->
-> 原因：用户名或密码错误
->
-> `com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown database 'mydbjdbc1'`
->
-> 原因：数据库名称不正确
->
-> ` com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: Communications link failureThe last packet sent successfully to the server was 0 milliseconds ago`
->
-> 原因：MySQL服务没有启动或网络故障
+| 异常信息 | 原因 |
+| --- | --- |
+| `java.lang.ClassNotFoundException: com.mysql.jdbc.Driver` | 项目中没有添加 MySQL 驱动，或驱动的名字写错 |
+| `java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: YES)` | 用户名或密码错误 |
+| `com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown database 'mydbjdbc1'` | 数据库名称不正确 |
+| `com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: Communications link failure ...` | MySQL 服务没有启动或网络故障 |
 
-### 2.3、获取发送SQL的对象
+### 2.3 获取发送 SQL 的对象
 
-```sql
+```java
 Statement statement = connection.createStatement();
 ```
 
-### 2.4、执行SQL语句
+### 2.4 执行 SQL 语句
 
-```sql
+```java
 //使用Statement发送SQL语句，返回受影响的行数
 int i = statement.executeUpdate(sql);
 ```
 
-> 增、删、改使用`executeUpdate`
->
-> 查询使用`executeQuery`
+> [!NOTE]
+> 增、删、改使用 `executeUpdate`；查询使用 `executeQuery`。
 
-### 2.5、处理结果
+### 2.5 处理结果
 
-```sql
+```java
 if(i == 1) {
 	System.out.println("添加成功");
 }
 ```
 
-### 2.6、释放资源
+### 2.6 释放资源
 
-> 遵循**先开后关**原则，释放所使用到的资源对象。
+遵循**先开后关**原则，释放所使用到的资源对象。
 
 ```java
 //释放资源
@@ -153,9 +152,10 @@ statement.close();
 connection.close();
 ```
 
-> 资源对于系统来说非常重要，而且是有限的，用完之后一定要释放。
+> [!WARNING]
+> 资源对系统来说非常重要，而且是有限的，用完之后一定要释放。
 
-### 2.7、完整代码
+### 2.7 完整代码
 
 ```java
 import java.sql.Connection;
@@ -166,7 +166,7 @@ import java.sql.Statement;
 public class TestJdbc1 {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         //驱动名
-        String driverName = "com.mysql.jdbc.Driver";
+        String driverName = "com.mysql.cj.jdbc.Driver";
         //连接数据库的url
         String url = "jdbc:mysql://localhost:3306/mydbjdbc?useSSL=false";
         //用户名
@@ -198,11 +198,11 @@ public class TestJdbc1 {
 }
 ```
 
-举一反三，我们可以按照上面的套路进行删除、修改操作。
+举一反三，可以按照上面的套路进行删除、修改操作。
 
-### 2.8、上面的程序改进
+### 2.8 程序改进
 
-> 我们在进行添加或其他操作时，SQL语句中的内容是不可能在程序中写死的，在数据库中操作的数据一定是能够变化的。我们对程序进行如下修改，其他部分不变。
+在进行添加或其他操作时，SQL 语句中的内容不可能在程序中写死，数据库中操作的数据一定是可变的。对程序做如下修改，其他部分不变：
 
 ```java
 //假设用户输入的数据
@@ -215,11 +215,9 @@ String gender = "male";
 String sql = "INSERT INTO tb_stu(sname, sage, sgender) VALUES('" + name + "', " + age + ", '" + gender + "')";
 ```
 
-> 通过上面的修改，我们就可以通过Java代码向数据库中添加变化的数据而不是在代码中写死。
->
-> 同理，删除和修改操作也可以按照这样的套路进行操作。
+通过上面的修改，就可以通过 Java 代码向数据库中添加变化的数据，而不是在代码中写死。同理，删除和修改操作也可以按照这样的套路进行。
 
-### 2.9、改进后的完整代码
+### 2.9 改进后的完整代码
 
 ```java
 import java.sql.Connection;
@@ -230,7 +228,7 @@ import java.sql.Statement;
 public class TestJdbc2 {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         //驱动名
-        String driverName = "com.mysql.jdbc.Driver";
+        String driverName = "com.mysql.cj.jdbc.Driver";
         //连接数据库的url
         String url = "jdbc:mysql://localhost:3306/mydbjdbc?useSSL=false";
         //用户名
@@ -269,11 +267,11 @@ public class TestJdbc2 {
 }
 ```
 
-## 三、查询操作
+## 3. 查询操作
 
-> 查询操作和增删改操作在结果处理上有很大区别，我们有必要深入研究一下。
+查询操作和增删改操作在结果处理上有很大区别，有必要深入研究。
 
-### 3.1、获取结果集
+### 3.1 获取结果集
 
 ```java
 //假设用户输入的数据
@@ -290,15 +288,16 @@ Statement statement = connection.createStatement();
 ResultSet resultSet = statement.executeQuery(sql);
 ```
 
-> 查询使用`executeQuery`
+> [!NOTE]
+> 查询使用 `executeQuery`。
 
-### 3.2、处理结果集
+### 3.2 处理结果集
 
-> ResultSet 以表（table）结构进行临时结果的存储，需要通过JDBC API将其中数据进行依次获取。
->
-> - 数据行指针：初始位置在第一行数据前，每调用一次`boolean next()`方法ResultSet的指针向下移动一行，结果为 true，表示当前行有数据；
-> - `resultSet.getXxx(整数)`：代表根据列的编号顺序获得，**从1开始（一定要注意）**；
-> - `resultSet.getXxx("列名")`：代表根据列名获得。
+ResultSet 以表（table）结构进行临时结果的存储，需要通过 JDBC API 将其中数据依次获取。
+
+- **数据行指针**：初始位置在第一行数据之前，每调用一次 `boolean next()` 方法，ResultSet 的指针向下移动一行，结果为 `true` 表示当前行有数据；
+- `resultSet.getXxx(整数)`：根据列的编号顺序获取，**从 1 开始（一定要注意）**；
+- `resultSet.getXxx("列名")`：根据列名获取。
 
 ```java
 int getInt(int columnIndex) throws SQLException		//获得当前行第N列的int值
@@ -323,7 +322,7 @@ while(resultSet.next()) {
 }
 ```
 
-### 3.3、查询操作完整代码
+### 3.3 查询操作完整代码
 
 ```java
 import java.sql.*;
@@ -331,7 +330,7 @@ import java.sql.*;
 public class TestJdbc3 {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         //驱动名
-        String driverName = "com.mysql.jdbc.Driver";
+        String driverName = "com.mysql.cj.jdbc.Driver";
         //连接数据库的url
         String url = "jdbc:mysql://localhost:3306/mydbjdbc?useSSL=false";
         //用户名
@@ -375,15 +374,15 @@ public class TestJdbc3 {
 }
 ```
 
-## 四、PreparedStatement
+## 4. PreparedStatement
 
-### 4.1、SQL注入
+### 4.1 SQL 注入
 
-#### 4.1.1、什么是SQL注入
+#### 4.1.1 什么是 SQL 注入
 
-> 用户输入的数据中**有SQL关键字或语法并且参与了SQL语句的编译**，导致SQL语句编译后的条件含义为true，一直得到正确的结果。这种现象称为SQL注入。
+**SQL 注入**是指用户输入的数据中含有 SQL 关键字或语法，并且参与了 SQL 语句的编译，导致 SQL 语句编译后的条件恒为 true，总能得到正确的结果。这种现象称为 SQL 注入。
 
-#### 4.1.2、SQL注入案例
+#### 4.1.2 SQL 注入案例
 
 ```java
 import java.sql.*;
@@ -391,7 +390,7 @@ import java.sql.*;
 public class TestJdbc4 {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         //驱动名
-        String driverName = "com.mysql.jdbc.Driver";
+        String driverName = "com.mysql.cj.jdbc.Driver";
         //连接数据库的url
         String url = "jdbc:mysql://localhost:3306/mydbjdbc?useSSL=false";
         //用户名
@@ -431,23 +430,21 @@ public class TestJdbc4 {
 }
 ```
 
-#### 4.1.2、如何避免SQL注入
+#### 4.1.3 如何避免 SQL 注入
 
->由于编写的SQL语句是在用户输入数据，整合后再进行编译。所以为了避免SQL注入的问题，我们要使SQL语句在用户输入数据前就已进行编译成完整的SQL语句，再进行填充数据。
->
->使用PreparedStatement。
+由于上面编写的 SQL 语句是先让用户输入数据、拼接之后再整体编译，所以才给了 SQL 注入可乘之机。要避免这个问题，就要让 SQL 语句在用户输入数据**之前**已经编译成完整的 SQL 语句（结构已固定），之后再填充数据。
 
-### 4.2、PreparedStatement使用
+解决方案就是使用 PreparedStatement。
 
-> PreparedStatement继承了Statement接口，执行SQL语句的方法无异。
->
-> 作用：
->
-> - 预编译SQL 语句，效率高。
-> - 安全，避免SQL注入 。
-> - 可以动态的填充数据，执行多个同构的 SQL 语句。
+### 4.2 PreparedStatement 使用
 
-#### 4.2.1、预编译SQL语句
+PreparedStatement 继承了 Statement 接口，执行 SQL 语句的方法与 Statement 无异。其作用如下：
+
+- 预编译 SQL 语句，效率高；
+- 安全，避免 SQL 注入；
+- 可以动态填充数据，执行多个同构的 SQL 语句。
+
+#### 4.2.1 预编译 SQL 语句
 
 ```java
 //SQL语句
@@ -457,7 +454,7 @@ String sql = "SELECT * FROM user WHERE username=? AND password=?";
 PreparedStatement statement = connection.prepareStatement(sql);
 ```
 
-#### 4.2.2、设置参数
+#### 4.2.2 设置参数
 
 ```java
 String n = "abc' OR 1=1 OR '1=1";
@@ -468,7 +465,7 @@ statement.setString(1, n);
 statement.setString(2, p);
 ```
 
-#### 4.2.3、完整代码
+#### 4.2.3 完整代码
 
 ```java
 import java.sql.*;
@@ -476,7 +473,7 @@ import java.sql.*;
 public class TestJdbc5 {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         //驱动名
-        String driverName = "com.mysql.jdbc.Driver";
+        String driverName = "com.mysql.cj.jdbc.Driver";
         //连接数据库的url
         String url = "jdbc:mysql://localhost:3306/mydbjdbc?useSSL=false";
         //用户名
@@ -519,13 +516,11 @@ public class TestJdbc5 {
 }
 ```
 
-## 五、使用JDBC进行CRUD操作（掌握）
+## 5. 使用 JDBC 进行 CRUD 操作（掌握）
 
-> 在项目实战中，推荐使用PreparedStatement而不是使用Statement。
->
-> 以下的代码必须熟练掌握，能够举一反三，这是后续学习的基础。
+在项目实战中，推荐使用 PreparedStatement 而不是 Statement。以下代码必须熟练掌握，能够举一反三，这是后续学习的基础。
 
-### 5.1、添加操作
+### 5.1 添加操作
 
 ```java
 import java.sql.*;
@@ -533,7 +528,7 @@ import java.sql.*;
 public class TestJdbc6 {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         //驱动名
-        String driverName = "com.mysql.jdbc.Driver";
+        String driverName = "com.mysql.cj.jdbc.Driver";
         //连接数据库的url
         String url = "jdbc:mysql://localhost:3306/mydbjdbc?useSSL=false";
         //用户名
@@ -570,7 +565,7 @@ public class TestJdbc6 {
 }
 ```
 
-### 5.2、删除操作
+### 5.2 删除操作
 
 ```java
 import java.sql.*;
@@ -578,7 +573,7 @@ import java.sql.*;
 public class TestJdbc7 {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         //驱动名
-        String driverName = "com.mysql.jdbc.Driver";
+        String driverName = "com.mysql.cj.jdbc.Driver";
         //连接数据库的url
         String url = "jdbc:mysql://localhost:3306/mydbjdbc?useSSL=false";
         //用户名
@@ -613,7 +608,7 @@ public class TestJdbc7 {
 }
 ```
 
-### 5.3、修改操作
+### 5.3 修改操作
 
 ```java
 import java.sql.Connection;
@@ -624,7 +619,7 @@ import java.sql.SQLException;
 public class TestJdbc8 {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         //驱动名
-        String driverName = "com.mysql.jdbc.Driver";
+        String driverName = "com.mysql.cj.jdbc.Driver";
         //连接数据库的url
         String url = "jdbc:mysql://localhost:3306/mydbjdbc?useSSL=false";
         //用户名
@@ -660,7 +655,7 @@ public class TestJdbc8 {
 }
 ```
 
-### 5.4、查询操作
+### 5.4 查询操作
 
 ```java
 import java.sql.*;
@@ -668,7 +663,7 @@ import java.sql.*;
 public class TestJdbc9 {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         //驱动名
-        String driverName = "com.mysql.jdbc.Driver";
+        String driverName = "com.mysql.cj.jdbc.Driver";
         //连接数据库的url
         String url = "jdbc:mysql://localhost:3306/mydbjdbc?useSSL=false";
         //用户名
@@ -709,11 +704,11 @@ public class TestJdbc9 {
 }
 ```
 
-## 六、封装工具类
+## 6. 封装工具类
 
-> 上面的代码大部分是重复的，我们有必要把重复的代码进行提取。
+上面的代码大部分是重复的，有必要把重复的代码提取出来。
 
-### 6.1、工具类
+### 6.1 工具类
 
 ```java
 import java.io.IOException;
@@ -784,18 +779,18 @@ public class JdbcUtil {
 }
 ```
 
-### 6.2、工具类使用
+### 6.2 工具类使用
 
-> 在src下创建jdbc.properties文件
+在 `src` 下创建 `jdbc.properties` 文件：
 
 ```properties
-jdbc.driverName=com.mysql.jdbc.Driver
+jdbc.driverName=com.mysql.cj.jdbc.Driver
 jdbc.url=jdbc:mysql://localhost:3306/mydbjdbc?useSSL=false
 jdbc.username=root
 jdbc.password=root
 ```
 
-> 在Java代码中使用工具类
+在 Java 代码中使用工具类：
 
 ```java
 import com.qfedu.utils.JdbcUtil;
@@ -832,4 +827,12 @@ public class TestJdbc10 {
 }
 ```
 
-> 通过使用工具类，我们的代码变得简洁更容易维护。
+通过使用工具类，代码变得简洁、更容易维护。
+
+## 7. 小结
+
+JDBC 操作数据库的流程是固定的：**加载驱动 → 获取连接 → 获取发送 SQL 的对象 → 执行 SQL → 处理结果 → 释放资源**。实际开发中记住三点：
+
+- 优先使用 PreparedStatement：预编译效率更高，且能防止 SQL 注入；
+- 连接四大参数写在配置文件中，配合连接池与工具类统一管理连接；
+- 释放资源遵循「先开后关」，并放在 `finally` 中保证一定执行。

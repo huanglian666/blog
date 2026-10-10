@@ -1,34 +1,35 @@
 ---
-title: 03_JSP入门_Cookie_Session
+title: JSP入门_Cookie_Session
 date: 2026-09-12
 ---
 
-## 一、JSP入门
+# JSP入门_Cookie_Session
 
-### 1.1、概述
+本篇整理三部分内容：JSP 的脚本、原理与注释，Cookie 的概念与常用操作，以及 Session（会话）的概念、原理与登录案例实战。
 
-#### 1.1.1、什么是JSP
+## 1. JSP 入门
 
-> JSP（Java Server Pages）是JavaWeb服务器端的**动态资源**。它与HTML页面的作用是相同的，显示数据和获取数据。
+### 1.1 概述
 
-#### 1.1.2、JSP组成
+#### 1.1.1 什么是 JSP
 
-> JSP=HTML+Java脚本+JSP动作标签(包含EL表达式)
+**JSP**（Java Server Pages）是 JavaWeb 服务器端的**动态资源**。它与 HTML 页面的作用是相同的：显示数据和获取数据。
 
-### 1.2、JSP脚本
+#### 1.1.2 JSP 组成
 
-> 本质上就是Java代码片段
->
-> 分类：
->
-> * `<%...%>`：Java语句
-> * `<%=…%>`：Java表达式`out.print(...);`
-> * `<%!...%>`：Java定义类成员
->
-> 内置对象（无需创建就可以使用的对象）：
->
-> * out对象在JSP页面中无需创建就可以使用，它的作用是用来向客户端输出；
-> * `<%=…%>`与out.print()功能是相同的，它们都是向客户端输出
+JSP = HTML + Java 脚本 + JSP 动态标签（包含 EL 表达式）。
+
+### 1.2 JSP 脚本
+
+JSP 脚本本质上就是嵌在页面中的 Java 代码片段，按写法分为三类：
+
+| 写法 | 作用 |
+| --- | --- |
+| `<%...%>` | Java 语句 |
+| `<%=…%>` | Java 表达式，等价于 `out.print(...);` |
+| `<%!...%>` | 定义类成员（成员变量、方法） |
+
+JSP 中还有无需创建就可以直接使用的**内置对象**，例如 `out` 对象：它的作用是向客户端输出。`<%=…%>` 与 `out.print()` 的功能是相同的，都是向客户端输出。
 
 ```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -39,7 +40,7 @@ date: 2026-09-12
 <body>
 <h1>JSP演示</h1>
     <%
-        // Java语句
+        // Java 语句
         String s1 = "hello jsp";
         // 不会输出到客户端，而是在服务器端的控制台打印
         System.out.println(s1);
@@ -53,7 +54,7 @@ date: 2026-09-12
 </html>
 ```
 
-> 在一个JSP中多个<%...%>可以一起使用
+在一个 JSP 中，多个 `<%...%>` 脚本块可以一起使用，例如用脚本把循环拆开、与 HTML 标签交错输出表格：
 
 ```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -78,107 +79,116 @@ date: 2026-09-12
                 <td><%=100+1 %></td>
             </tr>
         <%
-        	}
+            }
         %>
     </table>
 </body>
 </html>
 ```
 
-### 1.3、JSP原理
+### 1.3 JSP 原理
 
-> JSP是特殊的Servlet（查看编译后的JSP源码）类，当JSP页面首次被访问时，容器（Tomcat）会先把JSP编译成Servlet，然后再去执行Servlet。所以JSP其实就是一个Servlet。
+JSP 是特殊的 Servlet：当 JSP 页面首次被访问时，容器（Tomcat）会先把 JSP 编译成 Servlet，然后再执行这个 Servlet。所以 JSP 本质上就是一个 Servlet。
 
-![JSP实现原理](./_pic/JSP实现原理.png ':size=70%')
+![JSP 实现原理](./_pic/JSP实现原理.png)
 
-> JSP生成的Servlet存放在tomcat的work目录下，它是JSP的“真身”。我们打开看看其中的内容，了解一下JSP的“真身”。
->
-> 你会发现，在JSP中的静态信息（例如`<html>`等）在“真身”中都是使用out.write()完成打印！这些静态信息都是作为字符串输出给了客户端。
+JSP 生成的 Servlet 存放在 Tomcat 的 work 目录下，它是 JSP 的"真身"。打开看看其中的内容，可以更好地理解 JSP 的工作方式：JSP 中的静态信息（例如 `<html>` 等标签）在"真身"中都是使用 `out.write()` 完成打印的，即这些静态信息都作为字符串输出给了客户端。
 
-### 1.4、JSP注释
+### 1.4 JSP 注释
 
-> `<%-- ... --%>`， 在JSP编译成`.java`时会被忽略的，即JSP注释。
-> 可以在JSP页面中使用html注释：`<!-- … -->`，但这个注释在JSP编译成的.java中是存在的，它不会被忽略，而且会被发送到客户端浏览器。
+JSP 注释的写法是 `<%-- ... --%>`，在 JSP 编译成 `.java` 文件时会被忽略。
 
-## 二、Cookie
+也可以在 JSP 页面中使用 HTML 注释 `<!-- … -->`，但要注意：这个注释会保留在 JSP 编译成的 `.java` 文件中，不会被忽略，而且会被原样发送到客户端浏览器。
 
-### 2.1、什么是Cookie
+> [!NOTE]
+> 如果注释内容不想暴露给客户端（例如包含敏感信息或业务逻辑说明），一定要使用 JSP 注释 `<%-- --%>`，而不是 HTML 注释。
 
-> Cookie翻译成中文是小甜点，小饼干的意思。在HTTP中它表示服务器送给客户端浏览器的小甜点。
->
-> Cookie是在浏览器访问Web服务器的某个资源时，由Web服务器在HTTP响应消息头中附带传送给浏览器的一小段数据。一旦Web浏览器保存了某个Cookie，那么它在以后每次访问该Web服务器时，都应在HTTP请求头中将这个Cookie回传给Web服务器。一个Cookie主要由标识该信息的名称（name）和值（value）组成。
+## 2. Cookie
 
-![cookie工作原理](./_pic/cookie工作原理.png)
+### 2.1 什么是 Cookie
 
-### 2.2、Cookie规范
+Cookie 翻译成中文是"小甜点、小饼干"的意思，在 HTTP 中它表示服务器送给客户端浏览器的一小段数据。
 
->  Cookie大小上限为4KB；
->
-> 一个服务器最多在客户端浏览器上保存20个Cookie；
->
-> 一个浏览器最多保存300个Cookie；
->
-> 上面的数据只是HTTP的Cookie规范，但在浏览器大战的今天，一些浏览器为了打败对手，为了展现自己的能力起见，可能对Cookie规范“扩展”了一些，例如每个Cookie的大小为8KB，最多可保存500个Cookie等！但也不会出现把你硬盘占满的可能！
->
-> 注意，不同浏览器之间是不共享Cookie的。也就是说在你使用IE访问服务器时，服务器会把Cookie发给IE，然后由IE保存起来，当你在使用FireFox访问服务器时，不可能把IE保存的Cookie发送给服务器。
+具体来说：浏览器访问 Web 服务器的某个资源时，Web 服务器可以在 HTTP 响应消息头中附带一小段数据传送给浏览器；一旦浏览器保存了某个 Cookie，那么它以后每次访问该 Web 服务器时，都会在 HTTP 请求头中把这个 Cookie 回传给服务器。一个 Cookie 主要由标识该信息的名称（name）和值（value）组成。
 
-### 2.3、关于Cookie的操作
+![Cookie 工作原理](./_pic/cookie工作原理.png)
 
-#### 2.3.1、创建Cookie
+### 2.2 Cookie 规范
+
+| 规范项 | 限制 |
+| --- | --- |
+| 单个 Cookie 大小 | 上限 4KB |
+| 一个服务器在客户端浏览器上保存的 Cookie 数量 | 最多 20 个 |
+| 一个浏览器保存的 Cookie 总数 | 最多 300 个 |
+
+以上数据只是 HTTP 对 Cookie 的规范。在浏览器大战的年代，一些浏览器为了展现自己的能力，对规范做了一些"扩展"，例如单个 Cookie 大小为 8KB、最多可保存 500 个 Cookie 等，但也不会出现把硬盘占满的情况。
+
+> [!NOTE]
+> 不同浏览器之间是不共享 Cookie 的：使用 IE 访问服务器时，服务器把 Cookie 发给 IE 并由 IE 保存；之后使用 Firefox 访问服务器时，不可能把 IE 保存的 Cookie 发送给服务器。
+
+### 2.3 Cookie 的常用操作
+
+#### 2.3.1 创建 Cookie
 
 ```java
-//创建Cookie
-Cookie ck=new Cookie("name", "zs");
-ck.setMaxAge(-1);//内存存储，取值有三种：>0有效期，单位秒；=0浏览器关闭；<0内存存储,默认-1
-response.addCookie(ck);//添加到response对象中，响应时发送给客户端
+// 创建 Cookie
+Cookie ck = new Cookie("name", "zs");
+// 设置有效期：>0 有效期（单位秒）；=0 删除该 Cookie；<0 内存存储（默认 -1）
+ck.setMaxAge(-1);
+// 添加到 response 对象中，响应时发送给客户端
+response.addCookie(ck);
 ```
 
-#### 2.3.2、获取Cookie
+#### 2.3.2 获取 Cookie
 
 ```java
-//获取所有的Cookie
-Cookie[] cks=request.getCookies();
-//遍历Cookie
-for(Cookie ck:cks){
-    //检索出自己的Cookie
-    if(ck.getName().equals("name")) {
-        //记录Cookie的值
-        code=ck.getValue();
-        break;
+// 获取所有的 Cookie
+Cookie[] cks = request.getCookies();
+// 遍历 Cookie，检索出自己的 Cookie
+String code = null;
+if (cks != null) {
+    for (Cookie ck : cks) {
+        if (ck.getName().equals("name")) {
+            // 记录 Cookie 的值
+            code = ck.getValue();
+            break;
+        }
     }
 }
 ```
 
-#### 2.3.3、修改Cookie
+#### 2.3.3 修改 Cookie
 
-> 只需要保证Cookie的名和路径一致即可修改
+只需要保证 Cookie 的名和路径一致即可修改：
 
 ```java
-//修改Cookie
-Cookie ck=new Cookie("name", "ls");
-ck.setMaxAge(-1);//内存存储，取值有三种：>0有效期，单位秒；=0失效；<0内存存储
-response.addCookie(ck);//让浏览器添加Cookie
+// 同名的 Cookie 会覆盖原来的值
+Cookie ck = new Cookie("name", "ls");
+ck.setMaxAge(-1);
+response.addCookie(ck);
 ```
 
-#### 2.3.4、Cookie的生命
+#### 2.3.4 Cookie 的生命
 
-> Cookie不只有name和value，Cookie还是生命。所谓生命就是Cookie在客户端的有效时间，可以通过`setMaxAge(int)`来设置Cookie的有效时间。
->
-> * `cookie.setMaxAge(-1)`：cookie的maxAge属性的默认值就是-1，表示只在浏览器内存中存活。一旦关闭浏览器窗口，那么cookie就会消失。
-> * `cookie.setMaxAge(60*60)`：表示cookie对象可存活1小时。当生命大于0时，浏览器会把Cookie保存到硬盘上，就算关闭浏览器，就算重启客户端电脑，cookie也会存活1小时；
-> * `cookie.setMaxAge(0)`：cookie生命等于0是一个特殊的值，它表示cookie被作废！也就是说，如果原来浏览器已经保存了这个Cookie，那么可以通过Cookie的setMaxAge(0)来删除这个Cookie。无论是在浏览器内存中，还是在客户端硬盘上都会删除这个Cookie。 
->
-> 案例
+Cookie 不只有 name 和 value，还有"生命"，即 Cookie 在客户端的有效时间，可以通过 `setMaxAge(int)` 来设置：
+
+| 取值 | 含义 |
+| --- | --- |
+| `cookie.setMaxAge(-1)` | maxAge 属性的默认值，表示只在浏览器内存中存活，一旦关闭浏览器窗口，Cookie 就会消失 |
+| `cookie.setMaxAge(60*60)` | Cookie 可存活 1 小时；生命大于 0 时，浏览器会把 Cookie 保存到硬盘上，即使关闭浏览器、重启电脑，Cookie 也会存活 1 小时 |
+| `cookie.setMaxAge(0)` | 特殊值，表示 Cookie 被作废：如果浏览器已经保存了这个 Cookie，可以用它来删除该 Cookie，无论其保存在内存中还是硬盘上 |
+
+案例：设置并获取 Cookie。
 
 ```java
-//设置Cookie
+// 设置 Cookie
 @WebServlet(name = "AServlet", value = "/AServlet")
 public class AServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //设置Cookie
+        // 设置 Cookie
         Cookie cookie = new Cookie("name", "zs");
-        //设置Cookie的超时时间 -1表示一旦关闭浏览器窗口，那么cookie就会消失
+        // maxAge 为 -1 表示一旦关闭浏览器窗口，Cookie 就会消失
         cookie.setMaxAge(-1);
         response.addCookie(cookie);
     }
@@ -189,17 +199,19 @@ public class AServlet extends HttpServlet {
     }
 }
 
-//获取Cookie
+// 获取 Cookie
 @WebServlet(name = "BServlet", value = "/BServlet")
 public class BServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Cookie[] cks = request.getCookies();
-        for (Cookie ck : cks) {
-            if(ck.getName().equals("name")) {
-                //获取Cookie的值
-                System.out.println(ck.getValue());
-                break;
+        if (cks != null) {
+            for (Cookie ck : cks) {
+                if (ck.getName().equals("name")) {
+                    // 获取 Cookie 的值
+                    System.out.println(ck.getValue());
+                    break;
+                }
             }
         }
     }
@@ -211,47 +223,48 @@ public class BServlet extends HttpServlet {
 }
 ```
 
-## 三、Session
+## 3. Session
 
-### 3.1、什么是Session
+### 3.1 什么是 Session
 
-> 关于会话：
->
-> * 会话范围是某个用户从首次访问服务器开始，到该用户关闭浏览器结束
-> * 一个用户对服务器的多次连贯性请求！所谓连贯性请求，就是该用户多次请求中间没有关闭浏览器
-> * 类似生活中的对话
->
-> `javax.servlet.http.HttpSession`接口表示一个会话，是Java Web提供的。
->
-> Session是服务器端对象，保存在服务器端。
+关于**会话**：
 
-### 3.2、获取Session
+- 会话范围是从某个用户首次访问服务器开始，到该用户关闭浏览器结束；
+- 会话对应一个用户对服务器的多次连贯性请求，所谓连贯性请求，就是该用户多次请求中间没有关闭浏览器；
+- 可以类比为生活中的一次对话：开始对话、多轮交流、结束对话。
 
-> `HttpSession request.getSesssion()`：如果当前会话已经有了session对象那么直接返回，如果当前会话还不存在会话，那么创建session并返回；
-> JSP中得到session对象：session是JSP内置对象之一，不用创建就可以直接使用。
+`javax.servlet.http.HttpSession` 接口表示一个会话，是 JavaWeb 提供的。Session 是服务器端对象，保存在服务器端。
 
-### 3.3、HttpSession域对象功能
+### 3.2 获取 Session
 
-> 一个会话创建一个HttpSession对象，同一会话中的多个请求中可以共享session中的数据
->
-> 目前为止已经学习了三个域对象，分别是request、session、servletContext，他们都有共同的方法：
->
-> * `void setAttribute(String name, Object value)`
-> * `Object getAttribute(String name)`
-> * `void removeAttribute(String name)`
->
-> 如果用户需要在会话范围之内共享数据，应该将数据保存在session中。
->
-> 案例，演示session中会话的多次请求中共享数据
+在 Servlet 中通过 `HttpSession session = request.getSession()` 获取：如果当前会话已经有了 session 对象则直接返回；如果当前会话还不存在，则先创建 session 再返回。
+
+在 JSP 中，session 是内置对象之一，不用创建就可以直接使用。
+
+### 3.3 HttpSession 域对象功能
+
+一个会话创建一个 HttpSession 对象，同一会话中的多个请求之间可以共享 session 中的数据。
+
+到目前为止已经学习了三个域对象：request、session、servletContext，它们都有共同的方法：
+
+| 操作 | 方法 |
+| --- | --- |
+| 存 | `void setAttribute(String name, Object value)` |
+| 取 | `Object getAttribute(String name)` |
+| 删除 | `void removeAttribute(String name)` |
+
+如果需要在会话范围内共享数据，应该把数据保存在 session 中。
+
+案例：演示 session 在同一会话的多次请求中共享数据。
 
 ```java
 @WebServlet(name = "CServlet", value = "/CServlet")
 public class CServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //获取Session
+        // 获取 Session
         HttpSession session = request.getSession();
-        //在Session域中存放数据
+        // 在 Session 域中存放数据
         session.setAttribute("name", "zs");
     }
 
@@ -265,10 +278,10 @@ public class CServlet extends HttpServlet {
 public class DServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //获取Session
+        // 获取 Session
         HttpSession session = request.getSession();
-        //从Session域中获取数据
-        String name = (String)session.getAttribute("name");
+        // 从 Session 域中获取数据
+        String name = (String) session.getAttribute("name");
         System.out.println(name);
     }
 
@@ -279,36 +292,36 @@ public class DServlet extends HttpServlet {
 }
 ```
 
-### 3.4、登录案例
+先访问 CServlet 再访问 DServlet，控制台会打印 `zs`，说明数据在同一会话的两个请求之间共享成功。
 
-> login.jsp：提供登录表单，提交表单请求到LoginServlet
->
-> LoginServlet：获取请求参数，校验用户是否登录成功
->
-> * 失败：跳转到登录页面，显示错误信息
-> * 成功：跳转到成功页，显示“欢迎xxx”的提示信息
->
-> success.jsp：登录成功页面，显示欢迎信息，关闭浏览器后，直接访问登录页会提示登录
->
-> LoginServlet代码如下
+### 3.4 登录案例
+
+案例包含三个页面与一个 Servlet，职责划分如下：
+
+| 组件 | 职责 |
+| --- | --- |
+| login.jsp | 提供登录表单，提交表单请求到 LoginServlet |
+| LoginServlet | 获取请求参数，校验用户是否登录成功：失败则跳回登录页并显示错误信息；成功则跳转到成功页，显示"欢迎 xxx" |
+| success.jsp | 登录成功页面，显示欢迎信息；未登录直接访问时提示先登录 |
+
+LoginServlet 代码如下：
 
 ```java
 @WebServlet(name = "LoginServlet", value = "/LoginServlet")
 public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //获取请求参数
+        // 获取请求参数
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        if(username.equals("admin") && password.equals("admin")) {
-            //登录成功
-            //保存数据到Session
+        if ("admin".equals(username) && "admin".equals(password)) {
+            // 登录成功，保存数据到 Session
             HttpSession session = request.getSession();
             session.setAttribute("username", username);
             request.getRequestDispatcher("/success.jsp").forward(request, response);
         } else {
-            //登录失败信息
+            // 登录失败信息
             String msg = "用户名或密码错误";
             request.setAttribute("msg", msg);
             request.getRequestDispatcher("/login.jsp").forward(request, response);
@@ -320,10 +333,9 @@ public class LoginServlet extends HttpServlet {
         doGet(request, response);
     }
 }
-
 ```
 
-> login.jsp代码
+login.jsp 代码：
 
 ```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -361,7 +373,7 @@ public class LoginServlet extends HttpServlet {
 </html>
 ```
 
-> success.jsp代码
+success.jsp 代码：
 
 ```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -386,32 +398,28 @@ public class LoginServlet extends HttpServlet {
 </html>
 ```
 
-### 3.5、Session原理
+### 3.5 Session 原理
 
-> Session底层依赖Cookie
->
-> 1. 当用户第一次使用session时（表示第一次请求服务器），服务器会创建session，并创建一个Cookie，在Cookie中保存了session的id，发送给客户端。这样客户端就有了自己session的id了。但这个Cookie只在浏览器内存中存在，也就是说，在关闭浏览器窗口后，Cookie就会丢失，也就丢失了sessionId；
-> 2. 当用户第二次访问服务器时，会在请求中把保存了sessionId的Cookie发送给服务器，服务器通过sessionId查找session对象，然后给使用。也就是说，只要浏览器容器不关闭，无论访问服务器多少次，使用的都是同一个session对象。这样也就可以让多个请求共享同一个session了；
-> 3. 当用户关闭了浏览器窗口后，再打开浏览器访问服务器，这时请求中没有了sessionId，那么服务器会创建一个session，再把sessionId通过Cookie保存到浏览器中，也是一个新的会话开始了。原来的session会因为长时间无法访问而失效；
-> 4. 当用户打开某个服务器页面长时间没动作时，这样session会超时失效，当用户再有活动时，服务器通过用户提供的sessionId已经找不到session对象了，那么服务器还是会创建一个新的session对象，再把新的sessionId保存到客户端。这也是一个新的会话开始了。
+Session 底层依赖 Cookie，其工作过程如下：
 
-### 3.6、Session其他API
+1. 用户第一次使用 session 时（第一次请求服务器），服务器会创建 session，并创建一个 Cookie，在 Cookie 中保存 session 的 id 发送给客户端，这样客户端就有了自己 session 的 id。但这个 Cookie 只保存在浏览器内存中，关闭浏览器窗口后 Cookie 就会丢失，也就丢失了 sessionId；
+2. 用户第二次访问服务器时，会在请求中把保存了 sessionId 的 Cookie 发送给服务器，服务器通过 sessionId 查找对应的 session 对象来使用。也就是说，只要浏览器不关闭，无论访问服务器多少次，使用的都是同一个 session 对象，这也就可以让多个请求共享同一个 session；
+3. 用户关闭浏览器窗口后再打开浏览器访问服务器，这时请求中没有 sessionId，服务器会创建一个新 session，并把新的 sessionId 通过 Cookie 保存到浏览器中，一个新的会话开始了。原来的 session 会因为长时间无法访问而失效；
+4. 用户打开某个服务器页面长时间没有动作时，session 会超时失效；用户再有活动时，服务器通过 sessionId 已经找不到原来的 session 对象，会创建一个新的 session 对象，并把新的 sessionId 保存到客户端，这同样是一个新会话的开始。
 
-> `String getId()`：获取sessionId；
->
-> `int getMaxInactiveInterval()`：获取session可以的最大不活动时间（秒），默认为30分钟。当session在30分钟内没有使用，那么Tomcat会在session池中移除这个session；
->
-> `void setMaxInactiveInterval(int interval)`：设置session允许的最大不活动时间（秒），如果设置为1秒，那么只要session在1秒内不被使用，那么session就会被移除；
->
-> `long getCreationTime()`：返回session的创建时间，返回值为当前时间的毫秒值；
->
-> `long getLastAccessedTime()`：返回session的最后活动时间，返回值为当前时间的毫秒值；
->
-> `void invalidate()`：让session失效！调用这个方法会被session失效，当session失效后，客l 户端再次请求，服务器会给客户端创建一个新的session，并在响应中给客户端新session的sessionId；
->
-> `boolean isNew()`：查看session是否为新。当客户端第一次请求时，服务器为客户端创建session，但这时服务器还没有响应客户端，也就是还没有把sessionId响应给客户端时，这时session的状态为新。
->
-> 修改LoginServlet，体会Session超时时间及Session失效
+### 3.6 Session 其他 API
+
+| 方法 | 说明 |
+| --- | --- |
+| `String getId()` | 获取 sessionId |
+| `int getMaxInactiveInterval()` | 获取 session 允许的最大不活动时间（秒），默认为 30 分钟；30 分钟内没有使用，Tomcat 会在 session 池中移除这个 session |
+| `void setMaxInactiveInterval(int interval)` | 设置 session 允许的最大不活动时间（秒）；如果设置为 1 秒，那么只要 session 在 1 秒内不被使用就会被移除 |
+| `long getCreationTime()` | 返回 session 的创建时间，值为毫秒时间戳 |
+| `long getLastAccessedTime()` | 返回 session 的最后活动时间，值为毫秒时间戳 |
+| `void invalidate()` | 让 session 失效；session 失效后客户端再次请求时，服务器会创建一个新的 session，并在响应中给客户端新 session 的 sessionId |
+| `boolean isNew()` | 查看 session 是否为新；客户端第一次请求时服务器创建了 session，但还没把 sessionId 响应给客户端之前，session 的状态为新 |
+
+修改 LoginServlet，体会 Session 超时时间及 Session 失效：
 
 ```java
 import javax.servlet.ServletException;
@@ -426,28 +434,27 @@ import java.io.IOException;
 public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //获取请求参数
+        // 获取请求参数
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        if(username.equals("admin") && password.equals("admin")) {
-            //登录成功
-            //保存数据到Session
+        if ("admin".equals(username) && "admin".equals(password)) {
+            // 登录成功，保存数据到 Session
             HttpSession session = request.getSession();
             session.setAttribute("username", username);
-            //设置Session超时时间为1s
+            // 设置 Session 超时时间为 1 秒
             session.setMaxInactiveInterval(1);
-            //延时2000ms,模拟Session超时
+            // 延时 2000ms，模拟 Session 超时
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            //设置Session失效
-            //session.invalidate();
+            // 设置 Session 失效
+            // session.invalidate();
             request.getRequestDispatcher("/success.jsp").forward(request, response);
         } else {
-            //登录失败信息
+            // 登录失败信息
             String msg = "用户名或密码错误";
             request.setAttribute("msg", msg);
             request.getRequestDispatcher("/login.jsp").forward(request, response);
@@ -459,26 +466,25 @@ public class LoginServlet extends HttpServlet {
         doGet(request, response);
     }
 }
-
 ```
 
-> 修改登录案例，增加退出功能
->
-> 用于退出登录的Servlet
+继续修改登录案例，增加退出功能。用于退出登录的 Servlet：
 
 ```java
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "LogoutServlet", value = "/LogoutServlet")
 public class LogoutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //设置Session失效
+        // 设置 Session 失效
         request.getSession().invalidate();
-        //跳转到登录页
+        // 跳转到登录页
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
@@ -489,7 +495,7 @@ public class LogoutServlet extends HttpServlet {
 }
 ```
 
-> 修改success.jsp
+修改 success.jsp，增加退出链接：
 
 ```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -515,15 +521,13 @@ public class LogoutServlet extends HttpServlet {
 </html>
 ```
 
-### 3.7、Session实战保存验证码
+### 3.7 Session 实战：保存验证码
 
-> 在我们注册时，如果没有验证码的话，我们可以使用URLConnection来写一段代码发出注册请求。甚至可以使用while(true)来注册！那么服务器就废了！
->
-> 验证码可以去识别发出请求的是人还是程序！当然，如果聪明的程序可以去分析验证码图片！但分析图片也不是一件容易的事，因为一般验证码图片都会带有干扰线，人都看不清，那么程序一定分析不出来。
+注册时如果没有验证码，就可以使用 URLConnection 写一段代码循环发出注册请求，甚至用 `while(true)` 不停注册，服务器就废了。验证码的作用是识别发出请求的是人还是程序。当然，程序也可以尝试分析验证码图片，但这并不容易——一般验证码图片都带有干扰线，连人都看不清，程序更分析不出来。
 
-#### 3.7.1、测试生成验证码
+#### 3.7.1 测试生成验证码
 
-> 在项目中导入ValidateCode.jar
+在项目中导入 ValidateCode.jar：
 
 ```java
 import cn.dsna.util.images.ValidateCode;
@@ -533,10 +537,10 @@ import java.io.IOException;
 
 public class MyTest {
     public static void main(String[] args) throws IOException {
-        //生成验证码
-        ValidateCode vc=new ValidateCode(200, 30, 4, 10);
-        //获取验证码对应的文字
-        String code=vc.getCode();
+        // 生成验证码：宽 200、高 30、4 个字符、10 条干扰线
+        ValidateCode vc = new ValidateCode(200, 30, 4, 10);
+        // 获取验证码对应的文字
+        String code = vc.getCode();
         System.out.println(code);
         // 保存图片
         FileOutputStream out = new FileOutputStream("D:/code_img.jpg");
@@ -545,45 +549,45 @@ public class MyTest {
 }
 ```
 
-> 运行完成后可以在D盘下看到验证码图片。
+运行完成后，可以在 D 盘下看到生成的验证码图片。
 
-#### 3.7.2、修改登录案例
+#### 3.7.2 修改登录案例
 
-> 增加生成验证码的Servlet
+增加生成验证码的 Servlet，把验证码文字存入 Session，并把图片响应给用户：
 
- ```java
- import cn.dsna.util.images.ValidateCode;
- 
- import javax.servlet.ServletException;
- import javax.servlet.annotation.WebServlet;
- import javax.servlet.http.HttpServlet;
- import javax.servlet.http.HttpServletRequest;
- import javax.servlet.http.HttpServletResponse;
- import java.io.IOException;
- 
- @WebServlet(name = "CodeServlet", value = "/CodeServlet")
- public class CodeServlet extends HttpServlet {
-     @Override
-     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         //生成验证码
-         ValidateCode vc = new ValidateCode(150, 30, 4, 5);
-         String sysCode = vc.getCode();
-         System.out.println(sysCode);
- 
-         //在Session中存储验证码
-         request.getSession().setAttribute("sysCode", sysCode);
-         //将验证码响应给用户
-         vc.write(response.getOutputStream());
-     }
- 
-     @Override
-     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         doGet(request, response);
-     }
- }
- ```
+```java
+import cn.dsna.util.images.ValidateCode;
 
-> 修改登录页面
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@WebServlet(name = "CodeServlet", value = "/CodeServlet")
+public class CodeServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // 生成验证码：宽 150、高 30、4 个字符、5 条干扰线
+        ValidateCode vc = new ValidateCode(150, 30, 4, 5);
+        String sysCode = vc.getCode();
+        System.out.println(sysCode);
+
+        // 在 Session 中存储验证码
+        request.getSession().setAttribute("sysCode", sysCode);
+        // 将验证码图片响应给用户
+        vc.write(response.getOutputStream());
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
+    }
+}
+```
+
+修改登录页面，增加验证码输入框和验证码图片：
 
 ```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -626,7 +630,7 @@ public class MyTest {
 </html>
 ```
 
-> 修改LoginServlet
+修改 LoginServlet，登录前先校验验证码：
 
 ```java
 import javax.servlet.ServletException;
@@ -641,20 +645,20 @@ import java.io.IOException;
 public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //获取请求参数
+        // 获取请求参数
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String code = request.getParameter("code");
 
-        //获取Session中的Code
+        // 获取 Session 中的验证码
         HttpSession session = request.getSession();
-        String sysCode = (String)session.getAttribute("sysCode");
-        if(sysCode.equalsIgnoreCase(code)) {
-            if(username.equals("admin") && password.equals("admin")) {
+        String sysCode = (String) session.getAttribute("sysCode");
+        if (sysCode.equalsIgnoreCase(code)) {
+            if ("admin".equals(username) && "admin".equals(password)) {
                 session.setAttribute("username", username);
                 request.getRequestDispatcher("/success.jsp").forward(request, response);
             } else {
-                //登录失败信息
+                // 登录失败信息
                 String msg = "用户名或密码错误";
                 request.setAttribute("msg", msg);
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
@@ -673,9 +677,9 @@ public class LoginServlet extends HttpServlet {
 }
 ```
 
-#### 3.7.3、单击刷新验证码
+#### 3.7.3 单击刷新验证码
 
-> 在项目中引入jquery，修改登录页面
+在项目中引入 jQuery，修改登录页面：点击验证码图片时，给请求追加一个时间戳参数，强制浏览器重新向 CodeServlet 发起请求，从而更换验证码图片：
 
 ```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -694,10 +698,10 @@ public class LoginServlet extends HttpServlet {
 </head>
 <body>
 <%
-    String errorMsg = (String)request.getAttribute("errorMsg");
-    if(errorMsg != null) {
+    String msg = (String)request.getAttribute("msg");
+    if(msg != null) {
 %>
-    <p style="color: red;"><%=errorMsg %></p>
+    <p style="color: red;"><%=msg %></p>
 <%
     }
 %>
@@ -725,6 +729,13 @@ public class LoginServlet extends HttpServlet {
 </form>
 </body>
 </html>
-
 ```
 
+## 4. 本章小结
+
+- JSP 本质是 Servlet：首次访问时由容器编译成 `.java` 再执行；脚本分为 `<% %>`（语句）、`<%= %>`（表达式输出）、`<%! %>`（定义成员）三类；
+- JSP 注释 `<%-- --%>` 不会发送到客户端，HTML 注释会被原样发送，敏感内容应使用 JSP 注释；
+- Cookie 是服务器发给浏览器、由浏览器回传的小段数据，`setMaxAge()` 决定其存活策略：负数存内存、正数存硬盘、0 表示删除；
+- Session 是服务器端的会话对象，底层依赖 Cookie 传递 sessionId，同一会话的多次请求之间共享数据；
+- 三个域对象的共享范围从大到小为：ServletContext（应用）> session（会话）> request（请求），按需选择最小够用的域；
+- 验证码案例综合运用了 Session 保存验证码、图片流响应与 jQuery 刷新验证码，是 Session 的典型应用场景。

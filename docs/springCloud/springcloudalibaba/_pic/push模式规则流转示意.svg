@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 300" font-family="-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <rect x="0" y="0" width="920" height="300" rx="10" fill="#f8fafc"/>
+  <text x="460" y="36" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">Sentinel 规则 Push 模式的正确流转方向</text>
+
+  <defs>
+    <marker id="ar" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#2563eb"/></marker>
+  </defs>
+
+  <rect x="40" y="90" width="200" height="80" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="140" y="122" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e293b">规则修改入口</text>
+  <text x="140" y="146" text-anchor="middle" font-size="12" fill="#64748b">Sentinel 控制台 / 配置中心控制台</text>
+
+  <rect x="330" y="90" width="180" height="80" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="420" y="122" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e40af">配置中心</text>
+  <text x="420" y="146" text-anchor="middle" font-size="12" fill="#1e40af">Nacos / ZooKeeper / Apollo</text>
+
+  <rect x="590" y="90" width="130" height="80" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="655" y="122" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e293b">Sentinel 数据源</text>
+  <text x="655" y="146" text-anchor="middle" font-size="12" fill="#64748b">仅负责监听并读取配置</text>
+
+  <rect x="790" y="90" width="100" height="80" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  <text x="840" y="122" text-anchor="middle" font-size="15" font-weight="bold" fill="#065f46">Sentinel</text>
+  <text x="840" y="146" text-anchor="middle" font-size="12" fill="#047857">客户端生效</text>
+
+  <line x1="242" y1="130" x2="326" y2="130" stroke="#2563eb" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="512" y1="130" x2="586" y2="130" stroke="#2563eb" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="722" y1="130" x2="786" y2="130" stroke="#2563eb" stroke-width="2" marker-end="url(#ar)"/>
+
+  <line x1="586" y1="152" x2="512" y2="152" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="549" y="196" text-anchor="middle" font-size="12" fill="#94a3b8">✕ 数据源不反向推送配置</text>
+
+  <text x="460" y="240" text-anchor="middle" font-size="14" fill="#475569">推送方向：控制台修改规则 → 写入配置中心 → 数据源监听到变更 → 拉取并更新到 Sentinel 客户端</text>
+  <text x="460" y="268" text-anchor="middle" font-size="13" fill="#94a3b8">而不是由 Sentinel 数据源把规则推送至配置中心</text>
+</svg>

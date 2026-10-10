@@ -1,99 +1,89 @@
 ---
-title: 05_SpringSecurity通用权限管理系统
+title: SpringSecurity通用权限管理系统
 date: 2026-09-12
 ---
 
-## 一、是什么
+# SpringSecurity通用权限管理系统
 
-> 一个项目为什么需要添加权限，权限有什么用？
->
-> 一般一个稍微复杂一点的项目或者系统，都会涉及到权限部分，权限部分可以说是每一个系统的基础部分。
->
-> **权限**：不同人进入系统看到、操作的东西不一样。
->
-> * 演员(角色) -> 演戏(权限)
-> * 导演(角色) -> 演戏(权限)、写剧本(权限)
->
-> 如何完成一个权限系统？
->
-> * 自己手写一个权限系统(对程序员门槛要高一点)；
-> * 使用权限框架
->   * `Shiro`
->   * `Springsecurity`
+本篇以一个基于 RBAC 模型的通用权限管理系统为例，整理 SpringSecurity 的认证与授权：从项目搭建、建库建表、配置类编写，到基于内存和基于数据库两种登录认证方式，以及基于角色的细粒度权限控制。
 
-## 二、Shiro和SpringSecurity区别
+## 1. 为什么需要权限
 
-> `Shiro`的实现功能比`SpringSecurity`要少的多。`SpringSecurity`除了基本的`Shiro`的认证和授权以外，还对分布式，`oauth`认证，单点登录都比较友好支持；
->
-> `SpringSecurity`的社区讨论更丰富，有更好的社区支持；
->
-> `SpringSecurity`和`Spring`是无缝衔接，比`Shiro`好的多，特别是现在`SpringBoot`流行的当，`SpringSecurity`更能发挥他的特点；
->
-> `SpringSecurity`更加细粒度的控制权限，比`Shiro`做的好. 数据访问完全可以在`Controller`控制；
->
-> `Shiro`简单，功能没有那么多，容易学，`SpringSecurity`稍微复杂一点。
+一个项目为什么需要添加权限，权限有什么用？
 
-## 三、SpringSecurity的认识
+一般一个稍微复杂一点的项目或者系统，都会涉及到权限部分，权限部分可以说是每一个系统的基础部分。
 
-> `Spring Security`基于`Spring`框架，提供了一套`Web`应用安全性的完整解决方案。一般来说，`Web`应用的安全性包括`用户认证Authentication`和`用户授权Authorization`两个部分。
->
-> **用户认证**指的是验证某个用户**是否为系统中的合法主体**，也就是说用户能否访问该系统。用户认证一般要求用户提供用户名和密码。系统通过校验用户名和密码来完成认证过程。
->
-> **用户授权**指的是**验证某个用户是否有权限执行某个操作**。在一个系统中，不同用户所具有的权限是不同的。
->
-> 权限框架核心：用户认证 Authentication 和 用户授权(Authorization)。
+**权限**：不同人进入系统看到、操作的东西不一样。可以用演员和导演来类比：
 
-### 3.1、RBAC
+- 演员（角色）→ 演戏（权限）；
+- 导演（角色）→ 演戏（权限）、写剧本（权限）。
 
-> 用户的认证和用户的授权在这里都是基于`RBAC`的，什么是`RBAC`？现在我们来认识一下。
+如何完成一个权限系统？常见两种路线：
 
-#### 3.1.1、什么是RBAC
+- 自己手写一个权限系统（对程序员门槛要高一点）；
+- 使用权限框架：`Shiro` 或 `SpringSecurity`。
 
-> `RBAC`是基于角色的访问控制(Role-Based Access Controll)的缩写，在`RBAC`中，权限与角色相关联，用户通过成为适当角色的成员而得到这些角色的权限。这就极大地简化了权限的管理。
+## 2. Shiro 和 SpringSecurity 的区别
 
-#### 3.1.2、RBAC的关键字
+| 维度 | Shiro | SpringSecurity |
+| --- | --- | --- |
+| 功能范围 | 功能较少，主要覆盖认证和授权 | 除认证授权外，对分布式、OAuth 认证、单点登录都有较友好的支持 |
+| 社区支持 | 一般 | 社区讨论更丰富，支持更好 |
+| 与 Spring 的整合 | 需要额外适配 | 与 Spring 无缝衔接，在 SpringBoot 流行的当下更能发挥其特点 |
+| 权限控制粒度 | 相对较粗 | 更细粒度，数据访问完全可以在 Controller 层控制 |
+| 学习成本 | 简单，功能没有那么多，容易学 | 稍微复杂一点 |
 
-> 角色(Role):
->
-> * 为了对许多拥有相似权限的用户进行分类管理，定义了角色的概念, 比如说管理员，普通用户，访客。
->
-> 权限(Permisison):
->
-> * 具体的操作，比如新增用户、修改用户、删除用户操作等。
->
-> 用户(User):
->
-> * 就是操作的个体。说白了就是指人。
->
-> 资源(Resource)
->
-> * 具体的内容东西。
+## 3. SpringSecurity 的认识
 
-![image-20220605210456103](./_pic/RBAC举例.png)
+`Spring Security` 基于 `Spring` 框架，提供了一套 Web 应用安全性的完整解决方案。一般来说，Web 应用的安全性包括**用户认证（Authentication）**和**用户授权（Authorization）**两个部分。
 
-#### 3.1.3、RBAC关键字的关系
+- **用户认证**：验证某个用户**是否为系统中的合法主体**，也就是说用户能否访问该系统。用户认证一般要求用户提供用户名和密码，系统通过校验用户名和密码来完成认证过程。
+- **用户授权**：验证某个用户**是否有权限执行某个操作**。在一个系统中，不同用户所具有的权限是不同的。
 
-* 用户和角色 <--> 多对多关系 (多个用户可以拥有一个角色，一个角色可以赋给多个用户)  <--> 建一个中间表
-* 角色和权限 <--> 多对多关系 (多个权限可以拥有一个角色，一个角色可以赋给多个权限) <--> 建一个中间表
-* 权限和资源 <--> 这里可以是一对一 ，也可以是一对多  (一个权限对应一个资源，也可以一个权限对应多个资源) 
+权限框架的核心就是两件事：**用户认证（Authentication）**和**用户授权（Authorization）**。
 
-### 3.2、数据库表结构
+### 3.1 RBAC
 
-![image-20220605211121124](./_pic/RBAC表关系.png)
+用户的认证和用户的授权在这里都是基于 `RBAC` 的。什么是 RBAC？下面来认识一下。
 
-## 四、项目搭建
+#### 3.1.1 什么是 RBAC
 
-### 4.1、系统的技术结构
+`RBAC` 是基于角色的访问控制（Role-Based Access Control）的缩写。在 RBAC 中，权限与角色相关联，用户通过成为适当角色的成员而得到这些角色的权限，这就极大地简化了权限的管理。
 
-> * `Spring`、`SpringMVC`、`SpringSecurity`、`MyBatis`、`MyBatis PageHelper`、`JSP`
-> * `jQuery`、`Bootstrap`、`Art-template`
-> * `MySQL`
-> * `Maven`
+#### 3.1.2 RBAC 的关键字
 
-### 4.2、建库建表
+| 关键字 | 含义 |
+| --- | --- |
+| 角色（Role） | 为了对许多拥有相似权限的用户进行分类管理而定义的概念，比如管理员、普通用户、访客 |
+| 权限（Permission） | 具体的操作，比如新增用户、修改用户、删除用户操作等 |
+| 用户（User） | 操作的个体，说白了就是指人 |
+| 资源（Resource） | 具体的内容东西 |
 
-> * 创建数据库`ssm_security`；
-> * 运行下面的SQL脚本（建议直接导入SQL脚本）。
+![RBAC 举例](./_pic/RBAC举例.png)
+
+#### 3.1.3 RBAC 关键字的关系
+
+- **用户和角色**：多对多关系（多个用户可以拥有一个角色，一个角色可以赋给多个用户）——建一个中间表；
+- **角色和权限**：多对多关系（多个权限可以属于一个角色，一个角色可以拥有多个权限）——建一个中间表；
+- **权限和资源**：可以是一对一，也可以是一对多（一个权限对应一个资源，也可以一个权限对应多个资源）。
+
+### 3.2 数据库表结构
+
+![RBAC 表关系](./_pic/RBAC表关系.png)
+
+## 4. 项目搭建
+
+### 4.1 系统的技术结构
+
+- 后端：`Spring`、`SpringMVC`、`SpringSecurity`、`MyBatis`、`MyBatis PageHelper`、`JSP`；
+- 前端：`jQuery`、`Bootstrap`、`Art-template`；
+- 数据库：`MySQL`；
+- 构建工具：`Maven`。
+
+### 4.2 建库建表
+
+- 创建数据库 `ssm_security`；
+- 运行下面的 SQL 脚本（建议直接导入 SQL 脚本）。
 
 ```sql
 SET NAMES utf8mb4;
@@ -319,9 +309,11 @@ INSERT INTO `t_user_role` VALUES (22, 40, 4);
 SET FOREIGN_KEY_CHECKS = 1;
 ```
 
-### 4.3、创建Maven项目并导入依赖
+5 张表正好对应 RBAC 模型：`t_user`（用户）、`t_role`（角色）、`t_permission`（权限）、`t_user_role`（用户角色中间表）、`t_role_permission`（角色权限中间表），另有 `t_menu` 存储系统菜单。
 
-> 创建Maven web项目，并导入如下的依赖
+### 4.3 创建 Maven 项目并导入依赖
+
+创建 Maven web 项目，并导入如下的依赖：
 
 ```xml
 <dependencies>
@@ -407,7 +399,6 @@ SET FOREIGN_KEY_CHECKS = 1;
         <version>4.13</version>
         <scope>test</scope>
     </dependency>
-
     <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-aspects</artifactId>
@@ -439,7 +430,7 @@ SET FOREIGN_KEY_CHECKS = 1;
         <artifactId>jackson-annotations</artifactId>
         <version>2.9.0</version>
     </dependency>
-    <!--  SpringSecurity -->
+    <!-- SpringSecurity -->
     <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-core</artifactId>
@@ -474,13 +465,13 @@ SET FOREIGN_KEY_CHECKS = 1;
 </dependencies>
 ```
 
-> 项目结构如下：
+项目结构如下：
 
-![image-20220605213046216](./_pic/项目结构.png)
+![项目结构](./_pic/项目结构.png)
 
-### 4.4、创建相关配置文件
+### 4.4 创建相关配置文件
 
-#### 4.4.1、jdbc.properties
+#### 4.4.1 jdbc.properties
 
 ```properties
 jdbc.driver=com.mysql.jdbc.Driver
@@ -489,36 +480,23 @@ jdbc.username=root
 jdbc.password=root
 ```
 
-#### 4.4.2、log4j.properties
+#### 4.4.2 log4j.properties
 
 ```properties
-#
-# Hibernate, Relational Persistence for Idiomatic Java
-#
-# License: GNU Lesser General Public License (LGPL), version 2.1 or later.
-# See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.
-#
-
 ### direct log messages to stdout ###
 log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.Target=System.err
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.appender.stdout.layout.ConversionPattern=%d{ABSOLUTE} %5p %c{1}:%L - %m%n
 
-### direct messages to file hibernate.log ###
-#log4j.appender.file=org.apache.log4j.FileAppender
-#log4j.appender.file.File=hibernate.log
-#log4j.appender.file.layout=org.apache.log4j.PatternLayout
-#log4j.appender.file.layout.ConversionPattern=%d{ABSOLUTE} %5p %c{1}:%L - %m%n
-
 ### set log levels - for more verbose logging change 'info' to 'debug' ###
 
 log4j.rootLogger=debug, stdout
 ```
 
-#### 4.4.3、MyBatis核心配置文件
+#### 4.4.3 MyBatis 核心配置文件
 
-> SqlMapConfig.xml
+`SqlMapConfig.xml`：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -542,22 +520,22 @@ log4j.rootLogger=debug, stdout
 </configuration>
 ```
 
-### 4.5、相关配置类
+### 4.5 相关配置类
 
-> 我们后面的配置尽可能使用Java代码配置。
+我们后面的配置尽可能使用 Java 代码配置。
 
-#### 4.5.1、JdbcConfig
+#### 4.5.1 JdbcConfig
 
 ```java
 /**
  * JDBC配置类
  */
 @Configuration
-//引入外部配置文件
+// 引入外部配置文件
 @PropertySource("classpath:jdbc.properties")
-//扫描特定包下的mapper
+// 扫描特定包下的mapper
 @MapperScan(basePackages = "com.qfedu.mapper")
-//配置事务的注解驱动
+// 配置事务的注解驱动
 @EnableTransactionManagement
 public class JdbcConfig {
     @Value("${jdbc.driver}")
@@ -569,7 +547,7 @@ public class JdbcConfig {
     @Value("${jdbc.password}")
     private String password;
 
-    //创建数据源
+    // 创建数据源
     @Bean("dataSource")
     public DataSource dataSource() {
         DruidDataSource dataSource = new DruidDataSource();
@@ -581,20 +559,20 @@ public class JdbcConfig {
         return dataSource;
     }
 
-    //配置事务平台管理器
+    // 配置事务平台管理器
     @Bean("transactionManager")
     public DataSourceTransactionManager transactionManager(@Qualifier("dataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
-    //创建并配置SqlSessionFactoryBean
+    // 创建并配置SqlSessionFactoryBean
     @Bean("sqlSessionFactoryBean")
     public SqlSessionFactoryBean sqlSessionFactoryBean(@Qualifier("dataSource") DataSource dataSource) {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(dataSource);
-        //配置别名
+        // 配置别名
         factoryBean.setTypeAliasesPackage("com.qfedu.bean");
-        //加载MyBatis的核心配置文件
+        // 加载MyBatis的核心配置文件
         factoryBean.setConfigLocation(new ClassPathResource("SqlMapConfig.xml"));
 
         return factoryBean;
@@ -602,10 +580,10 @@ public class JdbcConfig {
 }
 ```
 
-#### 4.5.2、RootConfig
+#### 4.5.2 RootConfig
 
 ```java
-//Spring的配置类
+// Spring的配置类
 @Configuration
 @ComponentScan(
         basePackages = "com.qfedu",
@@ -622,7 +600,7 @@ public class RootConfig {
 }
 ```
 
-#### 4.5.3、WebConfig
+#### 4.5.3 WebConfig
 
 ```java
 /**
@@ -632,11 +610,11 @@ public class RootConfig {
 @ComponentScan(
         basePackages = "com.qfedu",
         includeFilters = {
-            @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class})
-})
+                @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class})
+        })
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
-    //配置视图解析器
+    // 配置视图解析器
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
@@ -646,7 +624,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.viewResolver(resolver);
     }
 
-    //配置静态资源不过滤
+    // 配置静态资源不过滤
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
@@ -660,51 +638,47 @@ public class WebConfig implements WebMvcConfigurer {
 
         return multipartResolver;
     }
-
 }
 ```
 
-#### 4.5.4、SecurityConfig
+#### 4.5.4 SecurityConfig
 
 ```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
- @Override
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-        .authorizeRequests()//HttpServletRequest请求认证
-                            //放行路径 不需要认证
-        .antMatchers("/css/**").permitAll()
-                             //访问user/**这个资源需要具有User角色
-        .antMatchers("/user/**").hasRole("USER")
-        .anyRequest().authenticated() //其他任何请求都需要登录认证
-        .and()
-        .formLogin() //form表单登录方式
-        .and()
-        .csrf().disable() //关闭CSRF
-        .formLogin().loginPage("/login") //表示登录时候 跳转的页面
-        .loginProcessingUrl("/form") //form表单登录请求
-        .defaultSuccessUrl("/index") //成功登陆后跳转页面
-        .failureUrl("/loginError").permitAll();//失败错误跳转
+                .authorizeRequests() // HttpServletRequest请求认证
+                // 放行路径，不需要认证
+                .antMatchers("/css/**").permitAll()
+                // 访问/user/**这个资源需要具有USER角色
+                .antMatchers("/user/**").hasRole("USER")
+                .anyRequest().authenticated() // 其他任何请求都需要登录认证
+                .and()
+                .formLogin() // form表单登录方式
+                .and()
+                .csrf().disable() // 关闭CSRF
+                .formLogin().loginPage("/login") // 表示登录时跳转的页面
+                .loginProcessingUrl("/form") // form表单登录请求
+                .defaultSuccessUrl("/index") // 成功登录后跳转页面
+                .failureUrl("/loginError").permitAll(); // 失败错误跳转
     }
 
-    //基于内存方式登录
+    // 基于内存方式登录
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-
         auth.inMemoryAuthentication()
                 .passwordEncoder(new BCryptPasswordEncoder())
                 .withUser("admin")
-                .password(new BCryptPasswordEncoder()
-                        .encode("123456")).roles("USER");
-
-
+                .password(new BCryptPasswordEncoder().encode("123456"))
+                .roles("USER");
     }
 }
 ```
 
-#### 4.5.5、WebAppInitializer
+#### 4.5.5 WebAppInitializer
 
 ```java
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -725,20 +699,20 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 }
 ```
 
-#### 4.5.6、SecurityWebApplicationInitializer
+#### 4.5.6 SecurityWebApplicationInitializer
 
 ```java
 public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplicationInitializer {
 }
 ```
 
-### 4.6、认证
+### 4.6 认证
 
-#### 4.6.1、基于内存方式登录认证
+#### 4.6.1 基于内存方式的登录认证
 
-##### 4.6.1.1、相关页面
+##### 4.6.1.1 相关页面
 
-> 登录页login.jsp
+登录页 `login.jsp`：
 
 ```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -748,21 +722,20 @@ public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplic
     <title>home</title>
 </head>
 <body>
-<form  class="form-signin" action="/form" method="post">
+<form class="form-signin" action="/form" method="post">
     <h2 class="form-signin-heading">用户登录</h2>
     <table>
         <tr>
             <td>用户名:</td>
-            <td><input type="text" name="username"  class="form-control"  placeholder="请输入用户名"/></td>
+            <td><input type="text" name="username" class="form-control" placeholder="请输入用户名"/></td>
         </tr>
         <tr>
             <td>密码:</td>
-            <td><input type="password" name="password"  class="form-control" placeholder="请输入密码" /></td>
+            <td><input type="password" name="password" class="form-control" placeholder="请输入密码"/></td>
         </tr>
         <tr>
-
             <td colspan="2">
-                <button type="submit"  class="btn btn-lg btn-primary btn-block" >登录</button>
+                <button type="submit" class="btn btn-lg btn-primary btn-block">登录</button>
             </td>
         </tr>
     </table>
@@ -771,7 +744,7 @@ public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplic
 </html>
 ```
 
-> 创建一个登录成功页面index.jsp
+创建一个登录成功页面 `index.jsp`：
 
 ```html
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -786,7 +759,7 @@ public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplic
 </html>
 ```
 
-> 创建一个登录失败页面error.jsp
+创建一个登录失败页面 `error.jsp`：
 
 ```html
 <!DOCTYPE html>
@@ -801,7 +774,7 @@ public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplic
 </html>
 ```
 
-##### 4.6.1.2、LoginController
+##### 4.6.1.2 LoginController
 
 ```java
 @Controller
@@ -823,20 +796,18 @@ public class LoginController {
 }
 ```
 
-##### 4.6.1.3、测试
+##### 4.6.1.3 测试
 
-> 访问`http://localhost:8080/index`，会跳转到登录页，只有登录之后才能访问该路径。
+访问 `http://localhost:8080/index`，会跳转到登录页，只有登录之后才能访问该路径。
 
-#### 4.6.2、基于数据库的登录认证
+#### 4.6.2 基于数据库的登录认证
 
-> 以下操作和之前学习的登录方式完全不同，如果用SpringSecurity，必须按照下面的操作进行。
->
-> 这是一种规范，也是一种约定。
+以下操作和之前学习的登录方式完全不同，如果使用 SpringSecurity 进行数据库认证，必须按照下面的操作进行。**这是一种规范，也是一种约定。**
 
-##### 4.6.2.1、创建实体类
+##### 4.6.2.1 创建实体类
 
 ```java
-//用户实体类
+// 用户实体类
 @Data
 public class User {
     private Long id;
@@ -844,24 +815,27 @@ public class User {
     private String password;
     private String email;
     private String tel;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
     private Boolean sex;
     private String headImg;
-    private Integer type; //type=1 是管理员  type=2是老师
-    private List<Role> roles = new ArrayList();//用户对应的角色集合
+    // type=1 是管理员，type=2 是老师
+    private Integer type;
+    // 用户对应的角色集合
+    private List<Role> roles = new ArrayList<>();
 }
 
-//角色实体类
+// 角色实体类
+@Data
 public class Role {
     private Long id;
     private String name;
     private String sn;
     private String desc;
-    List<Permission> permissions = new ArrayList();
+    private List<Permission> permissions = new ArrayList<>();
 }
 
-//权限实体类
+// 权限实体类
 @Data
 public class Permission {
     private Long id;
@@ -872,9 +846,9 @@ public class Permission {
 }
 ```
 
-##### 4.6.2.2、创建UserMapper和UserService
+##### 4.6.2.2 创建 UserMapper 和 UserService
 
-> UserMapper接口
+UserMapper 接口：
 
 ```java
 public interface UserMapper {
@@ -882,7 +856,7 @@ public interface UserMapper {
 }
 ```
 
-> UserMapper映射配置文件
+UserMapper 映射配置文件：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -894,7 +868,7 @@ public interface UserMapper {
 </mapper>
 ```
 
->UserService接口
+UserService 接口：
 
 ```java
 public interface UserService {
@@ -902,7 +876,7 @@ public interface UserService {
 }
 ```
 
-> UserService实现类
+UserService 实现类：
 
 ```java
 @Service
@@ -917,14 +891,14 @@ public class UserServiceImpl implements UserService {
 }
 ```
 
-##### 4.6.2.3、封装用户类UserSecurity
+##### 4.6.2.3 封装用户类 UserSecurity
 
-> 主要用于登录之后，存储用户的信息，需要是`UserDetails`接口的实现类。
->
-> `org.springframework.security.core.userdetails.User`类是`UserDetails`接口的实现类，我们只需要继承该类即可。
+该类主要用于登录之后存储用户的信息，需要是 `UserDetails` 接口的实现类。
+
+`org.springframework.security.core.userdetails.User` 类是 `UserDetails` 接口的实现类，我们只需要继承该类即可：
 
 ```java
-//登录用户封装
+// 登录用户封装
 public class UserSecurity extends org.springframework.security.core.userdetails.User {
     private User loginUser;
 
@@ -943,7 +917,7 @@ public class UserSecurity extends org.springframework.security.core.userdetails.
 }
 ```
 
-##### 4.6.2.4、添加登录认证处理类UserDetailsServiceImpl
+##### 4.6.2.4 添加登录认证处理类 UserDetailsServiceImpl
 
 ```java
 @Component
@@ -952,26 +926,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserService userService;
 
-    //查询用户和角色
+    // 查询用户和角色
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //根据用户名查询出用户
+        // 根据用户名查询出用户
         User user = userService.findUserByUserName(username);
-        if(user != null) {
-            //构建所有权限集合==ROLE_角色+权限
-            HashSet<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
+        if (user != null) {
+            // 构建权限集合：ROLE_角色 + 权限
+            HashSet<GrantedAuthority> authorities = new HashSet<>();
             authorities.add(new SimpleGrantedAuthority("ROLE_管理员"));
             return new UserSecurity(user, authorities);
-        }else{
+        } else {
             return null;
         }
     }
 }
 ```
 
-##### 4.6.2.5、改造SecurityConfig
+##### 4.6.2.5 改造 SecurityConfig
 
-> 把基于内存的注释掉，添加基于数据库登录方式
+把基于内存的认证注释掉，添加基于数据库的登录方式：
 
 ```java
 @Configuration
@@ -982,65 +956,63 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()//HttpServletRequest请求认证
-                //放行路径 不需要认证
+        http.authorizeRequests() // HttpServletRequest请求认证
+                // 放行路径，不需要认证
                 .antMatchers("/css/**").permitAll()
-                //访问user/**这个资源需要具有User角色
+                // 访问/user/**这个资源需要具有USER角色
                 .antMatchers("/user/**").hasRole("USER")
-                .anyRequest().authenticated() //其他任何请求都需要登录认证
+                .anyRequest().authenticated() // 其他任何请求都需要登录认证
                 .and()
-                .formLogin() //form表单登录方式
+                .formLogin() // form表单登录方式
                 .and()
-                .csrf().disable() //关闭CSRF
-                .formLogin().loginPage("/login") //表示登录时候 跳转的页面
-                .loginProcessingUrl("/form") //form表单登录请求
-                .defaultSuccessUrl("/index") //成功登陆后跳转页面
-                .failureUrl("/loginError").permitAll();//失败错误跳转
+                .csrf().disable() // 关闭CSRF
+                .formLogin().loginPage("/login") // 表示登录时跳转的页面
+                .loginProcessingUrl("/form") // form表单登录请求
+                .defaultSuccessUrl("/index") // 成功登录后跳转页面
+                .failureUrl("/loginError").permitAll(); // 失败错误跳转
     }
 
-    //基于内存方式登录
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        //基于数据库的认证
+        // 基于数据库的认证
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(new BCryptPasswordEncoder());
-
     }
 }
 ```
 
-#####  4.6.2.6、测试
+##### 4.6.2.6 测试
 
-> 访问`http://localhost:8080/index`，会跳转到登录页，只有登录之后才能访问该路径。
->
-> 这次登录，可以使用数据库中存在的用户名和密码了。
+访问 `http://localhost:8080/index`，会跳转到登录页，只有登录之后才能访问该路径。
 
-### 4.7、授权
+这次登录，可以使用数据库中存在的用户名和密码了。
 
-> **权限控制**：说白了就是用户有**特定权限或者有特定角色**，就可以操作内容，如果没有特定权限或者没有特定角色 ，就不能操作内容。
->
-> 实现的步骤： 
->
-> * 首先把该用户存储在数据库的**权限和角色**查询出来，交给`SpringSecurity`框架去管理；
-> * 该框架在发现你在操作某个内容的时候，就会把你的权限拿出来 和你操作的内容进行对比一下，如果存在就可以操作，如果不存在就不能操作。
+### 4.7 授权
 
-#### 4.7.1、添加相关mapper和service层
+**权限控制**：说白了就是用户有**特定权限或者有特定角色**，就可以操作内容；如果没有特定权限或者没有特定角色，就不能操作内容。
 
-> RoleMapper接口
+实现的步骤：
+
+1. 首先把该用户存储在数据库的**权限和角色**查询出来，交给 `SpringSecurity` 框架去管理；
+2. 该框架在发现你操作某个内容的时候，就会把你的权限拿出来和你操作的内容进行对比：如果存在就可以操作，如果不存在就不能操作。
+
+#### 4.7.1 添加相关 Mapper 和 Service 层
+
+RoleMapper 接口：
 
 ```java
 public interface RoleMapper {
-    //根据用户id查询对应的角色
+    // 根据用户id查询对应的角色
     List<Role> listRoleByUser(Long uid);
 }
 ```
 
-> RoleMapper映射配置文件
+RoleMapper 映射配置文件：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.codeaction.mapper.RoleMapper">
+<mapper namespace="com.qfedu.mapper.RoleMapper">
     <select id="listRoleByUser" resultType="role">
         select
             r.*
@@ -1052,7 +1024,7 @@ public interface RoleMapper {
 </mapper>
 ```
 
-> RoleService接口
+RoleService 接口：
 
 ```java
 public interface RoleService {
@@ -1060,11 +1032,12 @@ public interface RoleService {
 }
 ```
 
-> RoleService实现类
+RoleService 实现类：
 
 ```java
 @Service
 public class RoleServiceImpl implements RoleService {
+    @Autowired
     private RoleMapper roleMapper;
 
     @Override
@@ -1074,7 +1047,7 @@ public class RoleServiceImpl implements RoleService {
 }
 ```
 
-> PermissionMapper接口
+PermissionMapper 接口：
 
 ```java
 public interface PermissionMapper {
@@ -1082,12 +1055,12 @@ public interface PermissionMapper {
 }
 ```
 
-> PermissionMapper映射配置文件
+PermissionMapper 映射配置文件：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.codeaction.mapper.PermissionMapper">
+<mapper namespace="com.qfedu.mapper.PermissionMapper">
     <select id="listPermissionByUser" resultType="permission">
         select
             distinct p.*
@@ -1099,7 +1072,7 @@ public interface PermissionMapper {
 </mapper>
 ```
 
-> PermissionService接口
+PermissionService 接口：
 
 ```java
 public interface PermissionService {
@@ -1107,7 +1080,7 @@ public interface PermissionService {
 }
 ```
 
-> PermissionService实现类
+PermissionService 实现类：
 
 ```java
 @Service
@@ -1122,7 +1095,9 @@ public class PermissionServiceImpl implements PermissionService {
 }
 ```
 
-#### 4.7.2、添加对应的权限获取代码
+#### 4.7.2 添加对应的权限获取代码
+
+改造 `UserDetailsServiceImpl`，把用户的角色和权限都查询出来交给 SpringSecurity 管理：
 
 ```java
 @Service
@@ -1137,20 +1112,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userMapper.findUserByUserName(username);
-        if(user != null){
+        if (user != null) {
             Set<GrantedAuthority> authoritySet = new HashSet<>();
-            //获取该登录用户所有的角色
+            // 获取该登录用户所有的角色
             List<Role> roles = roleMapper.listRoleByUser(user.getId());
             for (Role role : roles) {
                 authoritySet.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
             }
-            
-            //获取该登录用户所有的权限
+
+            // 获取该登录用户所有的权限
             List<Permission> permissions = permissionMapper.listPermissionByUser(user.getId());
             for (Permission permission : permissions) {
                 authoritySet.add(new SimpleGrantedAuthority(permission.getName()));
             }
-			//根据该用户的的信息 将查询到的权限和角色交给springsecurity去管理
+            // 根据该用户的信息，将查询到的权限和角色交给SpringSecurity去管理
             return new UserSecurity(user, authoritySet);
         }
         return null;
@@ -1158,59 +1133,62 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 }
 ```
 
-#### 4.7.3、调整SecurityConfig的配置
+> [!NOTE]
+> 角色需要加前缀 `ROLE_` 再放入权限集合中，因为 `hasRole()` 在比对时会自动补上 `ROLE_` 前缀；而权限直接使用原始名称，配合 `hasAuthority()` 使用。
+
+#### 4.7.3 调整 SecurityConfig 的配置
 
 ```java
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)//开启细粒度控制
+@EnableGlobalMethodSecurity(prePostEnabled = true) // 开启细粒度控制
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()//HttpServletRequest请求认证
-                //放行路径 不需要认证
+        http.authorizeRequests() // HttpServletRequest请求认证
+                // 放行路径，不需要认证
                 .antMatchers("/css/**").permitAll()
-                ////访问user/**这个资源需要具有User角色
+                //// 访问/user/**这个资源需要具有USER角色
                 //.antMatchers("/user/**").hasRole("USER")
-                .anyRequest().authenticated() //其他任何请求都需要登录认证
+                .anyRequest().authenticated() // 其他任何请求都需要登录认证
                 .and()
-                .formLogin() //form表单登录方式
+                .formLogin() // form表单登录方式
                 .and()
-                .csrf().disable() //关闭CSRF
-                .formLogin().loginPage("/login") //表示登录时候 跳转的页面
-                .loginProcessingUrl("/form") //form表单登录请求
-                .defaultSuccessUrl("/index") //成功登陆后跳转页面
-                .failureUrl("/loginError").permitAll();//失败错误跳转
+                .csrf().disable() // 关闭CSRF
+                .formLogin().loginPage("/login") // 表示登录时跳转的页面
+                .loginProcessingUrl("/form") // form表单登录请求
+                .defaultSuccessUrl("/index") // 成功登录后跳转页面
+                .failureUrl("/loginError").permitAll(); // 失败错误跳转
 
-        //退出登录处理
+        // 退出登录处理
         http.logout().logoutUrl("/logout").logoutSuccessUrl("/login").invalidateHttpSession(true);
 
+        // 权限不足时的处理：ajax请求返回JSON，普通请求转发到错误页
         http.exceptionHandling().accessDeniedHandler((req, resp, e) -> {
             String header = req.getHeader("X-Requested-With");
-            if("XMLHttpRequest".equals(header)) {
+            if ("XMLHttpRequest".equals(header)) {
                 resp.getWriter().println("{\"errorMsg\":\"不好意思，您没有权限访问\"}");
             } else {
-                req.getRequestDispatcher("/error403").forward(req,resp);
+                req.getRequestDispatcher("/error403").forward(req, resp);
             }
         });
     }
-    
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        //基于数据库的认证
+        // 基于数据库的认证
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(new BCryptPasswordEncoder());
-
     }
 }
 ```
 
-#### 4.7.4、修改UserMapper和UserService
+#### 4.7.4 修改 UserMapper 和 UserService
 
-> UserMapper接口
+UserMapper 接口：
 
 ```java
 public interface UserMapper {
@@ -1219,7 +1197,7 @@ public interface UserMapper {
 }
 ```
 
-> UserMapper映射配置文件
+UserMapper 映射配置文件：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -1234,7 +1212,7 @@ public interface UserMapper {
 </mapper>
 ```
 
-> UserService接口
+UserService 接口：
 
 ```java
 public interface UserService {
@@ -1243,7 +1221,7 @@ public interface UserService {
 }
 ```
 
-> UserService实现类
+UserService 实现类：
 
 ```java
 @Service
@@ -1263,7 +1241,9 @@ public class UserServiceImpl implements UserService {
 }
 ```
 
-#### 4.7.5、增加UserController
+#### 4.7.5 增加 UserController
+
+在方法上使用 `@PreAuthorize` 进行细粒度的权限控制：
 
 ```java
 @Controller
@@ -1272,7 +1252,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PreAuthorize("hasRole('管理员')") //拥有管理员权限才能访问
+    @PreAuthorize("hasRole('管理员')") // 拥有管理员角色才能访问
     @RequestMapping("/findAll")
     @ResponseBody
     public List<User> findAll() {
@@ -1281,6 +1261,14 @@ public class UserController {
 }
 ```
 
-#### 4.7.5、测试
+#### 4.7.6 测试
 
-> 使用`admin`登录后，可以访问`http://localhost:8080/user/findAll`接口，而使用`t1`就不能。
+使用 `admin` 登录后，可以访问 `http://localhost:8080/user/findAll` 接口；而使用 `t1` 登录则不能访问，因为没有管理员角色。
+
+## 5. 本章小结
+
+- 权限系统的理论基础是 RBAC：用户、角色、权限、资源四类关键对象，用户与角色、角色与权限之间都是多对多关系，各用一张中间表维护；
+- SpringSecurity 的两大核心是认证（Authentication，你是谁）与授权（Authorization，你能做什么）；
+- 认证方式从易到难：基于内存（`inMemoryAuthentication`）适合演示，实际开发基于数据库，核心是提供 `UserDetailsService` 实现，把查到的用户封装成 `UserDetails` 交给框架；
+- 授权通过 `@EnableGlobalMethodSecurity(prePostEnabled = true)` 开启，用 `@PreAuthorize` 在方法上声明所需的角色或权限；
+- 角色放入权限集合时要加 `ROLE_` 前缀，与 `hasRole()` 的自动补全机制对应。

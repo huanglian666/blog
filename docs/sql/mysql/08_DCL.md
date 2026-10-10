@@ -1,15 +1,15 @@
 ---
-title: 08_DCL
+title: DCL
 date: 2026-09-12
 ---
 
-## 一、是什么
+# DCL
 
-> **数据控制语言** (Data Control Language) 在SQL语言中，是一种可对数据访问权进行控制的指令，它可以控制特定用户账户对数据表、查看表、存储程序、用户自定义函数等数据库对象的控制权。
+**DCL**（Data Control Language，数据控制语言）：在 SQL 语言中，是一种可对数据访问权进行控制的指令。它可以控制特定用户账户对数据表、视图、存储程序、用户自定义函数等数据库对象的控制权。
 
-## 二、常用操作
+## 1. 常用操作
 
-### 2.1、创建用户
+### 1.1 创建用户
 
 ```sql
 # 语法
@@ -19,7 +19,7 @@ CREATE USER 用户名@地址 IDENTIFIED BY '密码';
 CREATE USER user1@localhost IDENTIFIED BY '1234';
 ```
 
-### 2.2、用户授权
+### 1.2 用户授权
 
 ```sql
 # 语法
@@ -31,7 +31,7 @@ GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT ON mydb1.* TO user1@lo
 GRANT ALL ON mydb1.* TO user1@localhost;
 ```
 
-### 2.3、查看用户权限
+### 1.3 查看用户权限
 
 ```sql
 # 语法
@@ -41,7 +41,7 @@ SHOW GRANTS FOR 用户名@主机名;
 SHOW GRANTS FOR user1@localhost;
 ```
 
-### 2.4、撤销权限
+### 1.4 撤销权限
 
 ```sql
 # 语法
@@ -53,7 +53,7 @@ REVOKE create,alter,drop ON mydb1.* from user1@localhost;
 REVOKE ALL ON mydb1.* from user1@localhost;
 ```
 
-### 2.5、删除用户
+### 1.5 删除用户
 
 ```sql
 # 语法
@@ -63,7 +63,7 @@ DROP USER 用户名;
 DROP USER user1@localhost;
 ```
 
-### 2.6、修改用户密码
+### 1.6 修改用户密码
 
 ```sql
 # 语法

@@ -1,11 +1,15 @@
 ---
-title: 03_Spring整合MyBatis_声明式事务
+title: Spring整合MyBatis_声明式事务
 date: 2026-09-12
 ---
 
-## 一、Spring整合MyBatis基础工程搭建
+# Spring整合MyBatis_声明式事务
 
-> 新建Maven工程，导入坐标，pom.xml配置如下
+本篇先搭建 MyBatis 基础工程，然后把它整合进 Spring（SqlSessionFactory 交给容器管理、Mapper 接口自动生成代理对象），最后以转账案例引出事务问题，学习 Spring 声明式事务的配置方式。
+
+## 1. Spring整合MyBatis基础工程搭建
+
+新建 Maven 工程，导入坐标，`pom.xml` 配置如下：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -69,9 +73,10 @@ date: 2026-09-12
 </project>
 ```
 
-> 基础工程就是之前我们学习MyBatis时使用的工程，里面没有任何Spring的内容。
+> [!NOTE]
+> 基础工程就是之前我们学习 MyBatis 时使用的工程，里面没有任何 Spring 的内容，本节先把它跑通。
 
-### 1.1、建库建表
+### 1.1 建库建表
 
 ```sql
 DROP TABLE IF EXISTS `sys_role`;
@@ -80,20 +85,14 @@ CREATE TABLE `sys_role`  (
   `roleName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `roleDesc` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
 
--- ----------------------------
--- Records of sys_role
--- ----------------------------
 INSERT INTO `sys_role` VALUES (1, '校长', '负责全面工作');
 INSERT INTO `sys_role` VALUES (2, '教研专员', '课程研发工作');
 INSERT INTO `sys_role` VALUES (3, '讲师', '授课工作');
 INSERT INTO `sys_role` VALUES (4, '班主任', '班级日常管理，协助解决学生的问题');
 INSERT INTO `sys_role` VALUES (5, '就业专员', '负责学员就业工作');
 
--- ----------------------------
--- Table structure for sys_user
--- ----------------------------
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -102,18 +101,12 @@ CREATE TABLE `sys_user`  (
   `password` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `phoneNum` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
 
--- ----------------------------
--- Records of sys_user
--- ----------------------------
 INSERT INTO `sys_user` VALUES (1, '张三', 'zhangsan@126.com', '111', '18660701111');
 INSERT INTO `sys_user` VALUES (2, '王五', 'wangwu@126.com', '222', '18660702222');
 INSERT INTO `sys_user` VALUES (3, '李华', 'lihua@126.com', '333', '18660703333');
 
--- ----------------------------
--- Table structure for sys_user_role
--- ----------------------------
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`  (
   `userId` bigint(20) NOT NULL,
@@ -122,11 +115,8 @@ CREATE TABLE `sys_user_role`  (
   INDEX `roleId`(`roleId`) USING BTREE,
   CONSTRAINT `sys_user_role_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `sys_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `sys_user_role_ibfk_2` FOREIGN KEY (`roleId`) REFERENCES `sys_role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
 
--- ----------------------------
--- Records of sys_user_role
--- ----------------------------
 INSERT INTO `sys_user_role` VALUES (1, 1);
 INSERT INTO `sys_user_role` VALUES (1, 2);
 INSERT INTO `sys_user_role` VALUES (2, 2);
@@ -134,9 +124,9 @@ INSERT INTO `sys_user_role` VALUES (2, 3);
 INSERT INTO `sys_user_role` VALUES (3, 5);
 ```
 
-### 1.2、创建实体类
+### 1.2 创建实体类
 
-> Role.java
+Role.java：
 
 ```java
 public class Role {
@@ -144,13 +134,13 @@ public class Role {
     private Long id;
     private String roleName;
     private String roleDesc;
-    
-    //set和get方法
-    //toString方法
+
+    // set和get方法
+    // toString方法
 }
 ```
 
-> User.java
+User.java：
 
 ```java
 public class User {
@@ -160,15 +150,15 @@ public class User {
     private String password;
     private String phoneNum;
     private List<Role> roles;
-    
-    //set和get方法
-    //toString方法
+
+    // set和get方法
+    // toString方法
 }
 ```
 
-### 1.3、创建接口
+### 1.3 创建接口
 
-> RoleMapper.java
+RoleMapper.java：
 
 ```java
 public interface RoleMapper {
@@ -176,11 +166,11 @@ public interface RoleMapper {
 
     void save(Role role);
 
-    List<Role> fingByUserId(Long uid);
+    List<Role> findByUserId(Long uid);
 }
 ```
 
-> UserMapper.java
+UserMapper.java：
 
 ```java
 public interface UserMapper {
@@ -192,7 +182,7 @@ public interface UserMapper {
 }
 ```
 
-> UserRoleMapper.java
+UserRoleMapper.java：
 
 ```java
 public interface UserRoleMapper {
@@ -203,9 +193,9 @@ public interface UserRoleMapper {
 }
 ```
 
-### 1.4、创建映射配置文件
+### 1.4 创建映射配置文件
 
-> RoleMapper.xml
+RoleMapper.xml：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -217,7 +207,7 @@ public interface UserRoleMapper {
         select * from sys_role
     </select>
 
-    <select id="fingByUserId" resultType="role" parameterType="long">
+    <select id="findByUserId" resultType="role" parameterType="long">
         select * from sys_user u, sys_user_role ur, sys_role r where u.id=ur.userId and ur.roleId=r.id and u.id=#{id}
     </select>
 
@@ -227,7 +217,7 @@ public interface UserRoleMapper {
 </mapper>
 ```
 
-> UserMapper.xml
+UserMapper.xml：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -247,8 +237,8 @@ public interface UserRoleMapper {
             <result column="roleDesc" property="roleDesc" />
         </collection>
     </resultMap>
-    
-    <select id="list" resultType="user" resultMap="userMap">
+
+    <select id="list" resultMap="userMap">
         SELECT
             u.*, r.id rid, r.roleDesc roleDesc, r.roleName roleName
         FROM
@@ -270,7 +260,7 @@ public interface UserRoleMapper {
 </mapper>
 ```
 
-> UserRoleMapper.xml
+UserRoleMapper.xml：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -288,7 +278,7 @@ public interface UserRoleMapper {
 </mapper>
 ```
 
-### 1.5、创建JDBC配置文件
+### 1.5 创建JDBC配置文件
 
 ```properties
 jdbc.driver=com.mysql.jdbc.Driver
@@ -297,7 +287,9 @@ jdbc.username=root
 jdbc.password=root
 ```
 
-### 1.6、创建核心配置文件
+### 1.6 创建核心配置文件
+
+MyBatis 核心配置文件命名为 `mybatis-config.xml`：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -310,7 +302,7 @@ jdbc.password=root
     <typeAliases>
         <package name="com.qfedu.entity" />
     </typeAliases>
-    
+
     <!-- 配置环境 -->
     <environments default="mysql">
         <environment id="mysql">
@@ -331,41 +323,27 @@ jdbc.password=root
 </configuration>
 ```
 
-### 1.7、日志配置文件
+### 1.7 日志配置文件
 
-> log4j.properties
+`log4j.properties`：
 
 ```properties
-#
-# Hibernate, Relational Persistence for Idiomatic Java
-#
-# License: GNU Lesser General Public License (LGPL), version 2.1 or later.
-# See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.
-#
-
 ### direct log messages to stdout ###
 log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.Target=System.err
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.appender.stdout.layout.ConversionPattern=%d{ABSOLUTE} %5p %c{1}:%L - %m%n
 
-### direct messages to file hibernate.log ###
-#log4j.appender.file=org.apache.log4j.FileAppender
-#log4j.appender.file.File=hibernate.log
-#log4j.appender.file.layout=org.apache.log4j.PatternLayout
-#log4j.appender.file.layout.ConversionPattern=%d{ABSOLUTE} %5p %c{1}:%L - %m%n
-
 ### set log levels - for more verbose logging change 'info' to 'debug' ###
-
 log4j.rootLogger=debug, stdout
 ```
 
-### 1.8、测试
+### 1.8 测试
 
 ```java
 @Test
 public void testMyBatis() throws IOException {
-    InputStream inputStream = Resources.getResourceAsStream("sqlMapConfig.xml");
+    InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml");
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
     SqlSession session = sqlSessionFactory.openSession();
 
@@ -378,13 +356,17 @@ public void testMyBatis() throws IOException {
 }
 ```
 
-## 二、Spring整合MyBatis
+## 2. Spring整合MyBatis
 
-### 2.1、整合思路
+### 2.1 整合思路
 
-> 将Session工厂（SqlSessionFactory）交给Spring容器进行管理；
+整合要解决的核心问题是：把 MyBatis 的核心对象交给 Spring 容器管理，让业务代码不再手动创建和关闭 SqlSession。
 
-### 2.2、将Session工厂(SqlSessionFactory)交给Spring进行管理
+- 将 SqlSession 工厂（SqlSessionFactory）交给 Spring 容器进行管理；
+- 通过包扫描，由 mybatis-spring 为 Mapper 接口自动创建动态代理对象并注册为 Bean；
+- Service 层直接注入 Mapper 代理对象使用。
+
+### 2.2 将SqlSessionFactory交给Spring进行管理
 
 ```xml
 <!-- 加载配置文件 -->
@@ -403,13 +385,13 @@ public void testMyBatis() throws IOException {
     <!-- 配置连接池 -->
     <property name="dataSource" ref="dataSource" />
     <!-- 配置别名 -->
-    <property name="typeAliasesPackage" value="com.qfedu.bean" />
+    <property name="typeAliasesPackage" value="com.qfedu.entity" />
     <!-- 配置MyBatis的核心配置文件 -->
     <property name="configLocation" value="classpath:mybatis-config.xml" />
 </bean>
 ```
 
-### 2.3、配置包扫描，生成Mapper接口的动态代理对象
+### 2.3 配置包扫描，生成Mapper接口的动态代理对象
 
 ```xml
 <!-- 配置包扫描，生成Mapper接口的动态代理对象 -->
@@ -418,22 +400,24 @@ public void testMyBatis() throws IOException {
 </bean>
 ```
 
-### 2.4、修改MyBatis核心配置文件
+### 2.4 修改MyBatis核心配置文件
+
+数据源已交给 Spring 的 Druid 管理，核心配置文件里保留日志设置即可：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-	<settings>
+    <settings>
         <!-- 打印查询语句 -->
         <setting name="logImpl" value="LOG4J" />
     </settings>
 </configuration>
 ```
 
-### 2.5、Service层代码
+### 2.5 Service层代码
 
-> 接口RoleService.java
+接口 RoleService.java：
 
 ```java
 public interface RoleService {
@@ -442,7 +426,7 @@ public interface RoleService {
 }
 ```
 
-> 接口UserService.java
+接口 UserService.java：
 
 ```java
 public interface UserService {
@@ -452,10 +436,9 @@ public interface UserService {
 }
 ```
 
-> 实现类RoleServiceImpl.java
+实现类 RoleServiceImpl.java：
 
 ```java
-@Service
 public class RoleServiceImpl implements RoleService {
     private RoleMapper roleMapper;
 
@@ -475,10 +458,9 @@ public class RoleServiceImpl implements RoleService {
 }
 ```
 
-> 实现类UserServiceImpl.java
+实现类 UserServiceImpl.java，其中保存用户时还要同时维护用户-角色关系：
 
 ```java
-@Service
 public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     private UserRoleMapper userRoleMapper;
@@ -486,7 +468,7 @@ public class UserServiceImpl implements UserService {
     public void setUserMapper(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
-    
+
     public void setUserRoleMapper(UserRoleMapper userRoleMapper) {
         this.userRoleMapper = userRoleMapper;
     }
@@ -516,20 +498,29 @@ public class UserServiceImpl implements UserService {
 }
 ```
 
-> 在Spring的核心配置文件中配置Service。
+在 Spring 的核心配置文件中配置 Service：
 
 ```xml
 <!-- 创建Service层对象 -->
+<bean id="roleService" class="com.qfedu.service.impl.RoleServiceImpl">
+    <property name="roleMapper" ref="roleMapper" />
+</bean>
+
 <bean id="userService" class="com.qfedu.service.impl.UserServiceImpl">
     <property name="userMapper" ref="userMapper" />
     <property name="userRoleMapper" ref="userRoleMapper" />
 </bean>
 ```
 
-### 2.6、测试
+> [!NOTE]
+> 这里的 `userMapper`、`userRoleMapper` 是 2.3 节包扫描自动生成的 Mapper 代理对象，可以直接用 `ref` 注入到 Service 中。
+
+### 2.6 测试
 
 ```java
 public class MyTest {
+
+    // 整合前：手动获取Mapper
     @Test
     public void testMyBatis() throws IOException {
         InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml");
@@ -544,10 +535,11 @@ public class MyTest {
         }
     }
 
+    // 整合后：从Spring容器中直接获取Service
     @Test
     public void testSpringMyBatis() {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-        UserService userService = (UserService)context.getBean("userService");
+        UserService userService = (UserService) context.getBean("userService");
         List<User> userList = userService.list();
         for (User user : userList) {
             System.out.println(user);
@@ -556,41 +548,43 @@ public class MyTest {
 }
 ```
 
-## 三、事务处理
+## 3. 事务处理
 
-### 3.1、基础工程搭建
+### 3.1 基础工程搭建
 
-#### 3.1.1、建库建表
+#### 3.1.1 建库建表
+
+转账场景使用 account 表：
 
 ```sql
 CREATE TABLE `account`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(30),
+  `name` varchar(30) DEFAULT NULL,
   `money` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `account` VALUES (1, 'tom', 1000);
 INSERT INTO `account` VALUES (2, 'bob', 1000);
 ```
 
-#### 3.1.2、创建实体类
+#### 3.1.2 创建实体类
 
-> Account.java
+Account.java：
 
 ```java
 public class Account implements Serializable {
     private Integer id;
     private String name;
     private Integer money;
-    //set、get
-    //toString
+    // set、get
+    // toString
 }
 ```
 
-#### 3.1.3、创建接口及实现类
+#### 3.1.3 创建接口及实现类
 
-> AccountMapper.java
+AccountMapper.java：
 
 ```java
 public interface AccountMapper {
@@ -599,7 +593,7 @@ public interface AccountMapper {
 }
 ```
 
-> AccountService.java
+AccountService.java：
 
 ```java
 public interface AccountService {
@@ -607,7 +601,7 @@ public interface AccountService {
 }
 ```
 
-> AccountServiceImpl.java
+AccountServiceImpl.java，转账业务要先扣转出方、再加转入方，两步必须同成功同失败：
 
 ```java
 public class AccountServiceImpl implements AccountService {
@@ -622,15 +616,15 @@ public class AccountServiceImpl implements AccountService {
         Account src = accountMapper.findById(srcId);
         Account dst = accountMapper.findById(dstId);
 
-        if(src == null) {
+        if (src == null) {
             throw new RuntimeException("转出用户不存在");
         }
 
-        if(dst == null) {
+        if (dst == null) {
             throw new RuntimeException("转入用户不存在");
         }
 
-        if(src.getMoney() < money) {
+        if (src.getMoney() < money) {
             throw new RuntimeException("转出账户余额不足");
         }
 
@@ -638,13 +632,13 @@ public class AccountServiceImpl implements AccountService {
         dst.setMoney(dst.getMoney() + money);
 
         accountMapper.update(src);
-        //int x = 1/0;
+        // int x = 1/0;  // 取消注释可模拟两次更新之间出现异常
         accountMapper.update(dst);
     }
 }
 ```
 
-#### 3.1.4、创建映射配置文件
+#### 3.1.4 创建映射配置文件
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -661,16 +655,16 @@ public class AccountServiceImpl implements AccountService {
 </mapper>
 ```
 
-#### 3.1.5、创建JDBC配置文件
+#### 3.1.5 创建JDBC配置文件
 
- ```properties
- jdbc.driver=com.mysql.jdbc.Driver
- jdbc.url=jdbc:mysql://localhost:3306/spring_mybatis?useSSL=false&useUnicode=true&characterEncoding=utf8
- jdbc.username=root
- jdbc.password=root
- ```
+```properties
+jdbc.driver=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/spring_mybatis?useSSL=false&useUnicode=true&characterEncoding=utf8
+jdbc.username=root
+jdbc.password=root
+```
 
-#### 3.1.6、创建核心配置文件
+#### 3.1.6 创建核心配置文件
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -708,7 +702,7 @@ public class AccountServiceImpl implements AccountService {
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
         <!-- 配置别名 -->
-        <property name="typeAliasesPackage" value="com.qfedu.bean" />
+        <property name="typeAliasesPackage" value="com.qfedu.entity" />
         <property name="configLocation" value="classpath:mybatis-config.xml" />
     </bean>
 
@@ -719,100 +713,104 @@ public class AccountServiceImpl implements AccountService {
 </beans>
 ```
 
-#### 3.1.7、基础工程测试
+#### 3.1.7 基础工程测试
 
 ```java
 public class MyTest {
     @Test
     public void testTrans() throws Exception {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-        AccountService accountService = (AccountService)context.getBean("accountService");
+        AccountService accountService = (AccountService) context.getBean("accountService");
 
         accountService.transfer(1, 2, 100);
     }
 }
 ```
 
-> 在转账中间人为制造错误发现无法回滚。
+> [!WARNING]
+> 把 `int x = 1/0;` 的注释打开再执行转账，会发现钱扣了却没有到账——两次更新之间出现异常时**无法回滚**。这就是没有事务控制的问题，也是接下来引入事务管理的原因。
 
-### 3.2、编程式事务控制相关对象
+### 3.2 编程式事务控制相关对象
 
-> **PlatformTransactionManager接口是Spring的事务管理器，它里面提供了我们常用的操作事务的方法**
+**PlatformTransactionManager 接口**是 Spring 的事务管理器，它里面提供了我们常用的操作事务的方法：
 
-| 方法                                                         | 说明             |
-| ------------------------------------------------------------ | ---------------- |
-| `TransactionStatus getTransaction(TransactionDefinition var1)` | 获取事务状态信息 |
-| `void commit(TransactionStatus var1)`                        | 提交事务         |
-| `void rollback(TransactionStatus var1)`                      | 回滚事务         |
+| 方法 | 说明 |
+| --- | --- |
+| `TransactionStatus getTransaction(TransactionDefinition definition)` | 获取事务状态信息 |
+| `void commit(TransactionStatus status)` | 提交事务 |
+| `void rollback(TransactionStatus status)` | 回滚事务 |
 
-> PlatformTransactionManager是接口类型，不同的Dao层技术则有不同的实现类，Dao层技术是jdbc或mybatis时：org.springframework.jdbc.datasource.DataSourceTransactionManager。
->
-> **TransactionDefinition是事务的定义信息对象**
+PlatformTransactionManager 是接口类型，不同的 Dao 层技术有不同的实现类。Dao 层技术是 JDBC 或 MyBatis 时，实现类为 `org.springframework.jdbc.datasource.DataSourceTransactionManager`。
 
-| 方法                           | 说明               |
-| ------------------------------ | ------------------ |
-| `int getIsolationLevel()`      | 获得事务的隔离级别 |
-| `int getPropagationBehavior()` | 事务的传播行为     |
-| `int getTimeout()`             | 获得超时时间       |
-| `boolean isReadOnly()`         | 是否只读           |
+**TransactionDefinition 是事务的定义信息对象**，描述一个事务应该怎样执行：
 
-#### 1. 事务隔离级别
+| 方法 | 说明 |
+| --- | --- |
+| `int getIsolationLevel()` | 获得事务的隔离级别 |
+| `int getPropagationBehavior()` | 事务的传播行为 |
+| `int getTimeout()` | 获得超时时间 |
+| `boolean isReadOnly()` | 是否只读 |
 
-> 设置隔离级别，可以解决事务并发产生的问题，如脏读、不可重复读和虚读。
->
-> * ISOLATION_DEFAULT
-> * ISOLATION_READ_UNCOMMITTED
-> * ISOLATION_READ_COMMITTED
-> * ISOLATION_REPEATABLE_READ
-> * ISOLATION_SERIALIZABLE
+#### 3.2.1 事务隔离级别
 
-#### 2. 事务传播行为
+设置隔离级别，可以解决事务并发产生的问题，如脏读、不可重复读和虚读（幻读）：
 
-> * **REQUIRED：如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中。一般的选择（默认值）**
-> * **SUPPORTS：支持当前事务，如果当前没有事务，就以非事务方式执行（没有事务）**
-> * MANDATORY：使用当前的事务，如果当前没有事务，就抛出异常
-> * REQUERS_NEW：新建事务，如果当前在事务中，把当前事务挂起。
-> * NOT_SUPPORTED：以非事务方式执行操作，如果当前存在事务，就把当前事务挂起
-> * NEVER：以非事务方式运行，如果当前存在事务，抛出异常
-> * NESTED：如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则执行 REQUIRED 类似的操作
-> * 超时时间：默认值是-1，没有超时限制。如果有，以秒为单位进行设置
-> * 是否只读：建议查询时设置为只读
->
-> **TransactionStatus接口提供的是事务具体的运行状态**
+- ISOLATION_DEFAULT；
+- ISOLATION_READ_UNCOMMITTED；
+- ISOLATION_READ_COMMITTED；
+- ISOLATION_REPEATABLE_READ；
+- ISOLATION_SERIALIZABLE。
 
-| 方法                         | 说明           |
-| ---------------------------- | -------------- |
-| `boolean hasSavepoint()`     | 是否存储回滚点 |
-| `boolean isCompleted()`      | 事务是否完成   |
-| `boolean isNewTransaction()` | 是否是新事务   |
-| `boolean isRollbackOnly()`   | 事务是否回滚   |
+#### 3.2.2 事务传播行为
 
-### 3.3、声明式事务控制
+传播行为描述的是一个事务方法被另一个事务方法调用时，应该如何处理事务：
 
-#### 3.3.1、什么是声明式事务控制
+| 传播行为 | 说明 |
+| --- | --- |
+| **REQUIRED** | 如果当前没有事务，就新建一个事务；如果已经存在一个事务中，加入到这个事务中。一般的选择（默认值） |
+| **SUPPORTS** | 支持当前事务，如果当前没有事务，就以非事务方式执行 |
+| MANDATORY | 使用当前的事务，如果当前没有事务，就抛出异常 |
+| REQUIRES_NEW | 新建事务，如果当前在事务中，把当前事务挂起 |
+| NOT_SUPPORTED | 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起 |
+| NEVER | 以非事务方式运行，如果当前存在事务，抛出异常 |
+| NESTED | 如果当前存在事务，则在嵌套事务内执行；如果当前没有事务，则执行 REQUIRED 类似的操作 |
 
-> Spring的声明式事务顾名思义就是采用声明的方式来处理事务。这里所说的声明，就是指**在配置文件中声明**，用在Spring 配置文件中声明式的处理事务来代替代码式的处理事务。
->
-> **声明式事务处理的作用**
->
-> * 事务管理不侵入开发的组件。具体来说，业务逻辑对象就不会意识到正在事务管理之中，事实上也应该如此，因为事务管理是属于系统层面的服务，而不是业务逻辑的一部分，如果想要改变事务管理策划的话，也只需要在定义文件中重新配置即可
-> * 在不需要事务管理的时候，只要在设定文件上修改一下，即可移去事务管理服务，无需改变代码重新编译，这样维护起来极其方便
->
-> **注意：Spring 声明式事务控制底层就是AOP。**
+此外，事务定义信息还包括：**超时时间**（默认值是 -1，没有超时限制；如果有，以秒为单位进行设置）和**是否只读**（建议查询时设置为只读）。
 
-#### 3.3.2、声明式事务控制实现
+**TransactionStatus 接口**提供的是事务具体的运行状态：
 
-> 声明式事务控制需要明确的几个问题：
->
-> * 谁是切点？
-> * 谁是通知？
-> * 配置切面？
->
-> 代码实现如下：
+| 方法 | 说明 |
+| --- | --- |
+| `boolean hasSavepoint()` | 是否存储回滚点 |
+| `boolean isCompleted()` | 事务是否完成 |
+| `boolean isNewTransaction()` | 是否是新事务 |
+| `boolean isRollbackOnly()` | 事务是否回滚 |
 
-#### 3.3.3、引入相关依赖
+### 3.3 声明式事务控制
 
-> 在基础工程pom.xml中增加如下的依赖
+#### 3.3.1 什么是声明式事务控制
+
+Spring 的声明式事务顾名思义就是采用声明的方式来处理事务。这里所说的声明，就是指**在配置文件中声明**，用在 Spring 配置文件中声明式地处理事务来代替代码式的处理事务。
+
+**声明式事务处理的作用**：
+
+- 事务管理不侵入开发的组件。具体来说，业务逻辑对象不会意识到正在事务管理之中，事实上也应该如此，因为事务管理是属于系统层面的服务，而不是业务逻辑的一部分；如果想要改变事务管理策略的话，也只需要在配置文件中重新配置即可；
+- 在不需要事务管理的时候，只要在配置文件上修改一下，即可移去事务管理服务，无需改变代码重新编译，这样维护起来极其方便。
+
+> [!IMPORTANT]
+> Spring 声明式事务控制的底层就是 AOP。
+
+#### 3.3.2 声明式事务控制实现
+
+用 AOP 的思路来理解声明式事务，需要明确三个问题：
+
+- 谁是切点？——业务层中需要事务控制的方法；
+- 谁是通知？——Spring 的事务增强（`tx:advice`）；
+- 如何配置切面？——用 `aop:config` 把切点和事务通知织入。
+
+#### 3.3.3 引入相关依赖
+
+在基础工程 `pom.xml` 中增加如下的依赖：
 
 ```xml
 <dependency>
@@ -827,9 +825,9 @@ public class MyTest {
 </dependency>
 ```
 
-#### 3.3.4、引入相关命名空间
+#### 3.3.4 引入相关命名空间
 
-> applicationContext.xml
+`applicationContext.xml` 的 beans 根标签需要引入 `tx` 和 `aop` 命名空间：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -846,44 +844,50 @@ public class MyTest {
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- 其余配置不变，在下面继续追加事务相关配置 -->
+</beans>
 ```
 
-#### 3.3.5、配置事务增强
+#### 3.3.5 配置事务增强
 
 ```xml
 <!-- 配置平台事务管理器 -->
-<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" >
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
     <property name="dataSource" ref="dataSource" />
 </bean>
 
 <!-- 通知，事务的增强 -->
 <tx:advice id="txAdvice" transaction-manager="transactionManager">
     <tx:attributes>
+        <!-- 对所有方法开启事务支持 -->
         <tx:method name="*"/>
     </tx:attributes>
 </tx:advice>
 ```
 
-#### 3.3.6、配置织入
+#### 3.3.6 配置织入
 
 ```xml
 <!-- 配置切面 -->
 <aop:config>
-    <aop:pointcut id="pt" expression="execution(* com.qf.service..*(..))"/>
+    <!-- 切点：业务层中所有类的所有方法 -->
+    <aop:pointcut id="pt" expression="execution(* com.qfedu.service..*(..))"/>
     <aop:advisor advice-ref="txAdvice" pointcut-ref="pt" />
 </aop:config>
 ```
 
-#### 3.3.7、测试
+#### 3.3.7 测试
 
 ```java
 public class MyTest {
     @Test
     public void testTrans() throws Exception {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-        AccountService accountService = (AccountService)context.getBean("accountService");
+        AccountService accountService = (AccountService) context.getBean("accountService");
 
         accountService.transfer(1, 2, 100);
     }
 }
 ```
+
+再次打开 `int x = 1/0;` 制造异常，转账失败后会整体回滚，账户余额保持原样，说明事务控制生效了。
