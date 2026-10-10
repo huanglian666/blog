@@ -6,6 +6,3 @@ shamefullyHoist: true
 # 允许/禁止执行安装脚本的包（@parcel/watcher 为可选依赖，无需构建脚本）
 allowBuilds:
   '@parcel/watcher': false
-
-patchedDependencies:
-  '@docsearch/js@5.1.2': patches/@docsearch__js@5.1.2.patch
