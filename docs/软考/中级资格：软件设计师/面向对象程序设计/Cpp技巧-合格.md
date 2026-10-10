@@ -8,7 +8,7 @@ lastmod: 2026-10-08T19:16:43+08:00
 
 ## 1. 考点：类的定义
 
-```CPP
+```cpp
 class 类名 (1)
 {
     public: (2)
@@ -31,7 +31,7 @@ class 类名 (1)
 
 以策略模式或工厂模式中常见的收费基类（​`CashSuper`）为例：
 
-```CPP
+```cpp
 class CashSuper{
 	public:
     	virtual double acceptCash(double money){}
@@ -47,9 +47,7 @@ cs.acceptCash(100.00);
 
 C++ 中定义一个派生类（继承）的语法结构如下：
 
-C++
-
-```
+```cpp
 class 派生类名 : (1) 继承方式1 (2) 基类名1 (, 继承方式2 基类名2, ...)
 {
 public:
@@ -65,9 +63,7 @@ private:
 
 以继承前面定义的 ​`CashSuper`​ 基类来编写一个正常收费子类（​`CashNormal`）为例：
 
-C++
-
-```
+```cpp
 class CashNormal : public CashSuper // 正常子类，public 为继承方式
 {
 public:
@@ -85,7 +81,7 @@ public:
 
 当成员函数不在类的内部直接实现时，可以在类外进行定义，其基本格式如下：
 
-```CPP
+```cpp
 返回值类型 类名 :: () 成员函数名 (形参表)
 {
     函数体;
@@ -100,7 +96,7 @@ public:
 
 以类外定义 ​`CashNormal`​ 类的 ​`acceptCash` 成员函数为例：
 
-```CPP
+```cpp
 double CashNormal :: acceptCash(double money)
 { 
     return money; 
@@ -121,7 +117,7 @@ double CashNormal :: acceptCash(double money)
 
 以设计模式中常见的抽象收费超类（CashSuper）定义为例：
 
-```CPP
+```cpp
 class CashSuper{
 public:
     virtual double acceptCash(double money)=0;
@@ -148,7 +144,7 @@ public:
 
 以命令模式中的远程控制对象为例：
 
-```CPP
+```cpp
 LightOffCommand*remoteControl = new LightOffCommand(kitchenLight);
 remoteControl->setCommand(0, livingRoomLightOn, livingRoomLightOff);
 ```

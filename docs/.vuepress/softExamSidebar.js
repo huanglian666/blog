@@ -202,7 +202,7 @@ export const softExamSidebar = [
 				prefix: `${qualificationPath}面向对象程序设计/`,
 				collapsible: true,
 				children: [
-					article("C++技巧-合格", "面向对象程序设计"),
+					article("C++技巧-合格", "面向对象程序设计", "Cpp技巧-合格"),
 					article("Java技巧-合格", "面向对象程序设计"),
 					article("例子-合格", "面向对象程序设计"),
 				],
