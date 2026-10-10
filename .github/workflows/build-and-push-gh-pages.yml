@@ -87,6 +87,8 @@ jobs:
       # 都会被 GitHub 自动打码（***）；CRAWLER_USER_ID 非敏感，但同样走 Secrets 统一管理。
       # 凭据在 crawler.algolia.com 后台 Settings → API Keys 获取，
       # CRAWLER_ID 为 crawler 详情页的 UUID，三者均需在仓库 Secrets 中配置后本步骤才会生效。
+      # 注意接口区别：/run 仅恢复暂停的爬虫（否则等下次计划时间），
+      # 立即开爬必须用 /reindex。
       - name: Trigger Algolia crawler
         env:
           CRAWLER_USER_ID: ${{ secrets.CRAWLER_USER_ID }}
@@ -94,7 +96,7 @@ jobs:
           CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
         run: |
           http_code=$(curl -s -o /tmp/crawler-resp.json -w '%{http_code}' \
-            -X POST "https://crawler.algolia.com/api/1/crawlers/${CRAWLER_ID}/run" \
+            -X POST "https://crawler.algolia.com/api/1/crawlers/${CRAWLER_ID}/reindex" \
             --user "${CRAWLER_USER_ID}:${CRAWLER_API_KEY}")
           cat /tmp/crawler-resp.json; echo
           if [ "$http_code" != "200" ]; then
