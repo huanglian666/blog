@@ -163,7 +163,7 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  '@docsearch/js@5.1.2': c3bc642cec80b045d9fa68f5ff3f21e140aec13d827f8b0b47cb3b4bea016fc1
+  '@docsearch/js@5.1.2': 7785d93a62ece9b58d298396253c8b551ea5eeadb6511956eeab2758b1b1ca29
 
 importers:
 
@@ -2306,7 +2306,7 @@ snapshots:
 
   '@docsearch/css@5.1.2': {}
 
-  '@docsearch/js@5.1.2(patch_hash=c3bc642cec80b045d9fa68f5ff3f21e140aec13d827f8b0b47cb3b4bea016fc1)': {}
+  '@docsearch/js@5.1.2(patch_hash=7785d93a62ece9b58d298396253c8b551ea5eeadb6511956eeab2758b1b1ca29)': {}
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
@@ -3104,7 +3104,7 @@ snapshots:
   '@vuepress/plugin-docsearch@2.0.0-rc.134(@vuepress/bundler-vite@2.0.0-rc.31(@types/node@26.6.3)(@vue/compiler-sfc@3.5.43)(sass@1.105.0))(vuepress@2.0.0-rc.31(@vue/compiler-sfc@3.5.43)(@vuepress/bundler-vite@2.0.0-rc.31(@types/node@26.6.3)(@vue/compiler-sfc@3.5.43)(sass@1.105.0))(rolldown@1.2.11)(vite@8.3.1(@types/node@26.6.3)(sass@1.105.0))(vue@3.5.43))':
     dependencies:
       '@docsearch/css': 5.1.2
-      '@docsearch/js': 5.1.2(patch_hash=c3bc642cec80b045d9fa68f5ff3f21e140aec13d827f8b0b47cb3b4bea016fc1)
+      '@docsearch/js': 5.1.2(patch_hash=7785d93a62ece9b58d298396253c8b551ea5eeadb6511956eeab2758b1b1ca29)
       '@vuepress/helper': 2.0.0-rc.134(@vuepress/bundler-vite@2.0.0-rc.31(@types/node@26.6.3)(@vue/compiler-sfc@3.5.43)(sass@1.105.0))(vuepress@2.0.0-rc.31(@vue/compiler-sfc@3.5.43)(@vuepress/bundler-vite@2.0.0-rc.31(@types/node@26.6.3)(@vue/compiler-sfc@3.5.43)(sass@1.105.0))(rolldown@1.2.11)(vite@8.3.1(@types/node@26.6.3)(sass@1.105.0))(vue@3.5.43))
       '@vueuse/core': 14.4.0(vue@3.5.43)
       ts-debounce: 5.0.1

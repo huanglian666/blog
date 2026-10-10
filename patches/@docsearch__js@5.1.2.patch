@@ -1,8 +1,40 @@
 diff --git a/dist/esm/docsearch.js b/dist/esm/docsearch.js
-index c7133ddc314646a68ea48cb86dc616d7402dbe37..d1d310f158803602551ed98516b90cd09867c378 100644
+index c7133ddc314646a68ea48cb86dc616d7402dbe37..f994ce9b8bdeafaafefbf04c4f422a40abce7748 100644
 --- a/dist/esm/docsearch.js
 +++ b/dist/esm/docsearch.js
-@@ -16750,6 +16750,7 @@ function DocSearchModal(_ref) {
+@@ -13361,6 +13361,31 @@ function useModalEnvironment({ getEnvironmentProps, containerRef, dropdownRef, f
+ 		modalRef,
+ 		theme
+ 	});
++	// [博客定制] 输入节点被 React 重挂载时恢复焦点与光标：
++	// 点击输入框会触发重渲染，DocSearch 会重建 .DocSearch-Input 节点导致焦点丢失、
++	// 光标跳到末尾，用户无法继续编辑。此处用 MutationObserver 检测重挂载，
++	// 在指针原本位于输入框内时自动 focus 新节点并恢复光标位置。
++	if (typeof MutationObserver !== "undefined" && typeof window !== "undefined") {
++		let lastCaret = null;
++		let pointerInInput = false;
++		document.addEventListener("pointerdown", (e) => {
++			pointerInInput = !!(e.target && e.target.closest && e.target.closest(".DocSearch-Input"));
++		}, true);
++		document.addEventListener("selectionchange", () => {
++			const el = document.activeElement;
++			if (el && el.classList && el.classList.contains("DocSearch-Input")) {
++				try { lastCaret = el.selectionStart; } catch (_) {}
++			}
++		}, true);
++		const refocusIfRemounted = () => {
++			const input = modalRef.current && modalRef.current.querySelector(".DocSearch-Input");
++			if (input && pointerInInput && document.activeElement !== input && lastCaret != null) {
++				input.focus();
++				try { input.setSelectionRange(lastCaret, lastCaret); } catch (_) {}
++			}
++		};
++		new MutationObserver(refocusIfRemounted).observe(modalRef.current, { childList: true, subtree: true });
++	}
+ }
+ function useModalRefs() {
+ 	return {
+@@ -16750,6 +16775,7 @@ function DocSearchModal(_ref) {
  		id: "docsearch",
  		defaultActiveItemId: 0,
  		openOnFocus: true,
@@ -11,10 +43,42 @@ index c7133ddc314646a68ea48cb86dc616d7402dbe37..d1d310f158803602551ed98516b90cd0
  			query: initialQuery,
  			context: { searchSuggestions: [] }
 diff --git a/dist/esm/index.js b/dist/esm/index.js
-index 66c2219760dcd589140694eabfae2c11898a88e7..a86462271febf488ec119e7e2a3dcd3335527e40 100644
+index 66c2219760dcd589140694eabfae2c11898a88e7..52c3301679c1e3280ef57d797c688be8f39a5448 100644
 --- a/dist/esm/index.js
 +++ b/dist/esm/index.js
-@@ -33326,6 +33326,7 @@ function DocSearchAskAiModal(_ref) {
+@@ -13471,6 +13471,31 @@ function useModalEnvironment({ getEnvironmentProps, containerRef, dropdownRef, f
+ 		modalRef,
+ 		theme
+ 	});
++	// [博客定制] 输入节点被 React 重挂载时恢复焦点与光标：
++	// 点击输入框会触发重渲染，DocSearch 会重建 .DocSearch-Input 节点导致焦点丢失、
++	// 光标跳到末尾，用户无法继续编辑。此处用 MutationObserver 检测重挂载，
++	// 在指针原本位于输入框内时自动 focus 新节点并恢复光标位置。
++	if (typeof MutationObserver !== "undefined" && typeof window !== "undefined") {
++		let lastCaret = null;
++		let pointerInInput = false;
++		document.addEventListener("pointerdown", (e) => {
++			pointerInInput = !!(e.target && e.target.closest && e.target.closest(".DocSearch-Input"));
++		}, true);
++		document.addEventListener("selectionchange", () => {
++			const el = document.activeElement;
++			if (el && el.classList && el.classList.contains("DocSearch-Input")) {
++				try { lastCaret = el.selectionStart; } catch (_) {}
++			}
++		}, true);
++		const refocusIfRemounted = () => {
++			const input = modalRef.current && modalRef.current.querySelector(".DocSearch-Input");
++			if (input && pointerInInput && document.activeElement !== input && lastCaret != null) {
++				input.focus();
++				try { input.setSelectionRange(lastCaret, lastCaret); } catch (_) {}
++			}
++		};
++		new MutationObserver(refocusIfRemounted).observe(modalRef.current, { childList: true, subtree: true });
++	}
+ }
+ function useModalRefs() {
+ 	return {
+@@ -33326,6 +33351,7 @@ function DocSearchAskAiModal(_ref) {
  		id: "docsearch",
  		defaultActiveItemId: 0,
  		openOnFocus: true,
