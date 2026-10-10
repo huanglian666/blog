@@ -3,6 +3,12 @@ import { hopeTheme } from "vuepress-theme-hope"
 import { navbar } from "./navbar.js"
 import { softExamSidebar } from "./softExamSidebar.js"
 import { designPatternSidebar } from "./designPatternSidebar.js"
+import { javaseSidebar } from "./javaseSidebar.js"
+import { sqlSidebar } from "./sqlSidebar.js"
+import { toolSidebar } from "./toolSidebar.js"
+import { webSidebar } from "./webSidebar.js"
+import { frameworkSidebar } from "./frameworkSidebar.js"
+import { springCloudSidebar } from "./springCloudSidebar.js"
 
 // 保留标题中英文的原始大小写，避免 README 目录锚点把 SpringBoot、MyBatis 等转换成小写。
 const preserveCaseSlugify = (str) =>
@@ -80,6 +86,8 @@ export default {
 				type: "shiki",
 				lineNumbers: true,
 			},
+			// 启用 GFM 提示块语法（> [!NOTE] / [!TIP] / [!WARNING] 等），默认不开启
+			alert: true,
 			// 启用 KaTeX 数学公式渲染
 			math: {
 				type: "katex",
@@ -89,7 +97,8 @@ export default {
 		navbar,
 		// 侧边栏按分类路径配置：点击顶部菜单进入某分类后，
 		// 左侧只展示该分类下的二级/三级菜单，而不是全站平铺。
-		// 每个值 "structure" 表示该路径按目录结构自动生成侧边栏。
+		// 各技术板块均为手写侧边栏（形式同软考）：分组可折叠、
+		// 组头点击直接进入该目录的 README 索引页，显示名称不带数字前缀。
 		// Hope 的博客聚合页是主题自动生成的独立路由，这些页面不需要侧边栏，显式配置空数组以避免构建警告。
 		sidebar: {
 			'/category/': [],
@@ -97,12 +106,12 @@ export default {
 			'/article/': [],
 			'/star/': [],
 			'/timeline/': [],
-			'/javase/': 'structure',
-			'/tool/': 'structure',
-			'/sql/': 'structure',
-			'/web/': 'structure',
-			'/framework/': 'structure',
-			'/springCloud/': 'structure',
+			'/javase/': javaseSidebar,
+			'/tool/': toolSidebar,
+			'/sql/': sqlSidebar,
+			'/web/': webSidebar,
+			'/framework/': frameworkSidebar,
+			'/springCloud/': springCloudSidebar,
 			'/软考/': softExamSidebar,
 			'/designPatterns/': designPatternSidebar,
 			'/me/': 'structure',
