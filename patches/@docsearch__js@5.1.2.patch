@@ -1,0 +1,24 @@
+diff --git a/dist/esm/docsearch.js b/dist/esm/docsearch.js
+index c7133ddc314646a68ea48cb86dc616d7402dbe37..d1d310f158803602551ed98516b90cd09867c378 100644
+--- a/dist/esm/docsearch.js
++++ b/dist/esm/docsearch.js
+@@ -16750,6 +16750,7 @@ function DocSearchModal(_ref) {
+ 		id: "docsearch",
+ 		defaultActiveItemId: 0,
+ 		openOnFocus: true,
++		ignoreCompositionEvents: true,
+ 		initialState: {
+ 			query: initialQuery,
+ 			context: { searchSuggestions: [] }
+diff --git a/dist/esm/index.js b/dist/esm/index.js
+index 66c2219760dcd589140694eabfae2c11898a88e7..a86462271febf488ec119e7e2a3dcd3335527e40 100644
+--- a/dist/esm/index.js
++++ b/dist/esm/index.js
+@@ -33326,6 +33326,7 @@ function DocSearchAskAiModal(_ref) {
+ 		id: "docsearch",
+ 		defaultActiveItemId: 0,
+ 		openOnFocus: true,
++		ignoreCompositionEvents: true,
+ 		initialState: {
+ 			query: initialQuery,
+ 			context: { searchSuggestions: [] }
