@@ -1,3 +1,9 @@
+---
+icon: fa-solid fa-gears
+category: [JavaSE]
+tag: [Java高级]
+---
+
 * [01_IO](JavaSE高级/01_IO)
 
 * [02_多线程](JavaSE高级/02_多线程)

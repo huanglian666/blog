@@ -1,6 +1,9 @@
 ---
 title: Java入门与开发环境搭建
 date: 2026-09-12
+icon: fa-solid fa-rocket
+category: [JavaSE]
+tag: [Java基础]
 ---
 
 # Java入门与开发环境搭建

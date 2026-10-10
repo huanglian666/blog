@@ -1,6 +1,9 @@
 ---
 title: SpringMVC的响应和请求
 date: 2026-09-12
+icon: fa-solid fa-right-left
+category: [框架学习]
+tag: [SpringMVC]
 ---
 
 # SpringMVC的响应和请求

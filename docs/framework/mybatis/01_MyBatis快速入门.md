@@ -1,6 +1,9 @@
 ---
 title: MyBatis快速入门
 date: 2026-09-12
+icon: fa-solid fa-map
+category: [框架学习]
+tag: [MyBatis]
 ---
 
 # MyBatis快速入门

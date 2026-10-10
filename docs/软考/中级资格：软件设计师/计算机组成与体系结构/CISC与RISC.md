@@ -1,6 +1,9 @@
 ---
 title: CISC与RISC
 date: 2026-09-12
+icon: fa-solid fa-rectangle-list
+category: [软考]
+tag: [计算机组成与体系结构]
 ---
 
 # CISC与RISC

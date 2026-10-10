@@ -1,6 +1,9 @@
 ---
 title: SpringIOC和DI
 date: 2026-09-12
+icon: fa-solid fa-leaf
+category: [框架学习]
+tag: [Spring]
 ---
 
 # SpringIOC和DI

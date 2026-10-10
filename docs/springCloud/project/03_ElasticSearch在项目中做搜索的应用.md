@@ -1,6 +1,9 @@
 ---
 title: ElasticSearch在项目中做搜索的应用
 date: 2022-10-05
+icon: fa-solid fa-magnifying-glass
+category: [SpringCloud]
+tag: [综合项目]
 ---
 
 # ElasticSearch 在项目中做搜索的应用

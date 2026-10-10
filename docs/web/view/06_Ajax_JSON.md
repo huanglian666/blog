@@ -1,6 +1,9 @@
 ---
 title: Ajax_JSON
 date: 2026-09-12
+icon: fa-solid fa-arrows-rotate
+category: [Web开发]
+tag: [前端基础]
 ---
 
 # Ajax_JSON

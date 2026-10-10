@@ -1,6 +1,9 @@
 ---
 title: Java语言基础
 date: 2026-09-12
+icon: fa-solid fa-spell-check
+category: [JavaSE]
+tag: [Java基础]
 ---
 
 # Java语言基础

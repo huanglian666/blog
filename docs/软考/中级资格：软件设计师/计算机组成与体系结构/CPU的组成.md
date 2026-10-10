@@ -1,6 +1,9 @@
 ---
 title: CPU的组成
 date: 2026-09-12
+icon: fa-solid fa-microchip
+category: [软考]
+tag: [计算机组成与体系结构]
 ---
 
 # CPU的组成

@@ -1,6 +1,9 @@
 ---
 title: Spring整合MyBatis_声明式事务
 date: 2026-09-12
+icon: fa-solid fa-handshake
+category: [框架学习]
+tag: [Spring]
 ---
 
 # Spring整合MyBatis_声明式事务

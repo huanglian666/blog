@@ -1,6 +1,9 @@
 ---
 title: DQL
 date: 2026-09-12
+icon: fa-solid fa-magnifying-glass
+category: [数据库]
+tag: [MySQL]
 ---
 
 # DQL

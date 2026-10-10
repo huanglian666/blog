@@ -1,6 +1,9 @@
 ---
 title: Linux_Vim使用
 date: 2026-09-12
+icon: fa-solid fa-file-pen
+category: [工具与部署]
+tag: [Linux]
 ---
 
 # Linux_Vim使用

@@ -1,6 +1,9 @@
 ---
 title: Maven基础
 date: 2026-09-12
+icon: fa-solid fa-box-open
+category: [工具与部署]
+tag: [Maven]
 ---
 
 # Maven基础

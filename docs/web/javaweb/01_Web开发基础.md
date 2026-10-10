@@ -1,6 +1,9 @@
 ---
 title: Web开发基础
 date: 2026-09-12
+icon: fa-solid fa-globe
+category: [Web开发]
+tag: [JavaWeb]
 ---
 
 # Web开发基础

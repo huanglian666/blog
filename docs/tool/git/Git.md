@@ -1,6 +1,9 @@
 ---
 title: Git
 date: 2026-09-12
+icon: fa-brands fa-git-alt
+category: [工具与部署]
+tag: [Git]
 ---
 
 # Git

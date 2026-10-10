@@ -1,6 +1,9 @@
 ---
 title: Docker
 date: 2026-09-12
+icon: fa-brands fa-docker
+category: [SpringCloud]
+tag: [Docker]
 ---
 
 # Docker

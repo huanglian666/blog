@@ -1,6 +1,9 @@
 ---
 title: Gateway
 date: 2026-09-12
+icon: fa-solid fa-door-open
+category: [SpringCloud]
+tag: [SpringCloudAlibaba]
 ---
 
 # Gateway

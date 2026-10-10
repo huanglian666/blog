@@ -1,6 +1,9 @@
 ---
 title: 动态代理和SpringAOP
 date: 2026-09-12
+icon: fa-solid fa-user-secret
+category: [框架学习]
+tag: [Spring]
 ---
 
 # 动态代理和SpringAOP

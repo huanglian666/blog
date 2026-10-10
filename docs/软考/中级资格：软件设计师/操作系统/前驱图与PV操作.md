@@ -1,6 +1,9 @@
 ---
 title: 前驱图与PV操作
 date: 2026-09-12
+icon: fa-solid fa-diagram-project
+category: [软考]
+tag: [操作系统]
 ---
 
 # 前驱图与PV操作

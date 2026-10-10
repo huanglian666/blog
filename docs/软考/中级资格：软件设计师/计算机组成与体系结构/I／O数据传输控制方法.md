@@ -1,6 +1,9 @@
 ---
 title: I／O数据传输控制方法
 date: 2026-09-12
+icon: fa-solid fa-right-left
+category: [软考]
+tag: [计算机组成与体系结构]
 ---
 
 # I／O数据传输控制方法

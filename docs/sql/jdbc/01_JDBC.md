@@ -1,6 +1,9 @@
 ---
 title: JDBC
 date: 2026-09-12
+icon: fa-brands fa-java
+category: [数据库]
+tag: [JDBC]
 ---
 
 # JDBC

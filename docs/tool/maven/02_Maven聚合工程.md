@@ -1,6 +1,9 @@
 ---
 title: Maven聚合工程
 date: 2026-09-12
+icon: fa-solid fa-sitemap
+category: [工具与部署]
+tag: [Maven]
 ---
 
 # Maven聚合工程

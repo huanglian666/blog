@@ -1,6 +1,9 @@
 ---
 title: Nginx
 date: 2026-09-12
+icon: fa-solid fa-server
+category: [工具与部署]
+tag: [Nginx]
 ---
 
 # Nginx

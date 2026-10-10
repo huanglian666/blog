@@ -1,6 +1,9 @@
 ---
 title: JSP进阶_EL_JSTL
 date: 2026-09-12
+icon: fa-solid fa-file-code
+category: [Web开发]
+tag: [JavaWeb]
 ---
 
 # JSP进阶_EL_JSTL

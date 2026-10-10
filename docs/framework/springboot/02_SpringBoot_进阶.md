@@ -1,6 +1,9 @@
 ---
 title: SpringBoot进阶
 date: 2026-09-12
+icon: fa-solid fa-sliders
+category: [框架学习]
+tag: [SpringBoot]
 ---
 
 # SpringBoot进阶

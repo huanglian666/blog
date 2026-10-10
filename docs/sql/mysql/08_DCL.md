@@ -1,6 +1,9 @@
 ---
 title: DCL
 date: 2026-09-12
+icon: fa-solid fa-user-shield
+category: [数据库]
+tag: [MySQL]
 ---
 
 # DCL

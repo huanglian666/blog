@@ -1,6 +1,9 @@
 ---
 title: Redis（下）
 date: 2022-10-05
+icon: fa-solid fa-bolt
+category: [SpringCloud]
+tag: [Redis]
 ---
 
 # Redis（下）

@@ -1,6 +1,9 @@
 ---
 title: Cache缓存
 date: 2026-09-12
+icon: fa-solid fa-gauge-high
+category: [软考]
+tag: [计算机组成与体系结构]
 ---
 
 # Cache缓存

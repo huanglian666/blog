@@ -1,5 +1,6 @@
 ---
 title: 数据结构与算法应用
+icon: fa-solid fa-diagram-project
 date: 2026-09-22T14:09:43+08:00
 lastmod: 2026-09-22T14:58:08+08:00
 ---

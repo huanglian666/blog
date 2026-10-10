@@ -1,6 +1,9 @@
 ---
 title: Linux_防火墙FirewallD设置
 date: 2026-09-12
+icon: fa-solid fa-shield-halved
+category: [工具与部署]
+tag: [Linux]
 ---
 
 # Linux_防火墙FirewallD设置

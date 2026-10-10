@@ -1,6 +1,9 @@
 ---
 title: SSM整合案例
 date: 2026-09-12
+icon: fa-solid fa-puzzle-piece
+category: [框架学习]
+tag: [SpringMVC]
 ---
 
 # SSM整合案例

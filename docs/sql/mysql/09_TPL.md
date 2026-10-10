@@ -1,6 +1,9 @@
 ---
 title: TPL
 date: 2026-09-12
+icon: fa-solid fa-handshake
+category: [数据库]
+tag: [MySQL]
 ---
 
 # TPL

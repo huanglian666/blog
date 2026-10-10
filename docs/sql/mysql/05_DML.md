@@ -1,6 +1,9 @@
 ---
 title: DML
 date: 2026-09-12
+icon: fa-solid fa-pen-to-square
+category: [数据库]
+tag: [MySQL]
 ---
 
 # DML

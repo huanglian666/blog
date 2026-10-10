@@ -1,3 +1,9 @@
+---
+icon: fa-solid fa-desktop
+category: [Web开发]
+tag: [前端基础]
+---
+
 * [01_HTML](前端/01_HTML)
 * [02_CSS](前端/02_CSS)
 * [03_JavaScript](前端/03_JavaScript)

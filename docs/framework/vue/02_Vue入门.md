@@ -1,6 +1,9 @@
 ---
 title: Vue入门
 date: 2026-09-12
+icon: fa-brands fa-vuejs
+category: [框架学习]
+tag: [Vue]
 ---
 
 # Vue入门

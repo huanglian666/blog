@@ -1,6 +1,9 @@
 ---
 title: Linux_软件安装及Java开发环境搭建
 date: 2026-09-12
+icon: fa-solid fa-screwdriver-wrench
+category: [工具与部署]
+tag: [Linux]
 ---
 
 # Linux_软件安装及Java开发环境搭建

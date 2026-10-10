@@ -1,6 +1,9 @@
 ---
 title: MybatisPlus
 date: 2026-09-12
+icon: fa-solid fa-plus
+category: [框架学习]
+tag: [MyBatis]
 ---
 
 # MybatisPlus

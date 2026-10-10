@@ -1,6 +1,9 @@
 ---
 title: Linux_搭建基于SFTP服务的文件服务器
 date: 2026-09-12
+icon: fa-solid fa-folder-tree
+category: [工具与部署]
+tag: [Linux]
 ---
 
 # Linux_搭建基于SFTP服务的文件服务器

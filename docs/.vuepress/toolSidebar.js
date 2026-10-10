@@ -1,13 +1,27 @@
 // 工具与部署板块侧边栏配置：形式同 softExamSidebar，分组头可点击跳到目录 README。
+import { articleIcons } from "./articleIcons.js"
+
 const basePath = "/tool/"
+
+// 各二级目录的侧边栏图标（FontAwesome class），分组与组内文章共用，与目录 README 的 icon 保持一致
+const ICONS = {
+	git: "fa-brands fa-git-alt",
+	idea: "fa-solid fa-laptop-code",
+	linux: "fa-brands fa-linux",
+	maven: "fa-solid fa-box-archive",
+	nginx: "fa-solid fa-server",
+}
 
 const article = (text, directory, filename = text) => ({
 	text,
+	// 优先取逐篇文章的语义图标，未收录的文章回退到目录级图标
+	icon: articleIcons[`tool/${directory}/${filename}`] ?? ICONS[directory],
 	link: encodeURI(`${basePath}${directory}/${filename}`),
 })
 
 const group = (text, directory, children) => ({
 	text,
+	icon: ICONS[directory],
 	link: encodeURI(`${basePath}${directory}/`),
 	prefix: encodeURI(`${basePath}${directory}/`),
 	collapsible: true,
@@ -17,6 +31,7 @@ const group = (text, directory, children) => ({
 export const toolSidebar = [
 	{
 		text: "工具|部署概览",
+		icon: "fa-solid fa-toolbox",
 		link: encodeURI(`${basePath}`),
 	},
 	group("Git", "git", [

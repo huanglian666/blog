@@ -1,3 +1,9 @@
+---
+icon: fa-solid fa-code
+category: [JavaSE]
+tag: [Java基础]
+---
+
 * [01_Java入门与开发环境搭建](JavaSE基础/01_Java入门与开发环境搭建)
 * [02_Java语言基础](JavaSE基础/02_Java语言基础)
 * **[03_控制流程](JavaSE基础/03_控制流程)**

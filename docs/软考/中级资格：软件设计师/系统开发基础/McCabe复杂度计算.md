@@ -2,6 +2,9 @@
 title: McCabe复杂度计算
 date: 2026-09-27T14:41:52+08:00
 lastmod: 2026-09-27T15:03:05+08:00
+icon: fa-solid fa-square-root-variable
+category: [软考]
+tag: [系统开发基础]
 ---
 
 # McCabe复杂度计算

@@ -1,6 +1,9 @@
 ---
 title: SpringSecurity通用权限管理系统
 date: 2026-09-12
+icon: fa-solid fa-shield-halved
+category: [框架学习]
+tag: [SpringMVC]
 ---
 
 # SpringSecurity通用权限管理系统

@@ -1,6 +1,9 @@
 ---
 title: MySQL客户端工具
 date: 2026-09-12
+icon: fa-solid fa-desktop
+category: [数据库]
+tag: [MySQL]
 ---
 
 # MySQL客户端工具

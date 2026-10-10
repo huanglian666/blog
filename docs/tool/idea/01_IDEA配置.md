@@ -1,6 +1,9 @@
 ---
 title: IDEA配置
 date: 2026-09-12
+icon: fa-solid fa-sliders
+category: [工具与部署]
+tag: [IDEA]
 ---
 
 # IDEA配置

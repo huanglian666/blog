@@ -1,3 +1,9 @@
+---
+icon: fa-solid fa-database
+category: [数据库]
+tag: [MySQL]
+---
+
 * [01_MySQL概述](MySQL/01_MySQL概述)
 * [02_MySQL安装及配置](MySQL/02_MySQL安装及配置)
 * [03_MySQL客户端工具](MySQL/03_MySQL客户端工具)

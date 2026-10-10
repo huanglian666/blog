@@ -1,6 +1,9 @@
 ---
 title: ECMAScript6入门
 date: 2026-09-12
+icon: fa-brands fa-js
+category: [框架学习]
+tag: [Vue]
 ---
 
 # ECMAScript6入门

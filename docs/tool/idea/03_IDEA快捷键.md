@@ -1,6 +1,9 @@
 ---
 title: IDEA快捷键
 date: 2026-09-12
+icon: fa-solid fa-keyboard
+category: [工具与部署]
+tag: [IDEA]
 ---
 
 # IDEA快捷键

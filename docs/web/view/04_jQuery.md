@@ -1,6 +1,9 @@
 ---
 title: jQuery
 date: 2026-09-12
+icon: fa-solid fa-code
+category: [Web开发]
+tag: [前端基础]
 ---
 
 # jQuery

@@ -1,6 +1,9 @@
 ---
 title: SQL概述及DDL
 date: 2026-09-12
+icon: fa-solid fa-table
+category: [数据库]
+tag: [MySQL]
 ---
 
 # SQL概述及DDL

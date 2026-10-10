@@ -2,6 +2,9 @@
 title: Java技巧-合格
 date: 2026-10-08T19:17:32+08:00
 lastmod: 2026-10-08T19:39:40+08:00
+icon: fa-brands fa-java
+category: [软考]
+tag: [面向对象程序设计]
 ---
 
 # Java技巧-合格

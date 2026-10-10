@@ -1,6 +1,9 @@
 ---
 title: JSP入门_Cookie_Session
 date: 2026-09-12
+icon: fa-solid fa-cookie-bite
+category: [Web开发]
+tag: [JavaWeb]
 ---
 
 # JSP入门_Cookie_Session

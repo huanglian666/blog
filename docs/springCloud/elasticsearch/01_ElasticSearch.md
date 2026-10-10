@@ -1,6 +1,9 @@
 ---
 title: ElasticSearch
 date: 2022-10-05
+icon: fa-solid fa-magnifying-glass
+category: [SpringCloud]
+tag: [ElasticSearch]
 ---
 
 # ElasticSearch

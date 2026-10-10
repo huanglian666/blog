@@ -1,6 +1,9 @@
 ---
 title: Sentinel
 date: 2022-10-05
+icon: fa-solid fa-shield-halved
+category: [SpringCloud]
+tag: [SpringCloudAlibaba]
 ---
 
 # Sentinel

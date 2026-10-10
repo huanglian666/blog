@@ -1,6 +1,9 @@
 ---
 title: 单点登录SSO
 date: 2022-10-05
+icon: fa-solid fa-right-to-bracket
+category: [SpringCloud]
+tag: [综合项目]
 ---
 
 # 单点登录SSO

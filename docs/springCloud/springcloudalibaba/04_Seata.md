@@ -1,6 +1,9 @@
 ---
 title: Seata
 date: 2026-09-12
+icon: fa-solid fa-handshake
+category: [SpringCloud]
+tag: [SpringCloudAlibaba]
 ---
 
 # Seata

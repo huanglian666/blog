@@ -1,6 +1,9 @@
 ---
 title: Spring注解开发_整合Junit
 date: 2026-09-12
+icon: fa-solid fa-vial
+category: [框架学习]
+tag: [Spring]
 ---
 
 # Spring注解开发_整合Junit

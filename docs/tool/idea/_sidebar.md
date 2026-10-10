@@ -1,3 +1,9 @@
+---
+icon: fa-solid fa-laptop-code
+category: [工具与部署]
+tag: [IDEA]
+---
+
 * [01_IDEA配置_2019](IDEA/01_IDEA配置_2019)
 * [02_IDEA配置_2020](IDEA/02_IDEA配置_2020)
 * [03_IDEA快捷键](IDEA/03_IDEA快捷键)

@@ -1,23 +1,48 @@
+import { articleIcons } from "./articleIcons.js"
+
 const qualificationPath = "/软考/中级资格：软件设计师/"
+
+// 各专题板块的侧边栏图标（FontAwesome class），分组与组内文章共用，与目录 README 的 icon 保持一致
+const ICONS = {
+	计算机组成与体系结构: "fa-solid fa-memory",
+	操作系统: "fa-solid fa-gears",
+	程序设计语言: "fa-solid fa-code",
+	数据结构: "fa-solid fa-sitemap",
+	算法基础: "fa-solid fa-lightbulb",
+	数据结构与算法应用: "fa-solid fa-diagram-project",
+	系统开发基础: "fa-solid fa-cubes",
+	项目管理: "fa-solid fa-clipboard-list",
+	数据流图: "fa-solid fa-water",
+	面向对象技术: "fa-solid fa-cube",
+	"UML建模（案例题）": "fa-solid fa-project-diagram",
+	面向对象程序设计: "fa-solid fa-laptop-code",
+}
 
 const article = (text, directory, filename = text) => ({
 	text,
+	// 优先取逐篇文章的语义图标，未收录的文章回退到专题板块级图标
+	icon:
+		articleIcons[`软考/中级资格：软件设计师/${directory}/${filename}`] ??
+		ICONS[directory],
 	link: `${qualificationPath}${directory}/${filename}`,
 })
 
 export const softExamSidebar = [
 	{
 		text: "软考概览",
+		icon: "fa-solid fa-graduation-cap",
 		link: "/软考/",
 	},
 	{
 		text: "中级资格：软件设计师",
+		icon: "fa-solid fa-certificate",
 		link: qualificationPath,
 		prefix: qualificationPath,
 		collapsible: true,
 		children: [
 			{
 				text: "计算机组成与体系结构",
+				icon: ICONS["计算机组成与体系结构"],
 				link: `${qualificationPath}计算机组成与体系结构/`,
 				prefix: `${qualificationPath}计算机组成与体系结构/`,
 				collapsible: true,
@@ -41,6 +66,7 @@ export const softExamSidebar = [
 			},
 			{
 				text: "操作系统",
+				icon: ICONS["操作系统"],
 				link: `${qualificationPath}操作系统/`,
 				prefix: `${qualificationPath}操作系统/`,
 				collapsible: true,
@@ -65,6 +91,7 @@ export const softExamSidebar = [
 			},
 			{
 				text: "程序设计语言",
+				icon: ICONS["程序设计语言"],
 				link: `${qualificationPath}程序设计语言/`,
 				prefix: `${qualificationPath}程序设计语言/`,
 				collapsible: true,
@@ -82,6 +109,7 @@ export const softExamSidebar = [
 			},
 			{
 				text: "数据结构",
+				icon: ICONS["数据结构"],
 				link: `${qualificationPath}数据结构/`,
 				prefix: `${qualificationPath}数据结构/`,
 				collapsible: true,
@@ -102,6 +130,7 @@ export const softExamSidebar = [
 			},
 			{
 				text: "算法基础",
+				icon: ICONS["算法基础"],
 				link: `${qualificationPath}算法基础/`,
 				prefix: `${qualificationPath}算法基础/`,
 				collapsible: true,
@@ -122,6 +151,7 @@ export const softExamSidebar = [
 			},
 			{
 				text: "数据结构与算法应用",
+				icon: ICONS["数据结构与算法应用"],
 				link: `${qualificationPath}数据结构与算法应用/`,
 				prefix: `${qualificationPath}数据结构与算法应用/`,
 				collapsible: true,
@@ -132,6 +162,7 @@ export const softExamSidebar = [
 			},
 			{
 				text: "系统开发基础",
+				icon: ICONS["系统开发基础"],
 				link: `${qualificationPath}系统开发基础/`,
 				prefix: `${qualificationPath}系统开发基础/`,
 				collapsible: true,
@@ -154,6 +185,7 @@ export const softExamSidebar = [
 			},
 			{
 				text: "项目管理",
+				icon: ICONS["项目管理"],
 				link: `${qualificationPath}项目管理/`,
 				prefix: `${qualificationPath}项目管理/`,
 				collapsible: true,
@@ -166,6 +198,7 @@ export const softExamSidebar = [
 			},
 			{
 				text: "数据流图",
+				icon: ICONS["数据流图"],
 				link: `${qualificationPath}数据流图/`,
 				prefix: `${qualificationPath}数据流图/`,
 				collapsible: true,
@@ -178,6 +211,7 @@ export const softExamSidebar = [
 			},
 			{
 				text: "面向对象技术",
+				icon: ICONS["面向对象技术"],
 				link: `${qualificationPath}面向对象技术/`,
 				prefix: `${qualificationPath}面向对象技术/`,
 				collapsible: true,
@@ -194,10 +228,12 @@ export const softExamSidebar = [
 			// 单页板块：只有一篇文章，不再套一层可折叠分组
 			{
 				text: "UML建模（案例题）",
+				icon: ICONS["UML建模（案例题）"],
 				link: `${qualificationPath}UML建模（案例题）/`,
 			},
 			{
 				text: "面向对象程序设计",
+				icon: ICONS["面向对象程序设计"],
 				link: `${qualificationPath}面向对象程序设计/`,
 				prefix: `${qualificationPath}面向对象程序设计/`,
 				collapsible: true,

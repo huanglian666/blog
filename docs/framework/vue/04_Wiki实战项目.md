@@ -1,6 +1,9 @@
 ---
 title: Wiki实战项目
 date: 2026-09-12
+icon: fa-solid fa-laptop-code
+category: [框架学习]
+tag: [Vue]
 ---
 
 # Wiki实战项目

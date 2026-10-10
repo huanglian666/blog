@@ -1,6 +1,9 @@
 ---
 title: JavaScript
 date: 2026-09-12
+icon: fa-brands fa-js
+category: [Web开发]
+tag: [前端基础]
 ---
 
 # JavaScript

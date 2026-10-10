@@ -1,3 +1,9 @@
+---
+icon: fa-brands fa-java
+category: [数据库]
+tag: [JDBC]
+---
+
 * [01_JDBC](JDBC/01_JDBC)
 * [02_数据库连接池](JDBC/02_数据库连接池)
 * [03_事务](JDBC/03_事务)

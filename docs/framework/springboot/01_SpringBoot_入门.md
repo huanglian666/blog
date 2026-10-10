@@ -1,6 +1,9 @@
 ---
 title: SpringBoot入门
 date: 2026-09-12
+icon: fa-solid fa-rocket
+category: [框架学习]
+tag: [SpringBoot]
 ---
 
 # SpringBoot入门

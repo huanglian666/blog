@@ -1,6 +1,9 @@
 ---
 title: Linux_简介及常用命令
 date: 2026-09-12
+icon: fa-solid fa-terminal
+category: [工具与部署]
+tag: [Linux]
 ---
 
 # Linux_简介及常用命令

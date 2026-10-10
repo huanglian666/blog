@@ -1,3 +1,9 @@
+---
+icon: fa-solid fa-globe
+category: [Web开发]
+tag: [JavaWeb]
+---
+
 * [01_Web开发基础](JavaWeb/01_Web开发基础)
 * [02_Servlet](JavaWeb/02_Servlet)
 * [03_JSP入门_Cookie_Session](JavaWeb/03_JSP入门_Cookie_Session)

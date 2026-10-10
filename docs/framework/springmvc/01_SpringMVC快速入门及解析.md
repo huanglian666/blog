@@ -1,6 +1,9 @@
 ---
 title: SpringMVC快速入门及解析
 date: 2026-09-12
+icon: fa-solid fa-diagram-project
+category: [框架学习]
+tag: [SpringMVC]
 ---
 
 # SpringMVC快速入门及解析

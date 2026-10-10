@@ -1,6 +1,9 @@
 ---
 title: SpringMVC文件上传下载及异常处理
 date: 2026-09-12
+icon: fa-solid fa-file-arrow-up
+category: [框架学习]
+tag: [SpringMVC]
 ---
 
 # SpringMVC文件上传下载及异常处理

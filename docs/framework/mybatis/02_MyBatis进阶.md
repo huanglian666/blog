@@ -1,6 +1,9 @@
 ---
 title: MyBatis进阶
 date: 2026-09-12
+icon: fa-solid fa-database
+category: [框架学习]
+tag: [MyBatis]
 ---
 
 # MyBatis进阶

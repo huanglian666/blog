@@ -1,6 +1,9 @@
 ---
 title: Sleuth
 date: 2026-09-12
+icon: fa-solid fa-route
+category: [SpringCloud]
+tag: [SpringCloudAlibaba]
 ---
 
 # Sleuth

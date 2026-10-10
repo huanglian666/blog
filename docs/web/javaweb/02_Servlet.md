@@ -1,6 +1,9 @@
 ---
 title: Servlet
 date: 2026-09-12
+icon: fa-solid fa-inbox
+category: [Web开发]
+tag: [JavaWeb]
 ---
 
 # Servlet

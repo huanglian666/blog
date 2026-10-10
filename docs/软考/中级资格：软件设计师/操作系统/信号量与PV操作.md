@@ -1,6 +1,9 @@
 ---
 title: 信号量与PV操作
 date: 2026-09-12
+icon: fa-solid fa-traffic-light
+category: [软考]
+tag: [操作系统]
 ---
 
 # 信号量与PV操作

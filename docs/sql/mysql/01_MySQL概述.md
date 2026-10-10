@@ -1,6 +1,9 @@
 ---
 title: MySQL概述
 date: 2026-09-12
+icon: fa-solid fa-database
+category: [数据库]
+tag: [MySQL]
 ---
 
 # MySQL概述

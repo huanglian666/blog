@@ -1,6 +1,9 @@
 ---
 title: 自定义Spring框架
 date: 2026-09-12
+icon: fa-solid fa-toolbox
+category: [设计模式]
+tag: [综合案例]
 ---
 
 # 自定义Spring框架

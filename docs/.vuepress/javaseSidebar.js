@@ -1,17 +1,28 @@
 // JavaSE 侧边栏配置：仿 softExamSidebar 的形式，
 // 二级分组头可点击跳转到该目录的 README 索引页，组内文章平铺展示。
 // 显示文本去掉文件名的数字前缀，链接仍指向原文件，不改动仓库文件名。
+import { articleIcons } from "./articleIcons.js"
+
 const basePath = "/javase/"
+
+// 各二级目录的侧边栏图标（FontAwesome class），分组与组内文章共用，与目录 README 的 icon 保持一致
+const ICONS = {
+	basic: "fa-solid fa-code",
+	senior: "fa-solid fa-gears",
+}
 
 /** 拼接某二级目录下某篇文章的站点链接（自动 URL 编码），filename 默认为显示文本加编号前缀前的原名 */
 const article = (text, directory, filename = text) => ({
 	text,
+	// 优先取逐篇文章的语义图标，未收录的文章回退到目录级图标
+	icon: articleIcons[`javase/${directory}/${filename}`] ?? ICONS[directory],
 	link: encodeURI(`${basePath}${directory}/${filename}`),
 })
 
 /** 构造一个二级目录分组：组头点击进入目录 README，组内为该目录全部文章 */
 const group = (text, directory, children) => ({
 	text,
+	icon: ICONS[directory],
 	link: encodeURI(`${basePath}${directory}/`),
 	prefix: encodeURI(`${basePath}${directory}/`),
 	collapsible: true,
@@ -21,6 +32,7 @@ const group = (text, directory, children) => ({
 export const javaseSidebar = [
 	{
 		text: "JavaSE概览",
+		icon: "fa-brands fa-java",
 		link: encodeURI(`${basePath}`),
 	},
 	group("JavaSE基础", "basic", [

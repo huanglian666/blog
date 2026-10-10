@@ -1,6 +1,9 @@
 ---
 title: Linux_安装
 date: 2026-09-12
+icon: fa-solid fa-download
+category: [工具与部署]
+tag: [Linux]
 ---
 
 # Linux_安装

@@ -1,6 +1,9 @@
 ---
 title: Filter
 date: 2026-09-12
+icon: fa-solid fa-filter
+category: [Web开发]
+tag: [JavaWeb]
 ---
 
 # Filter

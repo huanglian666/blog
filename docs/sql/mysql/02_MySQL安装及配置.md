@@ -1,6 +1,9 @@
 ---
 title: MySQL安装及配置
 date: 2026-09-12
+icon: fa-solid fa-sliders
+category: [数据库]
+tag: [MySQL]
 ---
 
 # MySQL安装及配置

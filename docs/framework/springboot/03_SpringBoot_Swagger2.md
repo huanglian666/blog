@@ -1,6 +1,9 @@
 ---
 title: SpringBoot整合Swagger2
 date: 2026-09-12
+icon: fa-solid fa-book
+category: [框架学习]
+tag: [SpringBoot]
 ---
 
 # SpringBoot整合Swagger2

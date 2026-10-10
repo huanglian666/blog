@@ -1,6 +1,9 @@
 ---
 title: Nacos
 date: 2022-10-05
+icon: fa-solid fa-compass
+category: [SpringCloud]
+tag: [SpringCloudAlibaba]
 ---
 
 # Nacos

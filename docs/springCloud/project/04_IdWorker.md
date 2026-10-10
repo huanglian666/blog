@@ -1,6 +1,9 @@
 ---
 title: IdWorker
 date: 2022-10-05
+icon: fa-solid fa-fingerprint
+category: [SpringCloud]
+tag: [综合项目]
 ---
 
 # IdWorker

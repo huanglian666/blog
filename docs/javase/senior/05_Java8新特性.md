@@ -1,6 +1,9 @@
 ---
 title: Java8新特性
 date: 2026-09-12
+icon: fa-solid fa-wand-magic-sparkles
+category: [JavaSE]
+tag: [Java高级]
 ---
 
 # Java8新特性

@@ -2,6 +2,9 @@
 title: C++技巧-合格
 date: 2026-10-08T14:40:36+08:00
 lastmod: 2026-10-08T19:16:43+08:00
+icon: fa-solid fa-code
+category: [软考]
+tag: [面向对象程序设计]
 ---
 
 # C++技巧-合格

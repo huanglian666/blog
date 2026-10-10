@@ -1,6 +1,9 @@
 ---
 title: rocketMQ
 date: 2022-10-05
+icon: fa-solid fa-paper-plane
+category: [SpringCloud]
+tag: [消息队列]
 ---
 
 # rocketMQ

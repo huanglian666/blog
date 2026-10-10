@@ -2,6 +2,9 @@
 title: UML图
 date: 2026-10-07T14:13:01+08:00
 lastmod: 2026-10-07T16:33:00+08:00
+icon: fa-solid fa-project-diagram
+category: [软考]
+tag: [面向对象技术]
 ---
 
 # UML图
