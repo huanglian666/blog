@@ -55,3 +55,50 @@ jobs:
           git branch -M gh-pages
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push --force origin HEAD:gh-pages
+
+      # 部署链路：本 workflow 推 gh-pages 后，Netlify 拉 gh-pages 分支再发布到 huanglian.top。
+      # Algolia 爬虫必须等站点真正上线后才能抓到新内容，所以这里轮询 Netlify 部署状态，
+      # 直到「最新一次部署 ready 且对应本次推送」才放行，避免爬到旧版本。
+      - name: Wait for Netlify deploy
+        env:
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          deadline=$(( $(date +%s) + 600 ))
+          while [ "$(date +%s)" -lt "$deadline" ]; do
+            resp=$(curl -sf -H "Authorization: Bearer ${NETLIFY_TOKEN}" \
+              "https://api.netlify.com/api/v1/sites/${NETLIFY_SITE_ID}/deploys?per_page=1") || { sleep 15; continue; }
+            state=$(echo "$resp" | jq -r '.[0].state')
+            title=$(echo "$resp" | jq -r '.[0].title')
+            # 标题即 gh-pages 提交信息 "deploy: <SHA>"，必须包含本次推送的 SHA，
+            # 防止上一轮已 ready 的旧部署被误判为本轮完成
+            if [ "$state" = "ready" ] && [[ "$title" == *"${GITHUB_SHA}"* ]]; then
+              echo "Netlify 部署成功，站点已上线"
+              exit 0
+            fi
+            echo "Netlify 状态: ${state:-unknown}（${title:-无部署}），继续等待..."
+            sleep 15
+          done
+          echo "::error::等待 Netlify 部署超时（10 分钟），未触发爬虫"
+          exit 1
+
+      # 触发 Algolia DocSearch 爬虫重新抓取线上站点。
+      # 凭据说明：CRAWLER_API_KEY 已配置为 GitHub Secrets，日志中任何意外输出
+      # 都会被 GitHub 自动打码（***）；CRAWLER_USER_ID 非敏感，但同样走 Secrets 统一管理。
+      # 凭据在 crawler.algolia.com 后台 Settings → API Keys 获取，
+      # CRAWLER_ID 为 crawler 详情页的 UUID，三者均需在仓库 Secrets 中配置后本步骤才会生效。
+      - name: Trigger Algolia crawler
+        env:
+          CRAWLER_USER_ID: ${{ secrets.CRAWLER_USER_ID }}
+          CRAWLER_API_KEY: ${{ secrets.CRAWLER_API_KEY }}
+          CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
+        run: |
+          http_code=$(curl -s -o /tmp/crawler-resp.json -w '%{http_code}' \
+            -X POST "https://crawler.algolia.com/api/1/crawlers/${CRAWLER_ID}/run" \
+            --user "${CRAWLER_USER_ID}:${CRAWLER_API_KEY}")
+          cat /tmp/crawler-resp.json; echo
+          if [ "$http_code" != "200" ]; then
+            echo "::error::触发爬虫失败（HTTP ${http_code}），请检查 Secrets 配置"
+            exit 1
+          fi
+          echo "爬虫已触发（taskId 见上方输出）"
