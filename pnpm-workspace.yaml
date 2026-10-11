@@ -6,3 +6,11 @@ shamefullyHoist: true
 # 允许/禁止执行安装脚本的包（@parcel/watcher 为可选依赖，无需构建脚本）
 allowBuilds:
   '@parcel/watcher': false
+
+# DocSearch v5 内核存在中文输入回归（焦点丢失/组合误搜，见 vuepress-theme-hope#5440），
+# 强制使用 v4 内核；样式表 @docsearch/css 保持 v5 观感
+overrides:
+  '@docsearch/js': 4.7.1
+
+patchedDependencies:
+  '@vuepress/plugin-docsearch@2.0.0-rc.137': patches/@vuepress__plugin-docsearch@2.0.0-rc.137.patch
