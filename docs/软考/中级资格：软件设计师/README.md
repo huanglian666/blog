@@ -43,6 +43,7 @@ icon: fa-solid fa-graduation-cap
 - [面向对象程序设计](./面向对象程序设计/README.md)
 - [数据库系统](./数据库系统/README.md)
 - [数据库设计](./数据库设计/README.md)
+- [计算机网络](./计算机网络/README.md)
 
 ---
 

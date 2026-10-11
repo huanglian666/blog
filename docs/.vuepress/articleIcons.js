@@ -264,4 +264,11 @@ export const articleIcons = {
 	"软考/中级资格：软件设计师/数据库系统/并发控制": "fa-solid fa-lock",
 	"软考/中级资格：软件设计师/数据库系统/分布式数据库的特点": "fa-solid fa-globe",
 	"软考/中级资格：软件设计师/数据库系统/数据仓库": "fa-solid fa-warehouse",
+	// ===== 软考 · 计算机网络 =====
+	"软考/中级资格：软件设计师/计算机网络/OSI与TCP／IP协议簇": "fa-solid fa-layer-group",
+	"软考/中级资格：软件设计师/计算机网络/IP地址": "fa-solid fa-map-location-dot",
+	"软考/中级资格：软件设计师/计算机网络/网络接入技术": "fa-solid fa-tower-broadcast",
+	"软考/中级资格：软件设计师/计算机网络/网络的诊断命令": "fa-solid fa-stethoscope",
+	"软考/中级资格：软件设计师/计算机网络/URL": "fa-solid fa-link",
+	"软考/中级资格：软件设计师/计算机网络/HTML": "fa-brands fa-html5",
 }

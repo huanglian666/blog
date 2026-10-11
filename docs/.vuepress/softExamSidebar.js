@@ -18,6 +18,7 @@ const ICONS = {
 	面向对象程序设计: "fa-solid fa-laptop-code",
 	数据库系统: "fa-solid fa-database",
 	数据库设计: "fa-solid fa-pen-ruler",
+	计算机网络: "fa-solid fa-network-wired",
 }
 
 const article = (text, directory, filename = text) => ({
@@ -270,6 +271,21 @@ export const softExamSidebar = [
 				text: "数据库设计",
 				icon: ICONS["数据库设计"],
 				link: `${qualificationPath}数据库设计/`,
+			},
+			{
+				text: "计算机网络",
+				icon: ICONS["计算机网络"],
+				link: `${qualificationPath}计算机网络/`,
+				prefix: `${qualificationPath}计算机网络/`,
+				collapsible: true,
+				children: [
+					article("OSI与TCP／IP协议簇", "计算机网络"),
+					article("IP地址", "计算机网络"),
+					article("网络接入技术", "计算机网络"),
+					article("网络的诊断命令", "计算机网络"),
+					article("URL", "计算机网络"),
+					article("HTML", "计算机网络"),
+				],
 			},
 
 		],
