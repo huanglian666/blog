@@ -1,0 +1,18 @@
+# 旧 base 残留路径（根路径直出的页面会被 Vue Router 客户端跳转，
+# 对爬虫和直链访问都不友好）——统一 301 到 /blog/ 正式路径
+/springCloud/*   /blog/springCloud/:splat   301!
+/springcloud/*   /blog/springCloud/:splat   301!
+/javase/*        /blog/javase/:splat        301!
+/tool/*          /blog/tool/:splat          301!
+/sql/*           /blog/sql/:splat           301!
+/web/*           /blog/web/:splat           301!
+/framework/*     /blog/framework/:splat     301!
+/                /blog/                     301!
+
+# C++ 页面已改名 Cpp技巧-合格：Netlify 把路径中的 + 当空格处理，
+# 含 + 的路径无法静态命中，旧链接 301 兜底（raw 与 %2B 两种形态）
+/blog/软考/中级资格：软件设计师/面向对象程序设计/C++技巧-合格.html   /blog/软考/中级资格：软件设计师/面向对象程序设计/Cpp技巧-合格.html   301
+/blog/软考/中级资格：软件设计师/面向对象程序设计/C%2B%2B技巧-合格.html   /blog/软考/中级资格：软件设计师/面向对象程序设计/Cpp技巧-合格.html   301
+
+# 站点以 /blog/ 为 base，/blog/* 重写到 dist 根文件（必须放在最后）
+/blog/*   /:splat   200
