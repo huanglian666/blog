@@ -19,6 +19,7 @@ const ICONS = {
 	数据库系统: "fa-solid fa-database",
 	数据库设计: "fa-solid fa-pen-ruler",
 	计算机网络: "fa-solid fa-network-wired",
+	信息安全: "fa-solid fa-user-shield",
 }
 
 const article = (text, directory, filename = text) => ({
@@ -285,6 +286,24 @@ export const softExamSidebar = [
 					article("网络的诊断命令", "计算机网络"),
 					article("URL", "计算机网络"),
 					article("HTML", "计算机网络"),
+				],
+			},
+			{
+				text: "信息安全",
+				icon: ICONS["信息安全"],
+				link: `${qualificationPath}信息安全/`,
+				prefix: `${qualificationPath}信息安全/`,
+				collapsible: true,
+				children: [
+					article("信息安全的基本知识", "信息安全"),
+					article("计算机病毒", "信息安全"),
+					article("加密技术与认证技术", "信息安全"),
+					article("数字签名", "信息安全"),
+					article("数字证书", "信息安全"),
+					article("网络安全协议", "信息安全"),
+					article("网络攻击", "信息安全"),
+					article("网络安全控制技术", "信息安全"),
+					article("安全防范体系", "信息安全"),
 				],
 			},
 

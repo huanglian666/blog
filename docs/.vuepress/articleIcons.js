@@ -271,4 +271,14 @@ export const articleIcons = {
 	"软考/中级资格：软件设计师/计算机网络/网络的诊断命令": "fa-solid fa-stethoscope",
 	"软考/中级资格：软件设计师/计算机网络/URL": "fa-solid fa-link",
 	"软考/中级资格：软件设计师/计算机网络/HTML": "fa-brands fa-html5",
+	// ===== 软考 · 信息安全 =====
+	"软考/中级资格：软件设计师/信息安全/信息安全的基本知识": "fa-solid fa-book-bookmark",
+	"软考/中级资格：软件设计师/信息安全/计算机病毒": "fa-solid fa-virus",
+	"软考/中级资格：软件设计师/信息安全/加密技术与认证技术": "fa-solid fa-key",
+	"软考/中级资格：软件设计师/信息安全/数字签名": "fa-solid fa-signature",
+	"软考/中级资格：软件设计师/信息安全/数字证书": "fa-solid fa-id-card",
+	"软考/中级资格：软件设计师/信息安全/网络安全协议": "fa-solid fa-handshake",
+	"软考/中级资格：软件设计师/信息安全/网络攻击": "fa-solid fa-skull-crossbones",
+	"软考/中级资格：软件设计师/信息安全/网络安全控制技术": "fa-solid fa-user-lock",
+	"软考/中级资格：软件设计师/信息安全/安全防范体系": "fa-solid fa-shield-heart",
 }
