@@ -252,4 +252,16 @@ export const articleIcons = {
 	"软考/中级资格：软件设计师/面向对象程序设计/Cpp技巧-合格": "fa-solid fa-code",
 	"软考/中级资格：软件设计师/面向对象程序设计/Java技巧-合格": "fa-brands fa-java",
 	"软考/中级资格：软件设计师/面向对象程序设计/例子-合格": "fa-solid fa-clipboard-check",
+	// ===== 软考 · 数据库系统 =====
+	"软考/中级资格：软件设计师/数据库系统/数据库体系结构": "fa-solid fa-layer-group",
+	"软考/中级资格：软件设计师/数据库系统/关系代数": "fa-solid fa-shuffle",
+	"软考/中级资格：软件设计师/数据库系统/SQL语言": "fa-solid fa-terminal",
+	"软考/中级资格：软件设计师/数据库系统/数据库设计过程概述": "fa-solid fa-list-check",
+	"软考/中级资格：软件设计师/数据库系统/数据库概念结构设计": "fa-solid fa-circle-nodes",
+	"软考/中级资格：软件设计师/数据库系统/数据库逻辑结构设计": "fa-solid fa-table-list",
+	"软考/中级资格：软件设计师/数据库系统/规范化": "fa-solid fa-stairs",
+	"软考/中级资格：软件设计师/数据库系统/模式分解": "fa-solid fa-scissors",
+	"软考/中级资格：软件设计师/数据库系统/并发控制": "fa-solid fa-lock",
+	"软考/中级资格：软件设计师/数据库系统/分布式数据库的特点": "fa-solid fa-globe",
+	"软考/中级资格：软件设计师/数据库系统/数据仓库": "fa-solid fa-warehouse",
 }

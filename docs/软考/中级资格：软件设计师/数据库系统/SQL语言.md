@@ -9,6 +9,7 @@ tag:
   - SQL
 date: 2026-10-11T10:23:03+08:00
 lastmod: 2026-10-11T10:49:55+08:00
+icon: fa-solid fa-terminal
 ---
 
 # SQL语言

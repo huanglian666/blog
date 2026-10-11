@@ -16,6 +16,8 @@ const ICONS = {
 	面向对象技术: "fa-solid fa-cube",
 	"UML建模（案例题）": "fa-solid fa-project-diagram",
 	面向对象程序设计: "fa-solid fa-laptop-code",
+	数据库系统: "fa-solid fa-database",
+	数据库设计: "fa-solid fa-pen-ruler",
 }
 
 const article = (text, directory, filename = text) => ({
@@ -245,6 +247,7 @@ export const softExamSidebar = [
 			},
 			{
 				text: "数据库系统",
+				icon: ICONS["数据库系统"],
 				link: `${qualificationPath}数据库系统/`,
 				prefix: `${qualificationPath}数据库系统/`,
 				collapsible: true,
@@ -265,6 +268,7 @@ export const softExamSidebar = [
 			// 单页板块：只有一篇文章，不再套一层可折叠分组
 			{
 				text: "数据库设计",
+				icon: ICONS["数据库设计"],
 				link: `${qualificationPath}数据库设计/`,
 			},
 

@@ -94,6 +94,8 @@ const SECTIONS = {
 			面向对象技术: "fa-solid fa-cube",
 			"UML建模（案例题）": "fa-solid fa-project-diagram",
 			面向对象程序设计: "fa-solid fa-laptop-code",
+			数据库系统: "fa-solid fa-database",
+			数据库设计: "fa-solid fa-pen-ruler",
 		},
 	},
 	// 设计模式：文章都在板块根目录，按文件名编号前缀区分图标与 tag
