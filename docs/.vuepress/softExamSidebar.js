@@ -262,6 +262,11 @@ export const softExamSidebar = [
 					article("数据仓库", "数据库系统"),
 				],
 			},
+			// 单页板块：只有一篇文章，不再套一层可折叠分组
+			{
+				text: "数据库设计",
+				link: `${qualificationPath}数据库设计/`,
+			},
 
 		],
 	},

@@ -42,6 +42,7 @@ icon: fa-solid fa-graduation-cap
 - [UML建模（案例题）](./UML建模（案例题）/README.md)
 - [面向对象程序设计](./面向对象程序设计/README.md)
 - [数据库系统](./数据库系统/README.md)
+- [数据库设计](./数据库设计/README.md)
 
 ---
 
