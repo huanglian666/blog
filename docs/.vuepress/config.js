@@ -73,6 +73,10 @@ export default {
 		// 避免每条订阅链接都多一次跳转、也避免和站点自身的规范链接不一致。
 		hostname: "https://huanglian.top",
 		logo: "/logo.png",
+		// 导航栏全屏按钮（外观弹窗内），浏览器不支持时自动隐藏
+		fullscreen: true,
+		// GitHub 仓库图标：显示在导航栏外观按钮左侧，点击跳转博客仓库
+		repo: "https://github.com/huanglian666/blog",
 		blog: {
 			name: "黄炼",
 			avatar: "/logo.png",
