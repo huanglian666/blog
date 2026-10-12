@@ -20,6 +20,7 @@ const ICONS = {
 	数据库设计: "fa-solid fa-pen-ruler",
 	计算机网络: "fa-solid fa-network-wired",
 	信息安全: "fa-solid fa-user-shield",
+	知识产权: "fa-solid fa-copyright",
 }
 
 const article = (text, directory, filename = text) => ({
@@ -304,6 +305,19 @@ export const softExamSidebar = [
 					article("网络攻击", "信息安全"),
 					article("网络安全控制技术", "信息安全"),
 					article("安全防范体系", "信息安全"),
+				],
+			},
+			{
+				text: "知识产权",
+				icon: ICONS["知识产权"],
+				link: `${qualificationPath}知识产权/`,
+				prefix: `${qualificationPath}知识产权/`,
+				collapsible: true,
+				children: [
+					article("保护范围与对象", "知识产权"),
+					article("保护期限", "知识产权"),
+					article("产权判定", "知识产权"),
+					article("标准化", "知识产权"),
 				],
 			},
 

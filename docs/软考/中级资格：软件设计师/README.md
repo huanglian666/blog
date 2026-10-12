@@ -45,6 +45,7 @@ icon: fa-solid fa-graduation-cap
 - [数据库设计](./数据库设计/README.md)
 - [计算机网络](./计算机网络/README.md)
 - [信息安全](./信息安全/README.md)
+- [知识产权](./知识产权/README.md)
 
 ---
 

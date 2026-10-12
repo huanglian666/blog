@@ -281,4 +281,9 @@ export const articleIcons = {
 	"软考/中级资格：软件设计师/信息安全/网络攻击": "fa-solid fa-skull-crossbones",
 	"软考/中级资格：软件设计师/信息安全/网络安全控制技术": "fa-solid fa-user-lock",
 	"软考/中级资格：软件设计师/信息安全/安全防范体系": "fa-solid fa-shield-heart",
+	// ===== 软考 · 知识产权 =====
+	"软考/中级资格：软件设计师/知识产权/保护范围与对象": "fa-solid fa-file-contract",
+	"软考/中级资格：软件设计师/知识产权/保护期限": "fa-solid fa-hourglass-half",
+	"软考/中级资格：软件设计师/知识产权/产权判定": "fa-solid fa-gavel",
+	"软考/中级资格：软件设计师/知识产权/标准化": "fa-solid fa-stamp",
 }

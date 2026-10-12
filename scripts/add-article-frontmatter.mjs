@@ -98,6 +98,7 @@ const SECTIONS = {
 			数据库设计: "fa-solid fa-pen-ruler",
 			计算机网络: "fa-solid fa-network-wired",
 			信息安全: "fa-solid fa-user-shield",
+			知识产权: "fa-solid fa-copyright",
 		},
 	},
 	// 设计模式：文章都在板块根目录，按文件名编号前缀区分图标与 tag
