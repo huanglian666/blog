@@ -46,4 +46,4 @@ tag: [计算机组成与体系结构]
 
 **正确答案**<span data-type="text" style="background-color: var(--b3-inline-builtin-success-background-color, var(--b3-card-success-background)); color: var(--b3-inline-builtin-success-color, var(--b3-card-success-color));">：</span>**A。** 
 
-‍
+
