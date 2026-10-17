@@ -21,7 +21,29 @@ const preserveCaseSlugify = (str) =>
 		.replace(/^-+|-+$/g, "")
 		.replace(/^(\d)/, "_$1")
 
+import katex from "katex"
+
+// 语雀导出的合并单元格表格是 HTML <table>，markdown-it 对 HTML 块内的
+// 内容不做任何解析，导致单元格里的 **加粗** 与 $公式$ 原样字面输出。
+// 这里在渲染前对包含 <table> 的 HTML 块做两件事：
+//   **加粗** → <strong>；$公式$ → 构建期 KaTeX 渲染。
+// 只处理表格范围，避免误伤代码块里的星号与美元符。
+const renderKatexInHtmlTable = (md) => {
+	md.core.ruler.push("render-katex-in-html-table", (state) => {
+		for (const token of state.tokens) {
+			if (token.type !== "html_block" || !token.content.includes("<table"))
+				continue
+			token.content = token.content
+				.replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>")
+				.replace(/\$([^$\n]+)\$/g, (_, tex) =>
+					katex.renderToString(tex, { throwOnError: false })
+				)
+		}
+	})
+}
+
 export default {
+	extendsMarkdown: renderKatexInHtmlTable,
 	// 当前站点的公共运行时代码约 1 MB，调整 Vite 的提示阈值，避免把正常的主题公共包误报为异常。
 	bundler: viteBundler({
 		viteOptions: {
