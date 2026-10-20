@@ -30,3 +30,12 @@
 	max-width: 100%;
 }
 
+
+// 长文本表格（单元格内含 <br> 分行）改为左对齐，垂直保持居中：
+// 全局表格是居中对齐，对短内容友好，但几百字的单元格居中排版非常难读。
+// 用 :has(td br) 精准命中分行过的长文本表格，短表格不受影响。
+[vp-content] #markdown-content table:has(td br) td,
+[vp-content] #markdown-content table:has(td br) th {
+	vertical-align: middle;
+	text-align: left;
+}
