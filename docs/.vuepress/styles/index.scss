@@ -39,3 +39,12 @@
 	vertical-align: middle;
 	text-align: left;
 }
+
+// 模块设计页的耦合/内聚对比表：左对齐 + 垂直居中。
+// 全局表格为居中对齐，长描述居中难读；给这两张表加 table-left 类
+// 指定左对齐（markdown 表格无法加类，内聚表因此以 HTML 形式书写）。
+[vp-content] #markdown-content table.table-left td,
+[vp-content] #markdown-content table.table-left th {
+	text-align: left;
+	vertical-align: middle;
+}
