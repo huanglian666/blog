@@ -31,20 +31,16 @@
 }
 
 
-// 长文本表格（单元格内含 <br> 分行）改为左对齐，垂直保持居中：
+// 长文本表格改为左对齐，垂直保持居中：
 // 全局表格是居中对齐，对短内容友好，但几百字的单元格居中排版非常难读。
-// 用 :has(td br) 精准命中分行过的长文本表格，短表格不受影响。
+// 命中两类表格：
+//   1. 单元格内含 <br> 分行的（:has(td br)）；
+//   2. 带 table-left 类的（markdown 表格无法加类，需左对齐的表格
+//      以 HTML 书写时使用，如模块设计页的内聚类型表）。
 [vp-content] #markdown-content table:has(td br) td,
-[vp-content] #markdown-content table:has(td br) th {
-	vertical-align: middle;
-	text-align: left;
-}
-
-// 模块设计页的耦合/内聚对比表：左对齐 + 垂直居中。
-// 全局表格为居中对齐，长描述居中难读；给这两张表加 table-left 类
-// 指定左对齐（markdown 表格无法加类，内聚表因此以 HTML 形式书写）。
+[vp-content] #markdown-content table:has(td br) th,
 [vp-content] #markdown-content table.table-left td,
 [vp-content] #markdown-content table.table-left th {
-	text-align: left;
 	vertical-align: middle;
+	text-align: left;
 }
