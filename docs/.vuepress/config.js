@@ -70,6 +70,15 @@ export default {
 	// 否则部署到 /blog/ 子路径时图标 404
 	head: [
 		["link", { rel: "icon", href: `${process.env.BASE || "/"}logo.png` }],
+		// KaTeX Copy-tex 扩展：复制页面上的公式时，剪贴板还原为 LaTeX 源码
+		// （行内包 $...$，块级包 $$...$$）。构建期渲染的 KaTeX 输出自带
+		// <annotation encoding="application/x-tex"> 源码标注，本扩展据此还原。
+		// 自托管于 public/，版本与插件渲染所用的 katex 0.16.47 一致；
+		// head 静态资源不自动拼 base，需显式带上（同 favicon）。
+		[
+			"script",
+			{ src: `${process.env.BASE || "/"}copy-tex.min.js`, defer: true },
+		],
 		// FontAwesome 6 图标（顶部导航与侧边栏菜单图标）
 		[
 			"link",
