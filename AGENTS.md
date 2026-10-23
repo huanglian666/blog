@@ -193,3 +193,8 @@ pnpm docs:build 2>&1 | grep -iE "warning|error|success"
 ```
 
 预期只有 `success VuePress build completed`。**有 KaTeX 中文告警必须修掉**。若改动了正文链接或新增板块，另外确认构建产物里对应 HTML 已生成。
+
+零宽字符、语雀残字、加粗错位等排版问题的核查**只看源 .md 文件**：
+`node scripts/clean-yuque-export.mjs`（dry-run）报告为 0 即干净。
+不要去扫 `dist/` 构建产物——KaTeX 渲染会自带零宽字符（vlist 支撑符）
+和 MathML 文本，扫产物必然误报。
