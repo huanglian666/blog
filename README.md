@@ -142,3 +142,11 @@ python3 scripts/download_markdown_images.py docs/软考
 MIT
 
 Copyright © 2021-present 黄炼
+
+## Star History
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=huanglian666/blog&type=Date&logscale&theme=dark" />
+  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=huanglian666/blog&type=Date&logscale" />
+  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=huanglian666/blog&type=Date&logscale" />
+</picture>
